@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Construction Estimator — Prodify</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0d1117;--sur:#161b22;--sur2:#1c2430;--sur3:#21303f;--bdr:#30363d;--bdr2:#3d4f63;--acc:#e6a817;--acc2:#c48f10;--blue:#388bfd;--grn:#3fb950;--red:#f85149;--ora:#f0883e;--txt:#e6edf3;--txt2:#8b949e;--txt3:#6e7681;--inp:#fffdf2;--inp-b:#d4a017;--r:8px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);font-size:13px;line-height:1.5;min-height:100vh}
+.topbar{background:var(--sur);border-bottom:1px solid var(--bdr);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.4)}
+.tb-brand{display:flex;align-items:center;gap:12px}
+.tb-logo{width:36px;height:36px;background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#1a1208}
+.tb-title{font-size:15px;font-weight:700}
+.tb-sub{font-size:11px;color:var(--txt3);margin-top:1px}
+.tb-clock{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--acc)}
+.page{max-width:1440px;margin:0 auto;padding:20px 24px 48px}
+.layout{display:grid;grid-template-columns:440px 1fr;gap:18px;align-items:start}
+@media(max-width:1080px){.layout{grid-template-columns:1fr}}
+.panel{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.25)}
+.panel+.panel{margin-top:12px}
+.ph{background:var(--sur2);border-bottom:1px solid var(--bdr);padding:9px 16px;display:flex;align-items:center;gap:8px}
+.ph-ic{width:22px;height:22px;background:var(--sur3);border:1px solid var(--bdr2);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.ph h3{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--txt2)}
+.pb{padding:16px}
+.field{margin-bottom:10px}.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:9.5px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);margin-bottom:4px}
+.field input,.field select{width:100%;padding:7px 10px;border-radius:6px;font-size:12.5px;font-family:'Inter',sans-serif;appearance:none;-webkit-appearance:none;transition:border-color .15s}
+.field input:focus,.field select:focus{outline:none;box-shadow:0 0 0 3px rgba(230,168,23,.2);border-color:var(--acc)!important}
+.inp-m{background:var(--inp);border:1.5px solid var(--inp-b);color:#1a1208}
+.inp-m::placeholder{color:#b89a4a}
+.inp-auto{background:#f0faf3;border:1.5px solid rgba(63,185,80,.4);color:#166534;font-family:'JetBrains Mono',monospace;font-weight:700;pointer-events:none;font-size:12px}
+.inp-sel{background:var(--inp);border:1.5px solid var(--inp-b);color:#1a1208;font-weight:600;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' stroke='%231a1208' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;padding-right:28px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.r4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+.sec{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--txt3);padding:4px 0 6px;border-bottom:1px solid var(--bdr);margin:14px 0 10px;display:flex;align-items:center;gap:6px}
+.sec::before{content:'';width:3px;height:10px;background:var(--acc);border-radius:2px;flex-shrink:0}
+.btn-row{display:flex;gap:8px;margin-top:12px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 16px;border:none;border-radius:6px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn:active{transform:scale(.98)}
+.btn-pdf{background:rgba(63,185,80,.12);color:var(--grn);border:1px solid rgba(63,185,80,.3);padding:12px 20px;font-size:14px}
+.btn-pdf:hover{background:rgba(63,185,80,.22)}
+.abs-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.abs-tbl th{text-align:left;padding:6px 8px;background:var(--sur2);border-bottom:1px solid var(--bdr2);font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--txt3)}
+.abs-tbl td{padding:5px 8px;border-bottom:1px solid rgba(48,54,61,.6);color:var(--txt2)}
+.abs-tbl tr:hover td{background:var(--sur3)}
+.nc{font-family:'JetBrains Mono',monospace;font-size:11px}
+.amt{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--acc);text-align:right}
+.tot td{font-weight:700;color:var(--grn)!important;border-top:2px solid var(--acc);font-size:12px}
+.tot .amt{color:var(--grn)!important;font-size:13px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="tb-brand">
+    <div class="tb-logo">P</div>
+    <div><div class="tb-title">Construction Cost Estimator</div><div class="tb-sub">Prodify · Detailed & Abstract Estimation</div></div>
+  </div>
+  <div class="tb-clock" id="clock">--:--:--</div>
+</header>
+
+<main class="page">
+<div class="layout">
+<div>
+  <div class="panel">
+    <div class="ph"><div class="ph-ic">🌍</div><h3>Region & Currency</h3></div>
+    <div class="pb">
+      <div class="r2">
+        <div class="field"><label>Country</label>
+          <select id="country" class="inp-sel" onchange="onCountryChange()">
+            <option value="IN">India (Kerala)</option><option value="AE">UAE</option><option value="SG">Singapore</option>
+          </select>
+        </div>
+        <div class="field"><label>Currency / Unit</label><input type="text" id="currDisplay" class="inp-auto" readonly value="INR / Sqft"></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><div class="ph-ic">📄</div><h3>Project & Engineer</h3></div>
+    <div class="pb">
+      <div class="field"><label>Project Name</label><input type="text" id="projName" class="inp-m" placeholder="e.g. Al Fardan Residential Tower"></div>
+      <div class="field"><label>Client / Attention To</label><input type="text" id="clientName" class="inp-m" placeholder="Client Name"></div>
+      <div class="field"><label>Location / Site Address</label><input type="text" id="siteLocation" class="inp-m" placeholder="Site Address"></div>
+      <div class="r2">
+        <div class="field"><label>Engineer Name</label><input type="text" id="engName" class="inp-m" placeholder="Estimator"></div>
+        <div class="field"><label>License No.</label><input type="text" id="engLic" class="inp-m" placeholder="PE / License"></div>
+      </div>
+      <div class="r2">
+        <div class="field"><label>Date</label><input type="date" id="estDate" class="inp-m"></div>
+        <div class="field"><label>Estimate Ref.</label><input type="text" id="estRef" class="inp-m" placeholder="EST-001"></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><div class="ph-ic">🏗️</div><h3>Building Type & Structure</h3></div>
+    <div class="pb">
+      <div class="r2">
+        <div class="field"><label>Building Type</label>
+          <select id="bldgType" class="inp-sel" onchange="calculate()">
+            <option value="res">Residential</option><option value="com">Commercial</option><option value="ind">Industrial</option>
+          </select>
+        </div>
+        <div class="field"><label>Structure Type</label>
+          <select id="structType" class="inp-sel" onchange="calculate()">
+            <option value="rcc">RCC Frame</option><option value="load">Load Bearing</option><option value="steel">Steel Structure</option>
+          </select>
+        </div>
+      </div>
+      <div class="r2">
+        <div class="field"><label>Foundation Type</label>
+          <select id="foundType" class="inp-sel" onchange="calculate()">
+            <option value="isol">Isolated Footing</option><option value="raft">Raft/Mat</option><option value="pile">Pile</option>
+          </select>
+        </div>
+        <div class="field"><label>Soil Type</label>
+          <select id="soilType" class="inp-sel" onchange="calculate()">
+            <option value="hard">Hard/Rocky</option><option value="med" selected>Medium/Sand</option><option value="soft">Soft/Clay</option>
+          </select>
+        </div>
+      </div>
+      <div class="r2">
+        <div class="field"><label>Finish Level</label>
+          <select id="finishLvl" class="inp-sel" onchange="calculate()">
+            <option value="econ">Economy</option><option value="std" selected>Standard</option><option value="prem">Premium</option><option value="lux">Luxury</option>
+          </select>
+        </div>
+        <div class="field"><label>Roof Type</label>
+          <select id="roofType" class="inp-sel" onchange="calculate()">
+            <option value="flat">Flat Slab</option><option value="slope">Sloped/RCC</option><option value="truss">Steel Truss + Sheet</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ph"><div class="ph-ic">📐</div><h3>Dimensions & Rooms</h3></div>
+    <div class="pb">
+      <div class="r3">
+        <div class="field"><label>Plinth Area / Floor</label><input type="number" id="plArea" class="inp-m" step="1" min="1" placeholder="Sqft" oninput="calculate()"></div>
+        <div class="field"><label>No. of Floors</label><input type="number" id="numFloors" class="inp-m" min="1" value="2" oninput="calculate()"></div>
+        <div class="field"><label>Floor Height (Ft)</label><input type="number" id="floorHt" class="inp-m" step="0.5" value="10" oninput="calculate()"></div>
+      </div>
+      <div class="sec">Room Configuration (Per Floor)</div>
+      <div class="r4">
+        <div class="field"><label>Bedrooms</label><input type="number" id="numBed" class="inp-m" min="0" value="3" oninput="calculate()"></div>
+        <div class="field"><label>Bathrooms</label><input type="number" id="numBath" class="inp-m" min="0" value="2" oninput="calculate()"></div>
+        <div class="field"><label>Kitchens</label><input type="number" id="numKit" class="inp-m" min="0" value="1" oninput="calculate()"></div>
+        <div class="field"><label>Living Halls</label><input type="number" id="numLiv" class="inp-m" min="0" value="2" oninput="calculate()"></div>
+      </div>
+      <div class="r3">
+        <div class="field"><label>Staircases</label><input type="number" id="numStair" class="inp-m" min="0" value="1" oninput="calculate()"></div>
+        <div class="field"><label>Car Porch</label>
+          <select id="carPorch" class="inp-sel" onchange="calculate()">
+            <option value="0">None</option><option value="1" selected>1 Car</option><option value="2">2 Cars</option>
+          </select>
+        </div>
+        <div class="field"><label>Max Budget Cap</label><input type="number" id="maxBudget" class="inp-m" min="0" placeholder="0 = No Cap" oninput="calculate()"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div>
+  <div class="panel">
+    <div class="ph"><div class="ph-ic">📊</div><h3>Abstract Estimate Summary</h3></div>
+    <div class="pb">
+      <table class="abs-tbl">
+        <thead><tr><th style="width:32px">#</th><th>Section</th><th style="text-align:right">Amount</th></tr></thead>
+        <tbody id="absBody"><tr><td colspan="3" style="text-align:center;padding:24px;color:var(--txt3)">Enter Plinth Area to calculate</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="btn-row" style="margin-top:14px">
+    <button class="btn btn-pdf" style="flex:1;justify-content:center" onclick="exportPDF()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.97a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.779a.749.749 0 1 1 1.06-1.06l1.97 1.97Z"/></svg>
+      Generate Full Estimate PDF
+    </button>
+  </div>
+</div>
+</div>
+</main>
+
+<script>
+setInterval(function(){ document.getElementById('clock').textContent = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }, 1000);
+document.getElementById('estDate').value = new Date().toISOString().slice(0,10);
+
+function gid(id){ return document.getElementById(id); }
+function num(id){ var v = parseFloat(gid(id).value); return (isNaN(v) || v < 0) ? 0 : v; }
+function intg(id){ var v = parseInt(gid(id).value); return (isNaN(v) || v < 0) ? 0 : v; }
+
+var DB = {
+  IN: { curr:'INR', sym:'₹', name:'India (Kerala)', unit:'Sqft', sqmConv:10.764, depthMap:{isol:4.5,raft:3,pile:2}, soilMod:{hard:0.85,med:1.0,soft:1.25}, foundPct:{isol:0.08,raft:0.12,pile:0.18},
+    R:{ excCum:380, pccCum:4800, rccFdnCum:5800, rccSupCum:6200, steelKg:62, blockExtSft:58, blockIntSft:52, plasterSft:32, puttySft:14, floorSft:{econ:70,std:95,prem:155,lux:260}, dpcSft:38, waterproofSft:55, antitermiteSft:10, mainDoor:22000, intDoor:9500, bathDoor:7000, window:7500, ventilator:2800, paintIntSft:24, paintExtSft:30, paintWoodSft:55, elecSft:{econ:28,std:38,prem:55,lux:75}, plumbSft:{econ:35,std:48,prem:70,lux:95}, sanitarySet:{econ:8000,std:14000,prem:22000,lux:38000}, kitchenSink:{econ:4500,std:7500,prem:14000,lux:24000}, oht:28000, septic:42000, gate:18000, compoundRft:950, stairFlight:8500, parapetRft:180, backfillCum:180, fillCum:220, steelRatio:{rcc:120,load:90,steel:45} }
+  },
+  AE: { curr:'AED', sym:'AED ', name:'UAE', unit:'Sqft', sqmConv:10.764, depthMap:{isol:3.5,raft:2.5,pile:1.5}, soilMod:{hard:0.9,med:1.0,soft:1.3}, foundPct:{isol:0.07,raft:0.11,pile:0.17},
+    R:{ excCum:25, pccCum:320, rccFdnCum:420, rccSupCum:480, steelKg:4.2, blockExtSft:18, blockIntSft:16, plasterSft:9, puttySft:5, floorSft:{econ:22,std:35,prem:60,lux:95}, dpcSft:12, waterproofSft:18, antitermiteSft:3, mainDoor:2800, intDoor:1200, bathDoor:900, window:1400, ventilator:450, paintIntSft:5, paintExtSft:7, paintWoodSft:12, elecSft:{econ:8,std:12,prem:18,lux:28}, plumbSft:{econ:10,std:15,prem:22,lux:35}, sanitarySet:{econ:1800,std:3200,prem:5500,lux:9000}, kitchenSink:{econ:800,std:1500,prem:2800,lux:5000}, oht:5500, septic:8000, gate:3500, compoundRft:250, stairFlight:1800, parapetRft:6, backfillCum:12, fillCum:15, steelRatio:{rcc:110,load:85,steel:40} }
+  },
+  SG: { curr:'SGD', sym:'S$', name:'Singapore', unit:'Sqm', sqmConv:10.764, depthMap:{isol:1.5,raft:1,pile:0.6}, soilMod:{hard:0.9,med:1.0,soft:1.35}, foundPct:{isol:0.06,raft:0.10,pile:0.16},
+    R:{ excCum:45, pccCum:520, rccFdnCum:680, rccSupCum:750, steelKg:2.8, blockExtSft:28, blockIntSft:24, plasterSft:14, puttySft:8, floorSft:{econ:35,std:55,prem:90,lux:140}, dpcSft:18, waterproofSft:28, antitermiteSft:5, mainDoor:3800, intDoor:1600, bathDoor:1100, window:1800, ventilator:600, paintIntSft:8, paintExtSft:11, paintWoodSft:18, elecSft:{econ:12,std:18,prem:28,lux:42}, plumbSft:{econ:15,std:22,prem:35,lux:50}, sanitarySet:{econ:2800,std:4500,prem:7500,lux:12000}, kitchenSink:{econ:1200,std:2200,prem:4000,lux:7000}, oht:8500, septic:12000, gate:5000, compoundRft:380, stairFlight:2800, parapetRft:9, backfillCum:22, fillCum:28, steelRatio:{rcc:115,load:85,steel:42} }
+  }
+};
+
+function onCountryChange(){
+  var d = DB[gid('country').value];
+  gid('currDisplay').value = d.curr + ' / ' + d.unit;
+  gid('plArea').placeholder = d.unit;
+  calculate();
+}
+
+function calculate(){
+  var co = gid('country').value, d = DB[co], R = d.R;
+  var areaRaw = num('plArea');
+  var area = (co === 'SG') ? areaRaw * d.sqmConv : areaRaw;
+  var floors = intg('numFloors') || 1, flrHt = num('floorHt') || 10;
+  var bType = gid('bldgType').value, struct = gid('structType').value;
+  var found = gid('foundType').value, soil = gid('soilType').value;
+  var finish = gid('finishLvl').value, roof = gid('roofType').value;
+  var bed = intg('numBed'), bath = intg('numBath'), kit = intg('numKit'), liv = intg('numLiv');
+  var str = intg('numStair') || 1, porch = intg('carPorch'), maxB = num('maxBudget');
+
+  if(area <= 0){ gid('absBody').innerHTML = '<tr><td colspan="3" style="text-align:center;padding:24px;color:var(--txt3)">Enter Plinth Area to calculate</td></tr>'; return; }
+
+  var totalArea = area * floors, side = Math.sqrt(area), perimeter = 4 * side;
+  var intWallLen = (bed * 3.5 + bath * 2.5 + kit * 3 + liv * 4) * floors;
+  var foundDepth = d.depthMap[found], soilMod = d.soilMod[soil], foundPct = d.foundPct[found];
+
+  var Q = {};
+  Q.siteClear = area * 1.2; Q.excVol = Q.siteClear * foundDepth * soilMod; Q.backfillVol = Q.excVol * 0.6;
+  Q.antitermite = totalArea; Q.pccVol = area * 0.075; Q.rccFdnVol = area * foundDepth * foundPct;
+  Q.steelFdn = Q.rccFdnVol * R.steelRatio[struct] * 0.3; Q.plinthBeamVol = perimeter * 0.3 * 0.45;
+  Q.dpcArea = area; Q.plinthFill = area * 0.5;
+  var colCount = Math.ceil(area / 120) * floors;
+  Q.colVol = colCount * 0.3 * 0.45 * flrHt; Q.beamVol = intWallLen * 0.3 * 0.45;
+  Q.slabVol = area * floors * 0.15; Q.stairVol = str * Math.max(0, floors - 1) * 3 * 1.2 * 0.15;
+  Q.rccSupVol = Q.colVol + Q.beamVol + Q.slabVol + Q.stairVol; Q.steelSup = Q.rccSupVol * R.steelRatio[struct];
+  var doorArea = (1 + bed + bath) * 21, winArea = (bed + Math.ceil(bath/2) + liv) * 12;
+  Q.blockExt = Math.max(0, perimeter * flrHt * floors - doorArea * 0.4 - winArea * 0.5);
+  Q.blockInt = Math.max(0, intWallLen * flrHt - doorArea * 0.6); Q.parapet = perimeter * 3;
+  Q.plasterInt = Q.blockInt * 2 + area * floors; Q.plasterExt = Q.blockExt; Q.putty = Q.plasterInt;
+  Q.flooring = area * floors; Q.stairTreads = str * Math.max(0, floors - 1) * 12; Q.waterproof = area;
+  Q.mainDoor = 1; Q.intDoor = bed + liv; Q.bathDoor = bath; Q.windows = bed * 2 + bath + liv; Q.vents = bath + kit;
+  Q.paintInt = Q.plasterInt; Q.paintExt = Q.plasterExt; Q.paintWood = (Q.mainDoor + Q.intDoor + Q.bathDoor) * 14 + Q.windows * 6;
+  Q.elecArea = totalArea; Q.plumbArea = totalArea; Q.sanitarySets = bath * floors; Q.kitchenSinks = kit * floors;
+  Q.oht = 1; Q.septic = bath > 0 ? 1 : 0; Q.gate = 1; Q.compound = perimeter * 1.5;
+
+  var C = {};
+  C.site = (Q.siteClear * R.antitermiteSft) + (Q.excVol * R.excCum) + (Q.backfillVol * R.backfillCum) + (Q.antitermite * R.antitermiteSft);
+  C.found = (Q.pccVol * R.pccCum) + (Q.rccFdnVol * R.rccFdnCum) + (Q.steelFdn * R.steelKg) + (Q.plinthBeamVol * R.rccSupCum) + (Q.dpcArea * R.dpcSft) + (Q.plinthFill * R.fillCum);
+  C.super = (Q.rccSupVol * R.rccSupCum) + (Q.steelSup * R.steelKg);
+  C.masonry = (Q.blockExt * R.blockExtSft) + (Q.blockInt * R.blockIntSft) + (Q.parapet * R.parapetRft);
+  C.plaster = (Q.plasterInt * R.plasterSft) + (Q.plasterExt * R.plasterExtSft) + (Q.putty * R.puttySft);
+  C.floor = (Q.flooring * R.floorSft[finish]) + (Q.stairTreads * R.stairFlight / 12);
+  C.roof = Q.waterproof * R.waterproofSft;
+  C.doors = (Q.mainDoor * R.mainDoor) + (Q.intDoor * R.intDoor) + (Q.bathDoor * R.bathDoor) + (Q.windows * R.window) + (Q.vents * R.ventilator);
+  C.paint = (Q.paintInt * R.paintIntSft) + (Q.paintExt * R.paintExtSft) + (Q.paintWood * R.paintWoodSft);
+  C.elec = Q.elecArea * R.elecSft[finish];
+  C.plumb = (Q.plumbArea * R.plumbSft[finish]) + (Q.sanitarySets * R.sanitarySet[finish]) + (Q.kitchenSinks * R.kitchenSink[finish]) + (Q.oht * R.oht) + (Q.septic * R.septic);
+  C.misc = (Q.gate * R.gate) + (Q.compound * R.compoundRft);
+  C.cont = 0.05 * (C.site + C.found + C.super + C.masonry + C.plaster + C.floor + C.roof + C.doors + C.paint + C.elec + C.plumb + C.misc);
+  C.total = C.site + C.found + C.super + C.masonry + C.plaster + C.floor + C.roof + C.doors + C.paint + C.elec + C.plumb + C.misc + C.cont;
+
+  var optTotal = C.total, budgetNote = '';
+  if(maxB > 0 && C.total > maxB){
+    var deficit = C.total - maxB, cutFin = deficit * 0.6, cutCont = deficit * 0.4;
+    if(cutCont > C.cont){ cutFin += (cutCont - C.cont); cutCont = C.cont; }
+    optTotal = C.total - Math.min(deficit, cutFin + cutCont);
+    budgetNote = 'Budget capped from ' + d.curr + ' ' + Math.round(C.total).toLocaleString() + ' to ' + d.curr + ' ' + Math.round(optTotal).toLocaleString() + ' (Value Engineering applied)';
+  }
+
+  var sections = [
+    {n:'1',name:'Site Preparation & Earthwork',amt:C.site},{n:'2',name:'Foundation & Substructure',amt:C.found},
+    {n:'3',name:'Superstructure (RCC/Steel)',amt:C.super},{n:'4',name:'Masonry / Blockwork',amt:C.masonry},
+    {n:'5',name:'Plastering & Putty',amt:C.plaster},{n:'6',name:'Flooring',amt:C.floor},
+    {n:'7',name:'Roofing & Waterproofing',amt:C.roof},{n:'8',name:'Doors, Windows & Ventilators',amt:C.doors},
+    {n:'9',name:'Painting',amt:C.paint},{n:'10',name:'Electrical Work',amt:C.elec},
+    {n:'11',name:'Plumbing & Sanitary',amt:C.plumb},{n:'12',name:'Miscellaneous',amt:C.misc},{n:'13',name:'Contingencies (5%)',amt:C.cont}
+  ];
+
+  var fmtAmt = function(v){ return d.sym + Math.round(v).toLocaleString(); };
+  var html = '';
+  for(var i = 0; i < sections.length; i++){ var s = sections[i]; html += '<tr><td class="nc">'+s.n+'</td><td>'+s.name+'</td><td class="amt">'+fmtAmt(s.amt)+'</td></tr>'; }
+  html += '<tr class="tot"><td></td><td>ESTIMATED TOTAL</td><td class="amt">'+fmtAmt(optTotal)+'</td></tr>';
+  if(budgetNote){ html += '<tr><td colspan="3" style="color:var(--ora);font-size:10px;padding:6px 8px">⚠ '+budgetNote+'</td></tr>'; }
+  gid('absBody').innerHTML = html;
+
+  window._est = {
+    co:co, d:d, Q:Q, C:C, optTotal:optTotal, budgetNote:budgetNote, sections:sections,
+    area:area, floors:floors, flrHt:flrHt, totalArea:totalArea, perimeter:perimeter,
+    bType:bType, struct:struct, found:found, soil:soil, finish:finish, roof:roof,
+    bed:bed, bath:bath, kit:kit, liv:liv, str:str, porch:porch, maxB:maxB,
+    foundDepth:foundDepth, soilMod:soilMod, colCount:colCount,
+    bTypeName:{res:'Residential',com:'Commercial',ind:'Industrial'}[bType],
+    structName:{rcc:'RCC Frame',load:'Load Bearing',steel:'Steel Structure'}[struct],
+    foundName:{isol:'Isolated Footing',raft:'Raft/Mat',pile:'Pile Foundation'}[found],
+    soilName:{hard:'Hard/Rocky',med:'Medium/Sand',soft:'Soft/Clay'}[soil],
+    finishName:{econ:'Economy',std:'Standard',prem:'Premium',lux:'Luxury'}[finish],
+    roofName:{flat:'Flat Slab',slope:'Sloped RCC',truss:'Steel Truss + Sheet'}[roof]
+  };
+}
+
+function numToWords(n, co){
+  if(n === 0) return ''; if(n < 0) return 'Minus ' + numToWords(-n, co);
+  var ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+  var tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  if(n < 20) return ones[n]; if(n < 100) return tens[Math.floor(n/10)] + (n%10 ? ' '+ones[n%10] : '');
+  if(n < 1000) return ones[Math.floor(n/100)] + ' Hundred' + (n%100 ? ' and '+numToWords(n%100, co) : '');
+  if(co === 'IN') {
+    if(n < 100000) return numToWords(Math.floor(n/1000), co) + ' Thousand' + (n%1000 ? ' '+numToWords(n%1000, co) : '');
+    if(n < 10000000) return numToWords(Math.floor(n/100000), co) + ' Lakh' + (n%100000 ? ' '+numToWords(n%100000, co) : '');
+    return numToWords(Math.floor(n/10000000), co) + ' Crore' + (n%10000000 ? ' '+numToWords(n%10000000, co) : '');
+  } else {
+    if(n < 1000000) return numToWords(Math.floor(n/1000), co) + ' Thousand' + (n%1000 ? ' '+numToWords(n%1000, co) : '');
+    if(n < 1000000000) return numToWords(Math.floor(n/1000000), co) + ' Million' + (n%1000000 ? ' '+numToWords(n%1000000, co) : '');
+    return numToWords(Math.floor(n/1000000000), co) + ' Billion' + (n%1000000000 ? ' '+numToWords(n%1000000000, co) : '');
+  }
+}
+function amountToWords(num, co){
+  if(num === 0) return 'Zero'; if(isNaN(num)) return '';
+  var names = {IN:['Rupees','Paise'],AE:['Dirhams','Fils'],SG:['Dollars','Cents']}; var cn = names[co] || ['Currency','Cents'];
+  var intPart = Math.floor(num), decPart = Math.round((num - intPart) * 100);
+  var w = intPart > 0 ? numToWords(intPart, co) + ' ' + cn[0] : '';
+  if(decPart > 0){ if(intPart > 0) w += ' and '; w += numToWords(decPart, co) + ' ' + cn[1]; }
+  return w + ' Only';
+}
+
+function exportPDF(){
+  var e = window._est;
+  if(!e){ alert('Calculate first.'); return; }
+  var co = e.co, d = e.d, R = d.R;
+  var genDate = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
+  var estDateFmt = gid('estDate').value ? new Date(gid('estDate').value+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+  var fmtAmt = function(v){ return d.sym + Math.round(v).toLocaleString(); };
+  var fmtD = function(v){ return Number(v).toFixed(2); };
+  var words = amountToWords(e.optTotal, co);
+  var dispArea = (co === 'SG') ? Math.round(e.area / d.sqmConv) : Math.round(e.area);
+  var dispTotal = (co === 'SG') ? Math.round(e.totalArea / d.sqmConv) : Math.round(e.totalArea);
+  var uLabel = d.unit;
+
+  var absRows = '';
+  for(var i = 0; i < e.sections.length; i++){ var s = e.sections[i]; absRows += '<tr><td style="text-align:center;width:30px">'+s.n+'</td><td>'+s.name+'</td><td style="text-align:right;font-weight:700">'+fmtAmt(s.amt)+'</td></tr>'; }
+
+  function detSec(num, title, items){
+    var rows = '', sub = 0;
+    for(var j = 0; j < items.length; j++){ var it = items[j]; sub += it.amt; rows += '<tr><td style="text-align:left;font-size:8.5pt">'+it.desc+'</td><td style="text-align:center">'+it.unit+'</td><td style="text-align:right">'+fmtD(it.qty)+'</td><td style="text-align:right">'+fmtD(it.rate)+'</td><td style="text-align:right;font-weight:700">'+fmtAmt(it.amt)+'</td></tr>'; }
+    return '<div style="page-break-inside:avoid;margin-bottom:16px"><div style="background:#000;color:#fff;padding:5px 10px;font-size:9pt;font-weight:700;letter-spacing:.5px">Section '+num+': '+title+'</div><table style="width:100%;border-collapse:collapse;font-size:8.5pt"><thead><tr><th style="text-align:left;background:#f0f0f0;padding:4px 8px">Description</th><th style="background:#f0f0f0;padding:4px 8px;width:50px">Unit</th><th style="background:#f0f0f0;padding:4px 8px;width:65px">Qty</th><th style="background:#f0f0f0;padding:4px 8px;width:65px">Rate</th><th style="background:#f0f0f0;padding:4px 8px;width:80px">Amount</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr style="background:#f5f5f5"><td colspan="4" style="text-align:right;font-weight:700;padding:5px 8px">Subtotal</td><td style="text-align:right;font-weight:900;padding:5px 8px">'+fmtAmt(sub)+'</td></tr></tfoot></table></div>';
+  }
+
+  var detailed =
+    detSec('1','Site Preparation & Earthwork',[
+      {desc:'Site clearing & layout',unit:uLabel,qty:e.Q.siteClear,rate:R.antitermiteSft,amt:e.Q.siteClear*R.antitermiteSft},
+      {desc:'Excavation for foundation ('+e.foundName+', depth '+e.foundDepth+'ft, '+e.soilName+' soil)',unit:'Cum',qty:e.Q.excVol,rate:R.excCum,amt:e.Q.excVol*R.excCum},
+      {desc:'Backfilling & compaction',unit:'Cum',qty:e.Q.backfillVol,rate:R.backfillCum,amt:e.Q.backfillVol*R.backfillCum},
+      {desc:'Anti-termite treatment',unit:uLabel,qty:e.Q.antitermite,rate:R.antitermiteSft,amt:e.Q.antitermite*R.antitermiteSft}
+    ]) +
+    detSec('2','Foundation & Substructure',[
+      {desc:'PCC (1:4:8) under foundation',unit:'Cum',qty:e.Q.pccVol,rate:R.pccCum,amt:e.Q.pccVol*R.pccCum},
+      {desc:'RCC foundation ('+e.foundName+')',unit:'Cum',qty:e.Q.rccFdnVol,rate:R.rccFdnCum,amt:e.Q.rccFdnVol*R.rccFdnCum},
+      {desc:'Steel reinforcement in foundation',unit:'Kg',qty:e.Q.steelFdn,rate:R.steelKg,amt:e.Q.steelFdn*R.steelKg},
+      {desc:'Plinth beams RCC',unit:'Cum',qty:e.Q.plinthBeamVol,rate:R.rccSupCum,amt:e.Q.plinthBeamVol*R.rccSupCum},
+      {desc:'DPC (Damp Proof Course)',unit:uLabel,qty:e.Q.dpcArea,rate:R.dpcSft,amt:e.Q.dpcArea*R.dpcSft},
+      {desc:'Plinth filling with moorum/sand',unit:'Cum',qty:e.Q.plinthFill,rate:R.fillCum,amt:e.Q.plinthFill*R.fillCum}
+    ]) +
+    detSec('3','Superstructure — RCC/Steel',[
+      {desc:'Columns ('+e.colCount+' nos, '+e.structName+')',unit:'Cum',qty:e.Q.colVol,rate:R.rccSupCum,amt:e.Q.colVol*R.rccSupCum},
+      {desc:'Beams (main & tie beams)',unit:'Cum',qty:e.Q.beamVol,rate:R.rccSupCum,amt:e.Q.beamVol*R.rccSupCum},
+      {desc:'Slabs ('+e.floors+' floors x '+dispArea+' '+uLabel+')',unit:'Cum',qty:e.Q.slabVol,rate:R.rccSupCum,amt:e.Q.slabVol*R.rccSupCum},
+      {desc:'Staircase ('+e.str+' flight)',unit:'Cum',qty:e.Q.stairVol,rate:R.rccSupCum,amt:e.Q.stairVol*R.rccSupCum},
+      {desc:'Reinforcement steel ('+R.steelRatio[e.struct]+' kg/cum)',unit:'Kg',qty:e.Q.steelSup,rate:R.steelKg,amt:e.Q.steelSup*R.steelKg}
+    ]) +
+    detSec('4','Masonry / Blockwork',[
+      {desc:'External walls (6/8 inch block)',unit:uLabel,qty:e.Q.blockExt,rate:R.blockExtSft,amt:e.Q.blockExt*R.blockExtSft},
+      {desc:'Internal walls (4/6 inch block)',unit:uLabel,qty:e.Q.blockInt,rate:R.blockIntSft,amt:e.Q.blockInt*R.blockIntSft},
+      {desc:'Parapet wall (3 ft height)',unit:'Rft',qty:e.Q.parapet,rate:R.parapetRft,amt:e.Q.parapet*R.parapetRft}
+    ]) +
+    detSec('5','Plastering & Putty',[
+      {desc:'Internal plastering (both sides + ceiling)',unit:uLabel,qty:e.Q.plasterInt,rate:R.plasterSft,amt:e.Q.plasterInt*R.plasterSft},
+      {desc:'External plastering',unit:uLabel,qty:e.Q.plasterExt,rate:R.plasterExtSft,amt:e.Q.plasterExt*R.plasterExtSft},
+      {desc:'Putty & primer (internal)',unit:uLabel,qty:e.Q.putty,rate:R.puttySft,amt:e.Q.putty*R.puttySft}
+    ]) +
+    detSec('6','Flooring',[
+      {desc:'Flooring — '+e.finishName+' finish',unit:uLabel,qty:e.Q.flooring,rate:R.floorSft[e.finish],amt:e.Q.flooring*R.floorSft[e.finish]},
+      {desc:'Staircase treads & risers',unit:uLabel,qty:e.Q.stairTreads,rate:R.stairFlight/12,amt:e.Q.stairTreads*R.stairFlight/12}
+    ]) +
+    detSec('7','Roofing & Waterproofing',[
+      {desc:'Waterproofing treatment ('+e.roofName+')',unit:uLabel,qty:e.Q.waterproof,rate:R.waterproofSft,amt:e.Q.waterproof*R.waterproofSft}
+    ]) +
+    detSec('8','Doors, Windows & Ventilators',[
+      {desc:'Main door (teak/flush)',unit:'Nos',qty:e.Q.mainDoor,rate:R.mainDoor,amt:e.Q.mainDoor*R.mainDoor},
+      {desc:'Internal doors (bedroom/living)',unit:'Nos',qty:e.Q.intDoor,rate:R.intDoor,amt:e.Q.intDoor*R.intDoor},
+      {desc:'Bathroom doors (PVC/flush)',unit:'Nos',qty:e.Q.bathDoor,rate:R.bathDoor,amt:e.Q.bathDoor*R.bathDoor},
+      {desc:'Windows (aluminium/UPVC)',unit:'Nos',qty:e.Q.windows,rate:R.window,amt:e.Q.windows*R.window},
+      {desc:'Ventilators',unit:'Nos',qty:e.Q.vents,rate:R.ventilator,amt:e.Q.vents*R.ventilator}
+    ]) +
+    detSec('9','Painting',[
+      {desc:'Internal painting (2 coats + primer)',unit:uLabel,qty:e.Q.paintInt,rate:R.paintIntSft,amt:e.Q.paintInt*R.paintIntSft},
+      {desc:'External painting (weather shield)',unit:uLabel,qty:e.Q.paintExt,rate:R.paintExtSft,amt:e.Q.paintExt*R.paintExtSft},
+      {desc:'Wood & metal painting',unit:uLabel,qty:e.Q.paintWood,rate:R.paintWoodSft,amt:e.Q.paintWood*R.paintWoodSft}
+    ]) +
+    detSec('10','Electrical Work',[
+      {desc:'Complete electrical ('+e.finishName+' — wiring, DB, switches, fixtures)',unit:uLabel,qty:e.Q.elecArea,rate:R.elecSft[e.finish],amt:e.Q.elecArea*R.elecSft[e.finish]}
+    ]) +
+    detSec('11','Plumbing & Sanitary',[
+      {desc:'Plumbing (CPVC/UPVC piping, '+e.finishName+')',unit:uLabel,qty:e.Q.plumbArea,rate:R.plumbSft[e.finish],amt:e.Q.plumbArea*R.plumbSft[e.finish]},
+      {desc:'Sanitary fixtures — '+e.bath+' bath x '+e.floors+' fl',unit:'Sets',qty:e.Q.sanitarySets,rate:R.sanitarySet[e.finish],amt:e.Q.sanitarySets*R.sanitarySet[e.finish]},
+      {desc:'Kitchen sinks — '+e.kit+' x '+e.floors+' fl',unit:'Nos',qty:e.Q.kitchenSinks,rate:R.kitchenSink[e.finish],amt:e.Q.kitchenSinks*R.kitchenSink[e.finish]},
+      {desc:'Overhead water tank',unit:'Nos',qty:e.Q.oht,rate:R.oht,amt:e.Q.oht*R.oht},
+      {desc:'Septic tank / sewer connection',unit:'Nos',qty:e.Q.septic,rate:R.septic,amt:e.Q.septic*R.septic}
+    ]) +
+    detSec('12','Miscellaneous',[
+      {desc:'Main gate',unit:'Nos',qty:e.Q.gate,rate:R.gate,amt:e.Q.gate*R.gate},
+      {desc:'Compound wall',unit:'Rft',qty:e.Q.compound,rate:R.compoundRft,amt:e.Q.compound*R.compoundRft}
+    ]);
+
+  var budgetHtml = e.budgetNote ? '<div style="border:2px solid #f85149;border-radius:4px;padding:10px;background:#fff5f5;font-size:9pt;color:#c2410c;margin-top:12px"><b>⚠ Budget Cap Notice:</b> '+e.budgetNote+'. Structural components unchanged. Finishing & contingencies value-engineered.</div>' : '';
+
+  var pdfHtml = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Estimate - '+(gid('projName').value||'Project')+'</title>' +
+  '<style>@page{size:A4;margin:14mm}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}html,body{background:#fff!important;color:#000!important;font-family:Arial,Helvetica,sans-serif;font-size:9.5pt;line-height:1.5}.wm{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-size:72pt;font-weight:900;color:rgba(0,0,0,.035);letter-spacing:8px;text-transform:uppercase;pointer-events:none;z-index:0}.content{position:relative;z-index:1}.hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #000;padding-bottom:8px;margin-bottom:12px}.hdr-left{display:flex;align-items:flex-start;gap:10px}.hdr-logo{width:38px;height:38px;background:#000;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17pt;font-weight:900;flex-shrink:0}.hdr-co{font-size:13pt;font-weight:700;letter-spacing:.5px}.hdr-sub{font-size:8pt;color:#444;margin-top:2px}.hdr-title{font-size:15pt;font-weight:900;letter-spacing:2px;text-transform:uppercase;border:2px solid #000;padding:3px 14px;display:inline-block}.hdr-meta{font-size:8pt;color:#555;margin-top:5px;text-align:right}.ibox{border:1px solid #000;border-radius:3px;overflow:hidden;margin-bottom:12px}.ibox-head{background:#000!important;color:#fff!important;padding:4px 10px;font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:1px}.ibox-body{padding:7px 10px;font-size:9pt}.irow{margin-bottom:1px}.ilbl{font-weight:600;color:#555;font-size:8pt;text-transform:uppercase}.igrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}.abs-tbl{width:100%;border-collapse:collapse;font-size:9pt;margin-bottom:8px}.abs-tbl th{text-align:left;padding:5px 8px;background:#000!important;color:#fff!important;font-size:8pt;letter-spacing:.5px}.abs-tbl td{padding:4px 8px;border-bottom:1px solid #ddd}.abs-tbl .amt{text-align:right;font-weight:700}.abs-tbl .tot td{border-top:2px solid #000;font-weight:900;font-size:10.5pt;padding-top:6px}.abs-tbl .tot .amt{font-size:11pt}.words{border:1px solid #000;border-radius:3px;padding:7px 10px;background:#f9f9f9!important;margin-bottom:12px}.words-lbl{font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#555;margin-bottom:2px}.words-val{font-size:9.5pt;font-weight:700;font-style:italic}.pb-break{page-break-before:always}.sig{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:28px}.sig-box{text-align:center}.sig-lbl{font-size:8pt;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.5px}.sig-line{margin-top:35px;border-bottom:1px solid #000}.seal{margin-top:35px;height:55px;border:1px dashed #aaa;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:8pt}.ftr{position:fixed;bottom:0;left:0;right:0;padding:5px 14mm;border-top:1px solid #ccc;display:flex;justify-content:space-between;font-size:7pt;color:#666;background:#fff!important}.ftr-b{font-weight:700;color:#000}@media print{html,body{background:#fff!important;color:#000!important}.abs-tbl th{background:#000!important;color:#fff!important}.words{background:#f9f9f9!important}.ftr{background:#fff!important}}</style></head><body>' +
+  '<div class="wm">PRODIFY</div><div class="content">' +
+  '<div class="hdr"><div class="hdr-left"><div class="hdr-logo">P</div><div><div class="hdr-co">Construction Cost Estimate</div><div class="hdr-sub">Detailed & Abstract · Plinth Area Method · '+d.name+'</div></div></div><div style="text-align:right"><div class="hdr-title">ESTIMATE</div><div class="hdr-meta">Ref: <b>'+(gid('estRef').value||'—')+'</b><br>Date: <b>'+estDateFmt+'</b></div></div></div>' +
+  '<div class="igrid"><div class="ibox"><div class="ibox-head">Project Details</div><div class="ibox-body"><div class="irow"><span class="ilbl">Project:</span> <b>'+(gid('projName').value||'—')+'</b></div><div class="irow"><span class="ilbl">Client:</span> '+(gid('clientName').value||'—')+'</div><div class="irow"><span class="ilbl">Location:</span> '+(gid('siteLocation').value||'—')+'</div><div class="irow"><span class="ilbl">Building:</span> '+e.bTypeName+' · '+e.structName+'</div><div class="irow"><span class="ilbl">Floors:</span> '+e.floors+' × '+dispArea+' '+uLabel+' = '+dispTotal+' '+uLabel+'</div></div></div><div class="ibox"><div class="ibox-head">Engineer & Specifications</div><div class="ibox-body"><div class="irow"><span class="ilbl">Engineer:</span> <b>'+(gid('engName').value||'—')+'</b></div><div class="irow"><span class="ilbl">License:</span> '+(gid('engLic').value||'—')+'</div><div class="irow"><span class="ilbl">Foundation:</span> '+e.foundName+' · '+e.soilName+'</div><div class="irow"><span class="ilbl">Finish:</span> '+e.finishName+' · Roof: '+e.roofName+'</div><div class="irow"><span class="ilbl">Rooms:</span> '+e.bed+' Bed · '+e.bath+' Bath · '+e.kit+' Kitchen · '+e.liv+' Living</div></div></div></div>' +
+  '<table class="abs-tbl"><thead><tr><th style="width:28px">#</th><th>Section</th><th style="text-align:right;width:120px">Amount ('+d.curr+')</th></tr></thead><tbody>'+absRows+'</tbody></table>' +
+  '<div class="words"><div class="words-lbl">Amount in Words</div><div class="words-val">'+words+'</div></div>' +
+  budgetHtml +
+  '<div class="sig"><div class="sig-box"><div class="sig-lbl">Prepared By</div><div class="sig-line"></div><div style="font-size:8pt;margin-top:3px"><b>'+(gid('engName').value||'—')+'</b><br>Lic: '+(gid('engLic').value||'—')+'</div></div><div class="sig-box"><div class="sig-lbl">Checked By</div><div class="sig-line"></div></div><div class="sig-box"><div class="sig-lbl">Client Acceptance</div><div class="sig-line"></div><div class="seal">[ AFFIX SEAL ]</div></div></div>' +
+  '<div class="pb-break"></div>' +
+  '<div class="hdr" style="border-bottom-width:2px"><div class="hdr-left"><div class="hdr-logo">P</div><div><div class="hdr-co" style="font-size:11pt">Detailed Estimate</div><div class="hdr-sub">'+(gid('projName').value||'—')+' · '+estDateFmt+'</div></div></div><div style="text-align:right;font-size:9pt"><b>'+dispTotal+' '+uLabel+'</b> · '+e.floors+' Floors · '+e.finishName+' '+e.bTypeName+'</div></div>' +
+  detailed +
+  '<div class="sig" style="margin-top:24px"><div class="sig-box"><div class="sig-lbl">Prepared By</div><div class="sig-line"></div></div><div class="sig-box"><div class="sig-lbl">Checked By</div><div class="sig-line"></div></div><div class="sig-box"><div class="sig-lbl">Approved By</div><div class="sig-line"></div></div></div></div>' +
+  '<div class="ftr"><span>Generated by <span class="ftr-b">Prodify</span> — Production Simplified &nbsp;|&nbsp; '+(gid('projName').value||'')+'</span><span>'+(gid('estRef').value||'')+' &nbsp;|&nbsp; '+genDate+'</span></div>' +
+  '<script>setTimeout(function(){window.print();},500);<\/script></body></html>';
+
+  var w = window.open('','_blank');
+  if(!w) { alert('Pop-up blocked! Please allow pop-ups for this site to generate the PDF.'); return; }
+  w.document.write(pdfHtml);
+  w.document.close();
+}
+
+onCountryChange();
+</script>
+</body>
+</html>
