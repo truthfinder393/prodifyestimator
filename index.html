@@ -3,1674 +3,461 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prodify Green Nexus — Sustainability Intelligence</title>
+<title>ARC - Adaptive Regenerative Conservation</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#050D08;--bg2:#091409;--card:#0B1C0F;--card2:#0F2215;
-  --border:#163020;--border2:#1E4030;
-  --em:#0FBF7A;--em2:#0D9960;--gold:#C8970F;--amber:#F59E0B;
-  --red:#E84444;--blue:#3B82F6;--cyan:#08B8D4;--purple:#8B5CF6;--rose:#F43F5E;
-  --fg:#E4F2E8;--fg2:#B8D4BE;--muted:#5A9470;
-  --r1:12px;--r2:10px;--r3:8px;
-  --sh:0 4px 24px rgba(0,0,0,.45);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden}
-h1,h2,h3,h4,h5{font-family:'Syne',sans-serif}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+:root{--bg:#071a0b;--bg2:#0f2514;--card:rgba(18,42,24,0.75);--text:#E4F0E6;--muted:#7fa886;--accent:#d4a83a;--accent2:#30c770;--accent3:#d07840;--border:rgba(120,170,128,0.16)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Playfair Display',serif}
+canvas#bgC{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.sn{display:flex;align-items:center;justify-content:center;padding:1rem;position:relative;z-index:20;gap:0}
+.sd{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;border:2px solid var(--border);background:var(--bg2);color:var(--muted);transition:all .35s;flex-shrink:0}
+.sd.act{border-color:var(--accent);background:linear-gradient(135deg,var(--accent),#e0be50);color:#0a1a0d;box-shadow:0 0 16px rgba(212,168,58,.45)}
+.sd.dn{border-color:var(--accent2);background:var(--accent2);color:#0a1a0d}
+.sl{width:28px;height:2px;background:var(--border);transition:background .35s;flex-shrink:0}.sl.dn{background:var(--accent2)}
+.wrap{position:relative;z-index:10;max-width:1080px;margin:0 auto;padding:0 1.2rem 2.5rem}
+.ss{display:none;animation:fu .45s ease}.ss.on{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.gc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;backdrop-filter:blur(10px);margin-bottom:1.2rem}
+.fg{margin-bottom:.9rem}.fg label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:.25rem;font-weight:500}
+.fi{width:100%;padding:.55rem .8rem;background:rgba(7,26,11,.75);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border .25s}
+.fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(212,168,58,.12)}
+.fi::placeholder{color:rgba(127,168,134,.4)}
+select.fi{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%237fa886' stroke-width='1.3' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.bp{padding:.6rem 1.4rem;background:linear-gradient(135deg,var(--accent),#e0be50);color:#0a1a0d;font-weight:700;font-size:.88rem;border:none;border-radius:9px;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif}
+.bp:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(212,168,58,.35)}
+.bs{padding:.5rem 1.1rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:9px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.84rem;transition:all .3s}
+.bs:hover{border-color:var(--accent2);color:var(--accent2)}
+.bd{background:rgba(200,50,50,.12);border:1px solid rgba(200,50,50,.25);color:#e05050;border-radius:6px;padding:.25rem .5rem;cursor:pointer;font-size:.72rem;transition:all .25s}.bd:hover{background:rgba(200,50,50,.25)}
+.mt{width:100%;border-collapse:separate;border-spacing:0;font-size:.78rem}
+.mt th{padding:.5rem .35rem;text-align:left;color:var(--accent);font-weight:600;border-bottom:2px solid var(--border);font-size:.7rem;text-transform:uppercase;letter-spacing:.04em}
+.mt td{padding:.35rem;vertical-align:middle;border-bottom:1px solid rgba(120,170,128,.06)}
+.mi{width:100%;padding:.3rem .45rem;background:rgba(7,26,11,.6);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.76rem;outline:none;font-family:'DM Sans',sans-serif}
+.mi:focus{border-color:var(--accent)}
+select.mi{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M1 1l3.5 3.5L8 1' stroke='%237fa886' stroke-width='1' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center}
+.gb{display:inline-block;padding:.12rem .45rem;background:rgba(48,199,112,.1);color:var(--accent2);border-radius:5px;font-size:.7rem;font-weight:600}
+.cb{display:inline-block;padding:.12rem .45rem;background:rgba(212,168,58,.1);color:var(--accent);border-radius:5px;font-size:.7rem;font-weight:600}
+.pc{background:rgba(18,42,24,.45);border:1px solid var(--border);border-radius:11px;padding:1rem;transition:all .3s}.pc:hover{border-color:var(--accent2);transform:translateY(-2px)}
+.sr{position:relative;width:190px;height:190px;margin:0 auto}.sr svg{transform:rotate(-90deg)}.sr .sv{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.lb-bg{height:8px;background:rgba(120,170,128,.1);border-radius:4px;overflow:hidden}.lb-fl{height:100%;border-radius:4px;transition:width 1.4s ease}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.65rem 1.2rem;border-radius:9px;font-size:.84rem;z-index:9999;transform:translateX(130%);transition:transform .4s}.toast.show{transform:translateX(0)}
+.ts{background:rgba(48,199,112,.14);border:1px solid rgba(48,199,112,.28);color:var(--accent2)}
+.ti{background:rgba(212,168,58,.14);border:1px solid rgba(212,168,58,.28);color:var(--accent)}
 
-/* ─── ANIMATIONS ─── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes fadeOut{to{opacity:0;visibility:hidden}}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse2{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.6)}}
-@keyframes glow{0%,100%{box-shadow:0 0 8px rgba(15,191,122,.2)}50%{box-shadow:0 0 28px rgba(15,191,122,.55)}}
-@keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
-@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
-
-/* ─── GLASSMORPHISM ─── */
-.glass{background:rgba(11,28,15,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(22,48,32,.6)}
-.glass2{background:rgba(15,34,21,.5);backdrop-filter:blur(10px);border:1px solid rgba(30,64,48,.5)}
-
-/* ─── TOAST ─── */
-#toasts{position:fixed;top:14px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:6px;pointer-events:none}
-.toast{padding:9px 14px;border-radius:8px;font-size:11px;color:#fff;animation:slideIn .3s;pointer-events:auto;display:flex;align-items:center;gap:7px;box-shadow:var(--sh);font-weight:600}
-.toast.out{animation:fadeOut .3s forwards}
-
-/* ─── SPLASH ─── */
-#splash{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;background:var(--bg)}
-#splash canvas{position:absolute;inset:0;width:100%;height:100%}
-#splash .sc{position:relative;z-index:2;text-align:center}
-#splash.hide{animation:fadeOut .8s forwards;pointer-events:none}
-.spin-ring{animation:spin 1s linear infinite}
-.dot-pulse{width:7px;height:7px;border-radius:50%;background:var(--em);animation:pulse2 2s infinite}
-.logo-glow{animation:glow 2.5s infinite}
-
-/* ─── PROGRESS STEPPER ─── */
-#stepBar{position:sticky;top:0;z-index:40;background:rgba(5,13,8,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:10px 16px}
-.step-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid var(--border2);color:var(--muted);background:var(--bg);transition:all .3s;cursor:pointer;flex-shrink:0}
-.step-dot.active{border-color:var(--em);color:var(--em);background:rgba(15,191,122,.12);animation:glow 2.5s infinite}
-.step-dot.done{border-color:var(--em);color:var(--bg);background:var(--em)}
-.step-line{flex:1;height:2px;background:var(--border);transition:background .4s}
-.step-line.done{background:var(--em)}
-
-/* ─── FORM INPUTS ─── */
-.inp{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:8px 11px;font-size:12px;color:var(--fg);outline:none;font-family:'Space Grotesk',sans-serif;transition:border-color .2s}
-.inp:focus{border-color:var(--em)}
-.sel{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:8px 8px;font-size:12px;color:var(--fg);outline:none;font-family:'Space Grotesk',sans-serif}
-.lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px;font-weight:600}
-
-/* ─── BUTTONS ─── */
-.btn-primary{padding:9px 20px;border-radius:var(--r3);font-size:12px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--em),var(--em2));color:var(--bg);border:none;font-family:'Space Grotesk',sans-serif;transition:all .15s}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(15,191,122,.25)}
-.btn-ghost{padding:8px 16px;border-radius:var(--r3);font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);border:1px solid var(--border);font-family:'Space Grotesk',sans-serif;transition:all .15s}
-.btn-ghost:hover{border-color:var(--em);color:var(--fg)}
-
-/* ─── QUESTION CARD ─── */
-.qcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:11px;margin-bottom:7px;transition:border-color .2s}
-.qcard:hover{border-color:var(--border2)}
-.opt{padding:5px 11px;border-radius:var(--r3);font-size:10px;cursor:pointer;border:1px solid var(--border);color:var(--muted);display:inline-block;margin:2px;transition:all .12s;font-weight:600}
-.opt:hover{border-color:var(--em);color:var(--fg)}
-.opt.sel{background:rgba(15,191,122,.15);border-color:var(--em);color:var(--em)}
-
-/* ─── CHECKBOX ─── */
-.chk{width:17px;height:17px;border-radius:4px;border:2px solid var(--border);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .12s;flex-shrink:0}
-.chk:hover{border-color:var(--em)}
-.chk.on{background:var(--em);border-color:var(--em)}
-
-/* ─── PROGRESS BAR ─── */
-.pbar{height:5px;border-radius:3px;background:var(--border);overflow:hidden}
-.pfill{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}
-
-/* ─── KPI CARD ─── */
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r1);padding:14px;transition:all .2s;position:relative;overflow:hidden}
-.kpi:hover{border-color:rgba(15,191,122,.35);transform:translateY(-1px)}
-.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--em),var(--gold));opacity:0;transition:opacity .2s}
-.kpi:hover::after{opacity:1}
-
-/* ─── MODAL ─── */
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.mo.show{display:flex;animation:fadeIn .2s}
-.mb{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;max-width:460px;width:94%;animation:fadeUp .3s}
-
-/* ─── RISK MATRIX CELL ─── */
-.rcell{display:flex;align-items:center;justify-content:center;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer;min-height:44px;border:1px solid transparent;transition:all .12s}
-.rcell:hover{transform:scale(1.07);z-index:4;box-shadow:0 4px 16px rgba(0,0,0,.5);border-color:rgba(255,255,255,.15)}
-
-/* ─── MAIN CONTENT ─── */
-#appWrap{max-width:700px;margin:0 auto;padding:20px 16px 60px}
-.scr{animation:fadeUp .3s ease}
-
-/* ─── CERT BADGE ─── */
-.cert{display:inline-block;padding:3px 10px;border-radius:10px;font-size:9px;font-weight:800;letter-spacing:.08em}
-
-/* ─── CAT TABS ─── */
-.catTab{padding:4px 10px;border-radius:6px;font-size:9px;font-weight:700;cursor:pointer;border:1px solid transparent;transition:all .15s;font-family:'Space Grotesk',sans-serif}
-.catTab:hover{background:rgba(15,191,122,.08)}
-.catTab.active{background:rgba(15,191,122,.15);color:var(--em);border-color:rgba(15,191,122,.3)}
-
-/* ─── PRINT ─── */
-@media print{
-  body{background:#fff!important;color:#111!important}
-  #splash,#stepBar,#appWrap{display:none!important}
-  #printZone{display:block!important}
-  #printZone *{color:#111!important;border-color:#ccc!important;background:transparent!important}
-  .cv{text-align:center;padding:48px 20px 36px;page-break-after:always}
-  .cv h1{font-size:22pt;margin-bottom:6px;color:#0a7d4a!important}
-  .cv .sub{font-size:9pt;color:#666!important;margin-bottom:10px}
-  .sec{page-break-inside:avoid;margin-bottom:14px;padding:10px;border:1px solid #ddd;border-radius:6px}
-  .sec h2{font-size:11pt;border-bottom:2px solid #0a7d4a!important;padding-bottom:4px;margin-bottom:8px;color:#0a7d4a!important;font-family:sans-serif}
-  table{width:100%;border-collapse:collapse;margin:4px 0;font-size:8pt}
-  th,td{border:1px solid #ccc;padding:4px 6px;text-align:left}
-  th{background:#e8f5ec!important;color:#0a7d4a!important;font-weight:700}
-  tr:nth-child(even) td{background:#f8faf8!important}
-  .green-warn{border:2px solid #0a7d4a;border-radius:8px;padding:10px;text-align:center;margin-top:14px;font-size:8pt;color:#0a7d4a!important}
-  .summary-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:12px}
-  .sum-box{border:1px solid #ccc;border-radius:6px;padding:8px;text-align:center}
-  .sum-box .big{font-size:14pt;font-weight:800;color:#0a7d4a!important;display:block}
-  .sum-box .sm{font-size:7pt;color:#666!important}
-}
-
-/* ─── RESPONSIVE ─── */
-@media(max-width:640px){
-  .grid2{grid-template-columns:1fr!important}
-  .grid3{grid-template-columns:1fr 1fr!important}
-  .grid4{grid-template-columns:1fr 1fr!important}
-}
+/* Hero */
+.hero-wrap{min-height:82vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 0 1rem}
+.arc-letters{display:flex;align-items:flex-start;justify-content:center;gap:clamp(.8rem,3vw,2rem);margin-bottom:.5rem}
+.arc-letter-unit{display:flex;flex-direction:column;align-items:center}
+.arc-ltr{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(4.5rem,13vw,8.5rem);line-height:1}
+.arc-ext{font-family:'DM Sans',sans-serif;font-size:clamp(.6rem,1.5vw,.85rem);font-weight:500;letter-spacing:.14em;text-transform:uppercase;margin-top:.3rem}
+.hero-desc{max-width:520px;margin:1.5rem auto 0;font-size:clamp(.88rem,2vw,1.05rem);font-weight:300;color:var(--muted);line-height:1.6}
+.hero-stats{display:flex;gap:2.5rem;margin:1.8rem 0;justify-content:center;flex-wrap:wrap}
+.hero-stat .num{font-size:1.5rem;font-weight:900;font-family:'Playfair Display',serif}
+.hero-stat .lab{font-size:.72rem;color:var(--muted);margin-top:.1rem}
+.founder{display:inline-flex;align-items:center;gap:8px;background:rgba(212,168,58,.06);border:1px solid rgba(212,168,58,.18);border-radius:9px;padding:.4rem .85rem;font-size:.78rem;color:var(--accent);margin-top:1.5rem}
+.founder .fn{font-weight:700;color:var(--text)}.founder .fr{color:var(--muted);font-size:.68rem}
+.cc{background:rgba(18,42,24,.45);border:1px solid var(--border);border-radius:11px;padding:1.1rem;text-align:center;transition:all .3s;cursor:pointer;text-decoration:none;display:block}.cc:hover{border-color:var(--accent2);transform:translateY(-2px)}
+.cc-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin:0 auto .6rem;font-size:1.1rem}
+.fc{position:fixed;bottom:1.2rem;left:1.2rem;z-index:100}
+.fc-btn{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#22a85a);border:none;color:#fff;font-size:1rem;cursor:pointer;box-shadow:0 4px 16px rgba(48,199,112,.35);transition:all .3s;display:flex;align-items:center;justify-content:center}
+.fc-btn:hover{transform:scale(1.1)}
+.fc-panel{position:absolute;bottom:52px;left:0;background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:.9rem;width:240px;opacity:0;pointer-events:none;transform:translateY(8px);transition:all .3s}.fc-panel.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+.fc-link{display:flex;align-items:center;gap:7px;padding:.45rem .55rem;border-radius:6px;text-decoration:none;color:var(--text);transition:all .2s;font-size:.8rem}.fc-link:hover{background:rgba(48,199,112,.08);color:var(--accent2)}
+@media(max-width:768px){.gc{padding:1rem}.sl{width:14px}.sd{width:26px;height:26px;font-size:.62rem}.arc-letters{gap:.5rem}.arc-ext{font-size:.55rem;letter-spacing:.08em}}
 </style>
 </head>
 <body>
+<canvas id="bgC"></canvas>
+<div id="toast" class="toast ts"></div>
 
-<!-- TOAST -->
-<div id="toasts"></div>
-
-<!-- PRINT ZONE -->
-<div id="printZone" style="display:none;padding:20px;max-width:900px;margin:0 auto;font-family:sans-serif"></div>
-
-<!-- SPLASH -->
-<div id="splash">
-  <canvas id="splashCanvas"></canvas>
-  <div class="sc">
-    <div class="logo-glow" style="display:inline-block;margin-bottom:18px">
-      <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#0FBF7A,#C8970F);display:flex;align-items:center;justify-content:center;margin:0 auto">
-        <i class="fas fa-leaf" style="font-size:26px;color:#050D08"></i>
-      </div>
-    </div>
-    <h1 style="font-size:24px;background:linear-gradient(135deg,#0FBF7A,#C8970F);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px">Prodify Green Nexus</h1>
-    <p style="font-size:11px;color:#5A9470;margin-bottom:24px">Sustainability Intelligence Platform</p>
-    <div style="display:flex;align-items:center;justify-content:center;gap:10px">
-      <div style="width:18px;height:18px;border:2px solid #0FBF7A;border-top-color:transparent;border-radius:50%" class="spin-ring"></div>
-      <span style="font-size:11px;color:#5A9470">Initializing Sustainability Intelligence Engine…</span>
-    </div>
+<div class="fc">
+  <div class="fc-panel" id="fcP">
+    <div style="font-weight:700;font-size:.84rem;margin-bottom:.5rem;color:var(--accent);"><i class="fas fa-address-book" style="margin-right:4px;"></i>Contact</div>
+    <a href="https://www.linkedin.com/in/aravind-vijayan-3a877710b" target="_blank" rel="noopener noreferrer" class="fc-link"><i class="fab fa-linkedin" style="color:#0A66C2;"></i><div>LinkedIn<span style="font-size:.65rem;color:var(--muted);display:block;">Aravind Vijayan</span></div></a>
+    <a href="mailto:aravindvijayan193@gmail.com" class="fc-link"><i class="fas fa-envelope" style="color:var(--accent2);"></i><div>Email<span style="font-size:.65rem;color:var(--muted);display:block;">aravindvijayan193@gmail.com</span></div></a>
+    <div style="border-top:1px solid var(--border);margin-top:.4rem;padding-top:.4rem;font-size:.65rem;color:var(--muted);text-align:center;">Founded by <strong style="color:var(--accent);">Eng. Aravind Vijayan</strong></div>
   </div>
+  <button class="fc-btn" onclick="document.getElementById('fcP').classList.toggle('open')" aria-label="Contact"><i class="fas fa-headset"></i></button>
 </div>
 
-<!-- RISK MODAL -->
-<div class="mo" id="riskModal">
-  <div class="mb">
-    <h3 style="font-size:14px;margin-bottom:12px">Add Risk Entry</h3>
-    <div style="display:flex;flex-direction:column;gap:9px">
-      <div><label class="lbl">Description *</label><input type="text" id="rDesc" class="inp" placeholder="e.g., Flash flood risk during construction"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
-        <div><label class="lbl">Likelihood (1–5)</label>
-          <select id="rL" class="sel"><option value="1">1 – Rare</option><option value="2">2 – Unlikely</option><option value="3" selected>3 – Possible</option><option value="4">4 – Likely</option><option value="5">5 – Almost Certain</option></select>
-        </div>
-        <div><label class="lbl">Impact (1–5)</label>
-          <select id="rI" class="sel"><option value="1">1 – Negligible</option><option value="2">2 – Minor</option><option value="3" selected>3 – Moderate</option><option value="4">4 – Major</option><option value="5">5 – Catastrophic</option></select>
-        </div>
-      </div>
-      <div><label class="lbl">Category</label>
-        <select id="rCat" class="sel"><option>Environmental</option><option>Health &amp; Safety</option><option>Operational</option><option>Regulatory</option><option>Financial</option><option>Structural</option><option>Cyber / Technology</option></select>
-      </div>
-      <div><label class="lbl">Treatment Strategy</label>
-        <select id="rTreat" class="sel"><option>Mitigate</option><option>Transfer (Insurance)</option><option>Avoid</option><option>Accept</option></select>
-      </div>
-    </div>
-    <div style="display:flex;justify-content:flex-end;gap:9px;margin-top:14px">
-      <button class="btn-ghost" onclick="el('riskModal').classList.remove('show')">Cancel</button>
-      <button class="btn-primary" id="rAddBtn">Add Risk</button>
-    </div>
-  </div>
+<div class="sn">
+  <div class="sd act" data-s="1">1</div><div class="sl"></div>
+  <div class="sd" data-s="2">2</div><div class="sl"></div>
+  <div class="sd" data-s="3">3</div><div class="sl"></div>
+  <div class="sd" data-s="4">4</div><div class="sl"></div>
+  <div class="sd" data-s="5">5</div><div class="sl"></div>
+  <div class="sd" data-s="6">6</div>
 </div>
 
-<!-- STEP BAR -->
-<div id="stepBar" style="display:none">
-  <div style="max-width:700px;margin:0 auto">
-    <div style="display:flex;align-items:center;gap:2px;margin-bottom:4px" id="stepperDots"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="display:flex;align-items:center;gap:7px">
-        <div style="width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#0FBF7A,#C8970F);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="fas fa-leaf" style="font-size:9px;color:#050D08"></i>
-        </div>
-        <span style="font-size:10px;font-weight:700;color:var(--fg)">Prodify Green Nexus</span>
-      </div>
-      <span style="font-size:9px;color:var(--muted)" id="stepHint"></span>
+<div class="wrap">
+
+<!-- STEP 1: HERO -->
+<section class="ss on" id="s1">
+  <div class="hero-wrap">
+    <div class="arc-letters">
+      <div class="arc-letter-unit"><div class="arc-ltr" style="color:var(--accent2);">A</div><div class="arc-ext" style="color:var(--accent2);">Adaptive</div></div>
+      <div class="arc-letter-unit"><div class="arc-ltr" style="color:var(--accent);">R</div><div class="arc-ext" style="color:var(--accent);">Regenerative</div></div>
+      <div class="arc-letter-unit"><div class="arc-ltr" style="color:var(--accent3);">C</div><div class="arc-ext" style="color:var(--accent3);">Conservation</div></div>
+    </div>
+    <p class="hero-desc">Assess, optimize, and transform your construction projects with green alternatives. Reduce carbon emissions, enhance energy efficiency, and build responsibly for future generations.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num" style="color:var(--accent2);" id="ctr">0+</div><div class="lab">Materials Indexed</div></div>
+      <div class="hero-stat"><div class="num" style="color:var(--accent);">2</div><div class="lab">Regions Covered</div></div>
+      <div class="hero-stat"><div class="num" style="color:var(--accent3);">LEED</div><div class="lab">Aligned Scoring</div></div>
+    </div>
+    <button class="bp" onclick="go(2)" style="padding:.85rem 2.8rem;font-size:1rem;"><i class="fas fa-leaf" style="margin-right:7px;"></i>Start Green Assessment</button>
+    <div class="founder"><i class="fas fa-crown" style="font-size:.82rem;"></i><div><span class="fn">Eng. Aravind Vijayan</span><span class="fr"> — Founder of ARC</span></div></div>
+  </div>
+  <div style="padding:1rem 0;">
+    <div style="text-align:center;margin-bottom:1.2rem;"><h3 style="font-size:1.3rem;margin-bottom:.2rem;">Get In Touch</h3><p style="color:var(--muted);font-size:.84rem;">Reach out for green building consultation.</p></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:440px;margin:0 auto;">
+      <a href="https://www.linkedin.com/in/aravind-vijayan-3a877710b" target="_blank" rel="noopener noreferrer" class="cc"><div class="cc-icon" style="background:rgba(10,102,194,.1);color:#0A66C2;"><i class="fab fa-linkedin-in"></i></div><h4 style="font-size:.9rem;color:var(--text);">LinkedIn</h4><p style="color:var(--muted);font-size:.72rem;margin-top:.2rem;">Connect with Aravind Vijayan</p></a>
+      <a href="mailto:aravindvijayan193@gmail.com" class="cc"><div class="cc-icon" style="background:rgba(48,199,112,.1);color:var(--accent2);"><i class="fas fa-envelope"></i></div><h4 style="font-size:.9rem;color:var(--text);">Email</h4><p style="color:var(--muted);font-size:.72rem;margin-top:.2rem;">aravindvijayan193@gmail.com</p></a>
+    </div>
+    <div style="text-align:center;margin-top:1rem;"><div class="founder" style="display:inline-flex;"><i class="fas fa-seedling" style="font-size:.78rem;color:var(--accent2);"></i><div><span class="fn">Eng. Aravind Vijayan</span><span class="fr"> — Founder of ARC</span></div></div></div>
+  </div>
+</section>
+
+<!-- STEP 2: PROJECT INFO -->
+<section class="ss" id="s2">
+  <div class="gc">
+    <h2 style="font-size:1.35rem;margin-bottom:.2rem;">Project Information</h2>
+    <p style="color:var(--muted);font-size:.84rem;margin-bottom:1.1rem;">Provide your project details for tailored green recommendations.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+      <div class="fg"><label>Project Name</label><input type="text" class="fi" id="projName" placeholder="e.g. Green Towers Phase II"></div>
+      <div class="fg"><label>Full Name</label><input type="text" class="fi" id="userName" placeholder="Your full name"></div>
+      <div class="fg"><label>Organization</label><input type="text" class="fi" id="userOrg" placeholder="Organization name"></div>
+      <div class="fg"><label>City</label><input type="text" class="fi" id="userCity" placeholder="e.g. Dubai, Mumbai"></div>
+      <div class="fg"><label>Project Type</label><select class="fi" id="projectType"><option value="">Select</option><option value="residential">Residential</option><option value="commercial">Commercial</option><option value="industrial">Industrial</option><option value="institutional">Institutional</option><option value="mixeduse">Mixed-Use</option><option value="infra">Infrastructure</option></select></div>
+      <div class="fg"><label>Construction Mode</label><select class="fi" id="constrMode"><option value="">Select</option><option value="rcc">RCC Framed</option><option value="steel">Steel Structure</option><option value="composite">Composite</option><option value="loadbearing">Load-Bearing Masonry</option><option value="prefab">Pre-Fabricated</option><option value="hybrid">Hybrid</option></select></div>
+      <div class="fg"><label>Location (Country)</label><select class="fi" id="location" onchange="updZ()"><option value="">Select</option><option value="UAE">United Arab Emirates</option><option value="India">India</option></select></div>
+      <div class="fg"><label>Climate Zone</label><select class="fi" id="climateZone"><option value="">Select country first</option></select></div>
+      <div class="fg"><label>Project Size (sqm)</label><input type="number" class="fi" id="projSize" placeholder="e.g. 5000"></div>
+      <div class="fg"><label>Number of Floors</label><input type="number" class="fi" id="numFloors" placeholder="e.g. 10" min="1"></div>
+      <div class="fg" style="grid-column:1/3;"><label>Soil Type</label><select class="fi" id="soilType"><option value="">Select</option><option value="clay">Clay</option><option value="sandy">Sandy</option><option value="loamy">Loamy</option><option value="rocky">Rocky</option><option value="silt">Silt</option><option value="marshy">Marshy</option><option value="laterite">Laterite</option><option value="blackcotton">Black Cotton</option></select></div>
     </div>
   </div>
-</div>
+  <div style="display:flex;gap:.7rem;justify-content:flex-end;"><button class="bs" onclick="go(1)"><i class="fas fa-arrow-left" style="margin-right:4px;"></i>Back</button><button class="bp" onclick="v2()">Next <i class="fas fa-arrow-right" style="margin-left:4px;"></i></button></div>
+</section>
 
-<!-- APP WRAP -->
-<div id="appWrap" style="display:none"></div>
+<!-- STEP 3 -->
+<section class="ss" id="s3">
+  <div class="gc">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.7rem;margin-bottom:.8rem;">
+      <div><h2 style="font-size:1.35rem;margin-bottom:.1rem;">Material Assessment</h2><p style="color:var(--muted);font-size:.78rem;">Select materials — ARC suggests greener alternatives.</p></div>
+      <button class="bp" onclick="addR()" style="padding:.4rem .85rem;font-size:.78rem;"><i class="fas fa-plus" style="margin-right:3px;"></i>Add</button>
+    </div>
+    <div style="overflow-x:auto;"><table class="mt"><thead><tr><th style="width:24px;">#</th><th style="min-width:155px;">Conventional Material</th><th style="min-width:115px;">Purpose</th><th style="min-width:170px;">Green Alternative</th><th style="width:62px;">CO₂</th><th style="width:44px;">Qty</th><th style="width:30px;"></th></tr></thead><tbody id="mBd"></tbody></table></div>
+    <p style="color:var(--muted);font-size:.7rem;margin-top:.5rem;"><i class="fas fa-info-circle" style="margin-right:3px;"></i>Up to 100 materials.</p>
+  </div>
+  <div style="display:flex;gap:.7rem;justify-content:flex-end;"><button class="bs" onclick="go(2)"><i class="fas fa-arrow-left" style="margin-right:4px;"></i>Back</button><button class="bp" onclick="v3()">Next <i class="fas fa-arrow-right" style="margin-left:4px;"></i></button></div>
+</section>
+
+<!-- STEP 4 -->
+<section class="ss" id="s4">
+  <div class="gc">
+    <h2 style="font-size:1.35rem;margin-bottom:.2rem;">Plot & Offset Details</h2>
+    <p style="color:var(--muted);font-size:.84rem;margin-bottom:1rem;">Boundary distances for vegetation and pit optimization.</p>
+    <div style="display:flex;justify-content:center;margin-bottom:1rem;">
+      <div style="position:relative;width:270px;height:190px;border:2px dashed var(--border);border-radius:7px;background:rgba(18,42,24,.25);">
+        <div style="position:absolute;top:5px;left:50%;transform:translateX(-50%);font-size:.63rem;color:var(--accent);text-align:center;">Front (Road)<br><span id="dF" style="color:var(--accent2);">—</span></div>
+        <div style="position:absolute;bottom:5px;left:50%;transform:translateX(-50%);font-size:.63rem;color:var(--accent);text-align:center;">Back<br><span id="dB" style="color:var(--accent2);">—</span></div>
+        <div style="position:absolute;left:4px;top:50%;transform:translateY(-50%) rotate(-90deg);font-size:.63rem;color:var(--accent);">L <span id="dL" style="color:var(--accent2);">—</span></div>
+        <div style="position:absolute;right:4px;top:50%;transform:translateY(-50%) rotate(90deg);font-size:.63rem;color:var(--accent);">R <span id="dR" style="color:var(--accent2);">—</span></div>
+        <div style="position:absolute;top:24px;left:24px;right:24px;bottom:24px;border:2px solid var(--accent2);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.66rem;color:var(--accent2);background:rgba(48,199,112,.04);">Building</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+      <div class="fg"><label>Front Offset to Road (m)</label><input type="number" class="fi" id="frontRoad" placeholder="6" min="0" step="0.5" oninput="uD()"></div>
+      <div class="fg"><label>Front Offset to Boundary (m)</label><input type="number" class="fi" id="frontBound" placeholder="3" min="0" step="0.5" oninput="uD()"></div>
+      <div class="fg"><label>Left Offset (m)</label><input type="number" class="fi" id="leftOffset" placeholder="3" min="0" step="0.5" oninput="uD()"></div>
+      <div class="fg"><label>Right Offset (m)</label><input type="number" class="fi" id="rightOffset" placeholder="3" min="0" step="0.5" oninput="uD()"></div>
+      <div class="fg"><label>Back Offset (m)</label><input type="number" class="fi" id="backOffset" placeholder="3" min="0" step="0.5" oninput="uD()"></div>
+      <div class="fg"><label>Plot Area (sqm)</label><input type="number" class="fi" id="plotArea" placeholder="800" min="0"></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:.7rem;justify-content:flex-end;"><button class="bs" onclick="go(3)"><i class="fas fa-arrow-left" style="margin-right:4px;"></i>Back</button><button class="bp" onclick="v4()">Next <i class="fas fa-arrow-right" style="margin-left:4px;"></i></button></div>
+</section>
+
+<!-- STEP 5 -->
+<section class="ss" id="s5">
+  <div class="gc">
+    <h2 style="font-size:1.35rem;margin-bottom:.2rem;">Vegetation Recommendations</h2>
+    <p style="color:var(--muted);font-size:.84rem;margin-bottom:1rem;">Zone-specific plants for carbon sequestration, temperature reduction, and beauty.</p>
+    <div id="plR" style="display:grid;gap:1rem;"></div>
+  </div>
+  <div style="display:flex;gap:.7rem;justify-content:flex-end;"><button class="bs" onclick="go(4)"><i class="fas fa-arrow-left" style="margin-right:4px;"></i>Back</button><button class="bp" onclick="go(6)">View Score <i class="fas fa-arrow-right" style="margin-left:4px;"></i></button></div>
+</section>
+
+<!-- STEP 6 -->
+<section class="ss" id="s6">
+  <div class="gc" style="text-align:center;padding:1.6rem 1rem;">
+    <p style="color:var(--accent);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;">ARC Green Assessment</p>
+    <h2 style="font-size:1.6rem;" id="rT">Project Green Score</h2>
+    <p style="color:var(--muted);font-size:.84rem;" id="rS"></p>
+  </div>
+  <div class="gc" style="text-align:center;">
+    <div class="sr"><svg width="190" height="190" viewBox="0 0 190 190"><circle cx="95" cy="95" r="82" fill="none" stroke="rgba(120,170,128,.08)" stroke-width="11"/><circle cx="95" cy="95" r="82" fill="none" stroke="url(#sg)" stroke-width="11" stroke-dasharray="515" stroke-dashoffset="515" stroke-linecap="round" id="sA"/><defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#30c770"/><stop offset="100%" style="stop-color:#d4a83a"/></linearGradient></defs></svg><div class="sv"><div style="font-size:2.4rem;font-weight:900;font-family:'Playfair Display',serif;color:var(--accent2);" id="sN">0</div><div style="font-size:.72rem;color:var(--muted);">/ 100</div></div></div>
+    <div style="margin-top:.5rem;font-size:.92rem;font-weight:600;" id="sL"></div>
+    <div style="display:flex;justify-content:center;gap:1.6rem;margin-top:1rem;flex-wrap:wrap;">
+      <div style="text-align:center;"><div style="font-size:1.2rem;font-weight:700;color:var(--accent2);" id="tC">0</div><div style="font-size:.68rem;color:var(--muted);">kg CO₂ Saved</div></div>
+      <div style="text-align:center;"><div style="font-size:1.2rem;font-weight:700;color:var(--accent);" id="tE">0</div><div style="font-size:.68rem;color:var(--muted);">% Energy</div></div>
+      <div style="text-align:center;"><div style="font-size:1.2rem;font-weight:700;color:var(--accent3);" id="tP">0</div><div style="font-size:.68rem;color:var(--muted);">Plant Species</div></div>
+    </div>
+  </div>
+  <div class="gc"><h3 style="font-size:1.1rem;margin-bottom:.6rem;">LEED-Aligned Scores</h3><div id="lB" style="display:grid;gap:.6rem;"></div></div>
+  <div class="gc"><h3 style="font-size:1.1rem;margin-bottom:.6rem;">Material Substitutions</h3><div style="overflow-x:auto;"><table class="mt"><thead><tr><th>Conventional</th><th>Green Alternative</th><th>Purpose</th><th>CO₂</th></tr></thead><tbody id="sB"></tbody></table></div></div>
+  <div class="gc"><h3 style="font-size:1.1rem;margin-bottom:.6rem;">Vegetation Summary</h3><div id="pS"></div></div>
+  <div class="gc" style="text-align:center;">
+    <h3 style="font-size:1.1rem;margin-bottom:.3rem;">Need Expert Consultation?</h3>
+    <p style="color:var(--muted);font-size:.8rem;margin-bottom:.7rem;">Contact the founder for green building guidance.</p>
+    <div style="display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;">
+      <a href="https://www.linkedin.com/in/aravind-vijayan-3a877710b" target="_blank" rel="noopener noreferrer" class="bs" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;"><i class="fab fa-linkedin" style="color:#0A66C2;"></i>LinkedIn</a>
+      <a href="mailto:aravindvijayan193@gmail.com" class="bs" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;"><i class="fas fa-envelope" style="color:var(--accent2);"></i>Email</a>
+    </div>
+    <div style="margin-top:.7rem;"><div class="founder" style="display:inline-flex;"><i class="fas fa-crown" style="font-size:.78rem;"></i><div><span class="fn">Eng. Aravind Vijayan</span><span class="fr"> — Founder of ARC</span></div></div></div>
+  </div>
+  <div style="display:flex;gap:.7rem;justify-content:flex-end;margin-top:.8rem;">
+    <button class="bs" onclick="go(5)"><i class="fas fa-arrow-left" style="margin-right:4px;"></i>Back</button>
+    <button class="bp" onclick="genPDF()"><i class="fas fa-file-pdf" style="margin-right:5px;"></i>Save as PDF</button>
+  </div>
+</section>
+
+</div>
 
 <script>
-/* ═══════════════════════════════════════════════════
-   DATA DEFINITIONS — All technical data for assessment
-   ═══════════════════════════════════════════════════ */
+// ARC — Adaptive Regenerative Conservation
+// 110 Materials | iframe PDF | Fixed Hero
 
-/* LEED v4.1 BD+C — Full credit structure with accurate points */
-const LEED_DATA = [
-  { cat:'Integrative Process', abbr:'IP', max:1, icon:'fa-arrows-spin', cr:[
-    { n:'Integrative Process', p:1, t:'y', prereq:false,
-      q:'Was an integrative design process conducted with cross-disciplinary team collaboration from pre-design stage, covering energy, water, site, and materials?',
-      ref:'LEED v4.1 BD+C IP Credit — Integrative Process' }
-  ]},
-  { cat:'Location & Transportation', abbr:'LT', max:16, icon:'fa-location-dot', cr:[
-    { n:'LEED for Neighborhood Development', p:16, t:'y', prereq:false,
-      q:'Is the project located within a LEED-certified Neighborhood Development plan boundary?',
-      note:'If yes, earns up to 16 pts — most LT credits inapplicable.',
-      ref:'LEED v4.1 LT Credit: LEED ND Location' },
-    { n:'Sensitive Land Protection', p:1, t:'y', prereq:false,
-      q:'Is the building located on previously developed land, avoiding prime farmland, floodplains, wetlands, water bodies, threatened species habitat, and public parkland?',
-      ref:'LEED v4.1 LT Credit: Sensitive Land Protection' },
-    { n:'High Priority Site', p:2, t:'c', prereq:false,
-      q:'What is the site\'s priority designation?',
-      o:[['Standard site / no priority',0],['Brownfield redevelopment',1],['EPA National Priority List + historic + community priority',2]],
-      ref:'LEED v4.1 LT Credit: High Priority Site' },
-    { n:'Surrounding Density & Diverse Uses', p:5, t:'c', prereq:false,
-      q:'What level of surrounding density and diverse uses exists within 800m walking distance?',
-      o:[['Low density / single use',0],['Moderate density / 4+ uses',3],['High density / 8+ uses within 400m',5]],
-      ref:'LEED v4.1 LT Credit: Surrounding Density' },
-    { n:'Access to Quality Transit', p:5, t:'c', prereq:false,
-      q:'Quality transit stops within walking distance with frequent service?',
-      o:[['No transit within 800m',0],['Bus/rail within 800m, <50 trips/day',2],['Within 400m, 50–99 trips/day',3],['Within 400m, 100+ weekday trips',5]],
-      ref:'LEED v4.1 LT Credit: Access to Quality Transit' },
-    { n:'Bicycle Facilities', p:1, t:'y', prereq:false,
-      q:'Are secure long-term bicycle storage racks (per LEED ratio) AND on-site shower/changing facilities provided for regular cyclists?',
-      ref:'LEED v4.1 LT Credit: Bicycle Facilities' },
-    { n:'Reduced Parking Footprint', p:1, t:'y', prereq:false,
-      q:'Is the designed parking capacity ≤30% below the local code minimum, OR zero parking provided?',
-      ref:'LEED v4.1 LT Credit: Reduced Parking' },
-    { n:'Green Vehicles', p:1, t:'y', prereq:false,
-      q:'Is preferred parking provided for green vehicles AND/OR Level 2 EV charging for ≥5% of total parking spaces?',
-      ref:'LEED v4.1 LT Credit: Green Vehicles' }
-  ]},
-  { cat:'Sustainable Sites', abbr:'SS', max:10, icon:'fa-seedling', cr:[
-    { n:'Construction Activity Pollution Prevention', p:0, t:'p', prereq:true,
-      q:'Is erosion and sedimentation control implemented per EPA Construction General Permit (CGP) requirements — including sediment basins, perimeter controls, and velocity dissipation?',
-      ref:'LEED v4.1 SS Prerequisite: Construction Pollution Prevention' },
-    { n:'Site Assessment', p:1, t:'y', prereq:false,
-      q:'Has a comprehensive site assessment been documented covering topography, hydrology, climate, soils, vegetation, wildlife, and transport?',
-      ref:'LEED v4.1 SS Credit: Site Assessment' },
-    { n:'Protect or Restore Habitat', p:2, t:'c', prereq:false,
-      q:'What percentage of the site (excluding footprint) is restored with native/adapted vegetation?',
-      o:[['Less than 25%',0],['25–49% of site area',1],['50% or more of site area',2]],
-      ref:'LEED v4.1 SS Credit: Protect or Restore Habitat' },
-    { n:'Open Space', p:1, t:'y', prereq:false,
-      q:'Is outdoor open space ≥30% of total site area, with ≥25% of that space vegetated (not hardscape)?',
-      ref:'LEED v4.1 SS Credit: Open Space' },
-    { n:'Rainwater Management', p:3, t:'c', prereq:false,
-      q:'What percentile storm event is managed on-site with zero increase in runoff rate/volume compared to natural hydrology?',
-      o:[['Less than 75th percentile managed',0],['75th percentile event managed',1],['85th percentile event managed',2],['95th percentile event managed',3]],
-      ref:'LEED v4.1 SS Credit: Rainwater Management' },
-    { n:'Heat Island Reduction', p:2, t:'c', prereq:false,
-      q:'Heat island mitigation measures installed?',
-      o:[['None or minimal',0],['High-reflectance roof OR 50%+ shaded/permeable hardscape',1],['Both high-reflectance roof AND hardscape measures',2]],
-      ref:'LEED v4.1 SS Credit: Heat Island Reduction' },
-    { n:'Light Pollution Reduction', p:1, t:'y', prereq:false,
-      q:'Does exterior lighting comply with IESNA/IDA zone illumination limits — reducing uplight, glare, and light trespass on neighboring sites?',
-      ref:'LEED v4.1 SS Credit: Light Pollution Reduction' }
-  ]},
-  { cat:'Water Efficiency', abbr:'WE', max:11, icon:'fa-droplet', cr:[
-    { n:'Outdoor Water Use Reduction — Prereq', p:0, t:'p', prereq:true,
-      q:'Is outdoor irrigation water use reduced ≥30% from a calculated midsummer baseline (no irrigation = automatic compliance)?',
-      ref:'LEED v4.1 WE Prerequisite: Outdoor Water Use Reduction' },
-    { n:'Indoor Water Use Reduction — Prereq', p:0, t:'p', prereq:true,
-      q:'Are all installed fixtures (lavatories, toilets, urinals, showers, kitchen sinks) ≥20% below the LEED baseline calculated using EPA WaterSense flow rates?',
-      ref:'LEED v4.1 WE Prerequisite: Indoor Water Use Reduction' },
-    { n:'Building-Level Water Metering — Prereq', p:0, t:'p', prereq:true,
-      q:'Is a permanent whole-building water meter installed with data sharing capability for USGBC portfolio benchmarking?',
-      ref:'LEED v4.1 WE Prerequisite: Water Metering' },
-    { n:'Outdoor Water Use Reduction', p:2, t:'c', prereq:false,
-      q:'Outdoor water reduction beyond the 30% prerequisite?',
-      o:[['30% reduction (prereq only)',0],['50% reduction',1],['No permanent irrigation / 70%+ reduction',2]],
-      ref:'LEED v4.1 WE Credit: Outdoor Water Reduction' },
-    { n:'Indoor Water Use Reduction', p:6, t:'c', prereq:false,
-      q:'Whole-building indoor water reduction percentage below LEED baseline (using WaterSense and EPA guidelines)?',
-      o:[['20–24% reduction',1],['25–29%',2],['30–34%',3],['35–39%',4],['40–44%',5],['≥45% reduction',6]],
-      ref:'LEED v4.1 WE Credit: Indoor Water — up to 6 pts' },
-    { n:'Cooling Tower Water Use', p:2, t:'c', prereq:false,
-      q:'Is cooling tower water use optimized using makeup water quality analysis?',
-      o:[['N/A (no cooling tower)',0],['Cycles of concentration optimized (minimum 10)',1],['Optimized cycles + ≥50% non-potable makeup water',2]],
-      ref:'LEED v4.1 WE Credit: Cooling Tower' },
-    { n:'Water Metering (Subsystems)', p:1, t:'y', prereq:false,
-      q:'Are permanent submeters installed on ≥2 major water-consuming systems (irrigation, indoor plumbing, cooling tower, etc.)?',
-      ref:'LEED v4.1 WE Credit: Water Metering' }
-  ]},
-  { cat:'Energy & Atmosphere', abbr:'EA', max:33, icon:'fa-bolt', cr:[
-    { n:'Fundamental Commissioning — Prereq', p:0, t:'p', prereq:true,
-      q:'Has fundamental building systems commissioning been conducted per ASHRAE Guideline 0-2019 and NIBS Guideline 3-2012?',
-      ref:'LEED v4.1 EA Prerequisite: Fundamental Cx' },
-    { n:'Minimum Energy Performance — Prereq', p:0, t:'p', prereq:true,
-      q:'Does the building demonstrate minimum energy performance ≥5% better than ASHRAE 90.1-2016 whole building baseline?',
-      ref:'LEED v4.1 EA Prerequisite: Minimum Energy' },
-    { n:'Building-Level Energy Metering — Prereq', p:0, t:'p', prereq:true,
-      q:'Is a permanent building-level energy meter (electricity and all fuels) installed with data sharing capability?',
-      ref:'LEED v4.1 EA Prerequisite: Energy Metering' },
-    { n:'No CFC Refrigerants — Prereq', p:0, t:'p', prereq:true,
-      q:'Are all base building HVAC&R systems free from CFC-based refrigerants? (Phaseout plan in place for existing systems?)',
-      ref:'LEED v4.1 EA Prerequisite: Fundamental Refrigerant Management' },
-    { n:'Enhanced Commissioning', p:6, t:'c', prereq:false,
-      q:'Enhanced commissioning scope?',
-      o:[['No enhanced commissioning',0],['Enhanced Cx + monitoring-based Cx + envelope Cx — 4 pts',4],['Enhanced Cx + envelope Cx + owner\'s project requirements verification',6]],
-      ref:'LEED v4.1 EA Credit: Enhanced Cx — 4 or 6 pts' },
-    { n:'Optimize Energy Performance', p:18, t:'s', prereq:false,
-      q:'Percentage improvement over ASHRAE 90.1-2016 cost baseline (Energy Modeling or Prescriptive Path)?',
-      mn:0, mx:60,
-      note:'Score: 6–9%=1pt, 10–14%=3pts, 15–19%=5pts, 20–24%=7pts, 25–29%=9pts, 30–34%=11pts, 35–39%=13pts, 40–44%=15pts, 45–49%=16pts, 50–54%=17pts, ≥55%=18pts',
-      ref:'LEED v4.1 EA Credit: Optimize Energy — up to 18 pts' },
-    { n:'Advanced Energy Metering', p:1, t:'y', prereq:false,
-      q:'Advanced sub-metering of all energy end uses >10% of annual consumption, with web-based tracking and 15-min interval data?',
-      ref:'LEED v4.1 EA Credit: Advanced Energy Metering' },
-    { n:'Demand Response', p:2, t:'c', prereq:false,
-      q:'Demand response capability installed?',
-      o:[['No demand response',0],['Capable of DR + plan to participate in utility programs',1],['Automated DR + interoperable with utility signals',2]],
-      ref:'LEED v4.1 EA Credit: Demand Response' },
-    { n:'Renewable Energy Production', p:5, t:'s', prereq:false,
-      q:'Percentage of annual building energy (cost) from on-site renewable energy generation?',
-      mn:0, mx:50,
-      note:'1%=1pt, 5%=2pts, 10%=3pts, 20%=4pts, 30%+=5pts',
-      ref:'LEED v4.1 EA Credit: Renewable Energy — up to 5 pts' },
-    { n:'Enhanced Refrigerant Management', p:1, t:'y', prereq:false,
-      q:'Do all HVAC&R refrigerants have ODP=0 and GWP<50? (or: total leakage impact calculated below LEED threshold of 100 kgCO2e/kWTon-year?)',
-      ref:'LEED v4.1 EA Credit: Enhanced Refrigerant Management' },
-    { n:'Green Power and Carbon Offsets', p:2, t:'c', prereq:false,
-      q:'Green power or renewable energy certificates / carbon offsets contracted?',
-      o:[['None',0],['50% of energy use for minimum 5 years (Green-e or equivalent)',1],['100% of energy use for minimum 5 years',2]],
-      ref:'LEED v4.1 EA Credit: Green Power & Carbon Offsets' }
-  ]},
-  { cat:'Materials & Resources', abbr:'MR', max:13, icon:'fa-recycle', cr:[
-    { n:'Storage & Collection of Recyclables — Prereq', p:0, t:'p', prereq:true,
-      q:'Is dedicated storage space provided for recyclables (mixed paper, corrugated cardboard, glass, plastics, metals) serving the entire building?',
-      ref:'LEED v4.1 MR Prerequisite: Storage & Collection' },
-    { n:'C&D Waste Management Planning — Prereq', p:0, t:'p', prereq:true,
-      q:'Has a Construction & Demolition waste management plan been developed identifying at least 5 materials and diversion targets?',
-      ref:'LEED v4.1 MR Prerequisite: C&D Waste Management Plan' },
-    { n:'Life-Cycle Impact Reduction', p:5, t:'c', prereq:false,
-      q:'Approach to reducing life-cycle environmental impacts of building materials?',
-      o:[['No specific approach',0],['Historic building / adaptive reuse ≥50% structure',3],['Whole-building LCA showing ≥10% reduction in ≥3 impact categories vs. baseline',5]],
-      ref:'LEED v4.1 MR Credit: LCA — up to 5 pts' },
-    { n:'Building Product Disclosure & Optimization — EPD', p:3, t:'c', prereq:false,
-      q:'Environmental Product Declarations and sourcing disclosure?',
-      o:[['No EPDs collected',0],['≥20 permanently installed products with EPDs',1],['≥20 EPDs + responsible sourcing for 25%+ by cost',2],['EPDs + responsible sourcing + material ingredient reporting',3]],
-      ref:'LEED v4.1 MR Credit: Product Disclosure — up to 3 pts' },
-    { n:'C&D Waste Diversion', p:2, t:'c', prereq:false,
-      q:'Percentage of C&D waste (by weight or volume) diverted from landfill?',
-      o:[['Less than 50% diverted',0],['50–74% diverted from landfill',1],['≥75% diverted, with 3+ material streams',2]],
-      ref:'LEED v4.1 MR Credit: C&D Waste Diversion' },
-    { n:'Whole-Building Life-Cycle Assessment', p:2, t:'c', prereq:false,
-      q:'Whole-building LCA completed with demonstrated reductions vs. functionally equivalent baseline?',
-      o:[['No LCA conducted',0],['LCA showing ≥10% reduction in ≥3 impact categories',2]],
-      ref:'LEED v4.1 MR Credit: Whole-Building LCA' }
-  ]},
-  { cat:'Indoor Environmental Quality', abbr:'IEQ', max:16, icon:'fa-wind', cr:[
-    { n:'Minimum IAQ Performance — Prereq', p:0, t:'p', prereq:true,
-      q:'Does the ventilation system meet or exceed ASHRAE 62.1-2016 for mechanically ventilated spaces (or ASHRAE 62.2 for residential)?',
-      ref:'LEED v4.1 IEQ Prerequisite: Minimum IAQ' },
-    { n:'Environmental Tobacco Smoke Control — Prereq', p:0, t:'p', prereq:true,
-      q:'Is smoking prohibited inside the building AND within 7.5m (25 ft) of all entries, operable windows, and outdoor air intakes?',
-      ref:'LEED v4.1 IEQ Prerequisite: Tobacco Smoke Control' },
-    { n:'Enhanced Indoor Air Quality Strategies', p:2, t:'c', prereq:false,
-      q:'Enhanced IAQ strategy package?',
-      o:[['Baseline only',0],['Entryway systems + MERV 13+ + CO2 monitoring in densely occupied spaces',1],['All above + cross-contamination prevention + filtration on recirculated air',2]],
-      ref:'LEED v4.1 IEQ Credit: Enhanced IAQ — 1 or 2 pts' },
-    { n:'Low-Emitting Materials', p:3, t:'c', prereq:false,
-      q:'Percentage of installed products meeting CDPH v1.2 (or equivalent) emission standards?',
-      o:[['<50% of product categories compliant',0],['≥50% by cost of applicable categories',1],['≥75% of applicable categories',2],['≥90% of all applicable product categories',3]],
-      ref:'LEED v4.1 IEQ Credit: Low-Emitting Materials — up to 3 pts' },
-    { n:'Construction IAQ Management Plan', p:1, t:'y', prereq:false,
-      q:'Was a construction IAQ management plan developed and implemented per SMACNA IAQ Guidelines, protecting ductwork and absorptive materials?',
-      ref:'LEED v4.1 IEQ Credit: Construction IAQ Management' },
-    { n:'IAQ Assessment', p:2, t:'c', prereq:false,
-      q:'Post-occupancy IAQ assessment conducted?',
-      o:[['No assessment',0],['Baseline air testing meets CDPH threshold limits',1],['Air testing + building flush-out (14,000 cf/sf or 3,500 cf/sf + 3.5 cf/sf supply air flush)',2]],
-      ref:'LEED v4.1 IEQ Credit: IAQ Assessment' },
-    { n:'Thermal Comfort', p:1, t:'y', prereq:false,
-      q:'Does the HVAC system maintain thermal comfort per ASHRAE 55-2017 in all occupied spaces, with individual thermal controls for ≥50% of occupants?',
-      ref:'LEED v4.1 IEQ Credit: Thermal Comfort' },
-    { n:'Interior Lighting', p:2, t:'c', prereq:false,
-      q:'Lighting quality measures?',
-      o:[['Basic code compliance only',0],['IES LM-83 compliance + task lighting + multi-level controls',1],['All above + daylight-responsive controls + ≥90 CRI lamps',2]],
-      ref:'LEED v4.1 IEQ Credit: Interior Lighting' },
-    { n:'Daylight', p:3, t:'c', prereq:false,
-      q:'Daylight autonomy in regularly occupied spaces (sDA300lux/50% annualized)?',
-      o:[['Less than 55% of floor area',0],['55–74% of floor area',1],['75%+ by simulation with annual glare control analysis',2],['75%+ by measurement (post-occupancy) or validated simulation',3]],
-      ref:'LEED v4.1 IEQ Credit: Daylight — up to 3 pts' },
-    { n:'Quality Views', p:1, t:'y', prereq:false,
-      q:'Do ≥75% of regularly occupied floor area have direct line-of-sight to the outdoors with view glazing ≥2.5m above floor?',
-      ref:'LEED v4.1 IEQ Credit: Quality Views' },
-    { n:'Acoustic Performance', p:1, t:'y', prereq:false,
-      q:'Do spaces meet ASHRAE 55 and ANSI S12.60 acoustic standards for STC ratings, background noise levels (RC/NC), and reverberation times?',
-      ref:'LEED v4.1 IEQ Credit: Acoustic Performance' }
-  ]},
-  { cat:'Innovation', abbr:'IN', max:6, icon:'fa-lightbulb', cr:[
-    { n:'Innovation Credits', p:5, t:'c', prereq:false,
-      q:'Innovative strategies achieved that significantly exceed LEED performance thresholds or address topics not covered by LEED?',
-      o:[['None',0],['1 innovation strategy',1],['2 strategies',2],['3 strategies',3],['4 strategies',4],['5 strategies',5]],
-      ref:'LEED v4.1 IN Credit: Innovation — up to 5 pts' },
-    { n:'LEED Accredited Professional', p:1, t:'y', prereq:false,
-      q:'Is at least one principal participant on the project team a LEED Accredited Professional (LEED AP with specialty)?',
-      ref:'LEED v4.1 IN Credit: LEED AP' }
-  ]},
-  { cat:'Regional Priority', abbr:'RP', max:4, icon:'fa-map-pin', cr:[
-    { n:'Regional Priority Credits', p:4, t:'c', prereq:false,
-      q:'How many USGBC-designated regional priority credits have been earned for your project location?',
-      o:[['None',0],['1 RP credit',1],['2 RP credits',2],['3 RP credits',3],['4 RP credits',4]],
-      note:'RP credits are pre-identified by USGBC for each zip code/location. For UAE/GCC, typically includes water efficiency, heat island, and energy credits.',
-      ref:'LEED v4.1 RP Credits: Location-specific' }
-  ]}
+const CM=[
+{id:1,n:"OPC Cement (Grade 43)",c:"Cement",p:["Structural Framework","Foundation","Plastering"]},
+{id:2,n:"OPC Cement (Grade 53)",c:"Cement",p:["High-Strength Concrete","Precast","Structural"]},
+{id:3,n:"PPC Cement",c:"Cement",p:["Marine Structures","Plastering","General Construction"]},
+{id:4,n:"Rapid Hardening Cement",c:"Cement",p:["Emergency Repairs","Cold Weather Concreting"]},
+{id:5,n:"Sulphate Resistant Cement",c:"Cement",p:["Foundation in Sulphate Soil","Marine Structures"]},
+{id:6,n:"White Cement",c:"Cement",p:["Architectural Finishes","Tile Grouting","Decorative"]},
+{id:7,n:"Red Clay Bricks",c:"Masonry",p:["Load-Bearing Walls","Partition Walls","Boundary Walls"]},
+{id:8,n:"Concrete Solid Blocks",c:"Masonry",p:["Load-Bearing Walls","Partition Walls"]},
+{id:9,n:"Hollow Concrete Blocks",c:"Masonry",p:["Partition Walls","Infill","Boundary Walls"]},
+{id:10,n:"Fly Ash Bricks",c:"Masonry",p:["Load-Bearing Walls","Partition Walls"]},
+{id:11,n:"AAC Blocks",c:"Masonry",p:["Partition Walls","Infill","Low-Rise Load-Bearing"]},
+{id:12,n:"Laterite Stone",c:"Masonry",p:["Load-Bearing Walls","Compound Walls","Foundation"]},
+{id:13,n:"Sun-Dried Clay Bricks",c:"Masonry",p:["Non-Load Bearing","Filler Walls","Temporary"]},
+{id:14,n:"CLC Blocks",c:"Masonry",p:["Partition Walls","Roof Insulation","Infill"]},
+{id:15,n:"Structural Steel (IS 2062)",c:"Steel",p:["Frame Structure","Beams & Columns","Roof Truss"]},
+{id:16,n:"TMT Bars (Fe500)",c:"Steel",p:["RCC Reinforcement","Slab","Column","Beam"]},
+{id:17,n:"TMT Bars (Fe500D)",c:"Steel",p:["Seismic-Resistant RCC","Ductile Frame"]},
+{id:18,n:"Cold-Formed Steel Sections",c:"Steel",p:["Purlins","Light Gauge Framing","Roof Decking"]},
+{id:19,n:"Galvanized Iron Sheets",c:"Steel",p:["Roofing","Cladding","Ducting","Flashing"]},
+{id:20,n:"Stainless Steel (304)",c:"Steel",p:["Handrails","Facade Elements","Kitchen Equipment"]},
+{id:21,n:"RCC",c:"Concrete",p:["Slabs","Beams","Columns","Foundations"]},
+{id:22,n:"Ready Mix Concrete (M25/M30)",c:"Concrete",p:["Slabs","Beams","Columns"]},
+{id:23,n:"High-Performance Concrete",c:"Concrete",p:["High-Rise Columns","Bridge Decks"]},
+{id:24,n:"Precast Concrete Elements",c:"Concrete",p:["Boundary Walls","Pavers","Beams"]},
+{id:25,n:"Shotcrete",c:"Concrete",p:["Tunnel Lining","Slope Protection","Pool Construction"]},
+{id:26,n:"Float Glass (Clear)",c:"Glass",p:["Windows","Curtain Walls","Skylights"]},
+{id:27,n:"Toughened Glass",c:"Glass",p:["Facades","Skylights","Doors","Partitions"]},
+{id:28,n:"Laminated Safety Glass",c:"Glass",p:["Overhead Glazing","Balustrades","Skylights"]},
+{id:29,n:"Tinted / Reflective Glass",c:"Glass",p:["Facades","Solar Control","Privacy Glazing"]},
+{id:30,n:"Wired Glass",c:"Glass",p:["Fire-Rated Glazing","Industrial Windows"]},
+{id:31,n:"Ceramic Tiles",c:"Flooring",p:["Flooring","Wall Cladding","Wet Areas"]},
+{id:32,n:"Vitrified Tiles",c:"Flooring",p:["Flooring","Wall Cladding"]},
+{id:33,n:"Porcelain Tiles",c:"Flooring",p:["High-Traffic Flooring","Exterior Paving"]},
+{id:34,n:"Granite Slabs",c:"Stone",p:["Flooring","Countertops","Cladding","Staircases"]},
+{id:35,n:"Marble Slabs",c:"Stone",p:["Flooring","Countertops","Wall Cladding","Foyers"]},
+{id:36,n:"Kota Stone",c:"Stone",p:["Flooring","Paving","Staircases","Verandahs"]},
+{id:37,n:"Sandstone",c:"Stone",p:["Cladding","Paving","Landscaping","Boundary Walls"]},
+{id:38,n:"Slate Stone",c:"Stone",p:["Roofing","Flooring","Wall Cladding"]},
+{id:39,n:"Terrazzo Flooring",c:"Flooring",p:["Flooring","Commercial","Institutional"]},
+{id:40,n:"Teak Wood",c:"Wood",p:["Doors","Windows","Furniture","Structural Members"]},
+{id:41,n:"Plywood (Commercial MR)",c:"Wood",p:["Doors","Furniture","Partitions","Ceiling"]},
+{id:42,n:"MDF Board",c:"Wood",p:["Furniture","Partitions","Wall Paneling"]},
+{id:43,n:"Particle Board",c:"Wood",p:["Furniture","Shelving","Partitions"]},
+{id:44,n:"Block Board",c:"Wood",p:["Doors","Table Tops","Shelving"]},
+{id:45,n:"Hardwood Timber",c:"Wood",p:["Flooring","Decking","Structural Beams"]},
+{id:46,n:"Softwood Timber (Pine/Deodar)",c:"Wood",p:["Formwork","False Ceiling","Paneling"]},
+{id:47,n:"PVC Pipes",c:"Plumbing",p:["Water Supply","Drainage","Sewage"]},
+{id:48,n:"Cast Iron Pipes",c:"Plumbing",p:["Soil Pipes","Rainwater Drainage","Sewage"]},
+{id:49,n:"GI Pipes",c:"Plumbing",p:["Water Supply","Gas Lines","Scaffolding"]},
+{id:50,n:"Copper Pipes",c:"Plumbing",p:["Hot Water Supply","HVAC","Medical Gas"]},
+{id:51,n:"CPVC Pipes",c:"Plumbing",p:["Hot & Cold Water Supply","Industrial Piping"]},
+{id:52,n:"HDPE Pipes",c:"Plumbing",p:["Water Supply","Gas Distribution","Sewage"]},
+{id:53,n:"Copper Wiring",c:"Electrical",p:["Electrical Wiring","Power Distribution"]},
+{id:54,n:"Aluminum Cable",c:"Electrical",p:["Power Transmission","Overhead Lines"]},
+{id:55,n:"PVC Conduit",c:"Electrical",p:["Wiring Enclosure","Cable Routing"]},
+{id:56,n:"PVC Insulated Cables",c:"Electrical",p:["Internal Wiring","Appliance Connections"]},
+{id:57,n:"XLPE Cables",c:"Electrical",p:["HT Power Distribution","Industrial Wiring"]},
+{id:58,n:"Bitumen (60/70 Grade)",c:"Waterproofing",p:["Roof Waterproofing","Basement Tanking"]},
+{id:59,n:"Torch-on Membrane",c:"Waterproofing",p:["Roof Waterproofing","Basement","Podium Decks"]},
+{id:60,n:"Cementitious Waterproofing",c:"Waterproofing",p:["Wet Areas","Terrace","Water Tanks"]},
+{id:61,n:"Polyurethane Coating",c:"Waterproofing",p:["Roof Coating","Terrace","Wet Areas"]},
+{id:62,n:"Bentonite Waterproofing",c:"Waterproofing",p:["Below-Grade","Basement Walls"]},
+{id:63,n:"Distemper Paint",c:"Finishing",p:["Interior Walls","Ceiling"]},
+{id:64,n:"Emulsion Paint",c:"Finishing",p:["Interior Walls","Exterior Walls","Ceiling"]},
+{id:65,n:"Enamel Paint",c:"Finishing",p:["Exterior Walls","Metal Surfaces","Doors & Windows"]},
+{id:66,n:"Cement Paint",c:"Finishing",p:["Exterior Walls","Boundary Walls"]},
+{id:67,n:"Textured Paint",c:"Finishing",p:["Feature Walls","Exterior Facades"]},
+{id:68,n:"Anti-Corrosive Paint",c:"Finishing",p:["Steel Structures","Industrial Equipment"]},
+{id:69,n:"Cement Plaster",c:"Finishing",p:["Interior Walls","Exterior Walls","Ceiling"]},
+{id:70,n:"Gypsum Plaster",c:"Finishing",p:["Interior Walls","Ceiling","Decorative"]},
+{id:71,n:"Lime Plaster",c:"Finishing",p:["Interior Walls","Heritage Restoration"]},
+{id:72,n:"River Sand",c:"Aggregate",p:["Concrete Mix","Plastering","Masonry Mortar"]},
+{id:73,n:"Coarse Aggregate (20mm)",c:"Aggregate",p:["Concrete Mix","Road Base"]},
+{id:74,n:"M-Sand",c:"Aggregate",p:["Concrete Mix","Plastering","Masonry"]},
+{id:75,n:"Recycled Aggregate",c:"Aggregate",p:["Non-Structural Concrete","Road Sub-Base"]},
+{id:76,n:"EPS Insulation",c:"Insulation",p:["Wall Insulation","Roof Insulation","Floor"]},
+{id:77,n:"Glass Wool Insulation",c:"Insulation",p:["Wall Insulation","Roof","Acoustic","HVAC"]},
+{id:78,n:"XPS Insulation",c:"Insulation",p:["Wall Insulation","Roof","Below-Grade"]},
+{id:79,n:"Rock Wool / Stone Wool",c:"Insulation",p:["Fire-Rated Walls","Acoustic","HVAC Ducting"]},
+{id:80,n:"PUF Panels",c:"Insulation",p:["Cold Storage","Roof Insulation","Prefab Shelters"]},
+{id:81,n:"Aluminum Sections",c:"Metal",p:["Window Frames","Door Frames","Facades"]},
+{id:82,n:"ACP Panels",c:"Metal",p:["Exterior Cladding","Fascia","Signage"]},
+{id:83,n:"Wrought Iron",c:"Metal",p:["Railings","Gates","Decorative Elements"]},
+{id:84,n:"Copper Roofing Sheets",c:"Metal",p:["Roofing","Flashing","Domes"]},
+{id:85,n:"Concrete Roof Tiles",c:"Roofing",p:["Roofing","Cladding"]},
+{id:86,n:"Clay Roof Tiles",c:"Roofing",p:["Roofing","Cladding"]},
+{id:87,n:"Asbestos Cement Sheets",c:"Roofing",p:["Roofing","Wall Cladding","Partitions"]},
+{id:88,n:"Polycarbonate Sheets",c:"Roofing",p:["Skylights","Canopies","Greenhouse"]},
+{id:89,n:"Metal Deck Sheet",c:"Roofing",p:["Composite Slab Formwork","Roof Decking"]},
+{id:90,n:"MS Doors",c:"Doors",p:["Main Door","Security Doors","Fire Doors"]},
+{id:91,n:"Flush Doors",c:"Doors",p:["Interior Doors","Bedroom","Bathroom"]},
+{id:92,n:"Panel Doors",c:"Doors",p:["Main Entrance","Interior","Office Cabins"]},
+{id:93,n:"PVC Doors",c:"Doors",p:["Bathroom","Toilet","Wet Areas"]},
+{id:94,n:"Sliding Aluminum Doors",c:"Doors",p:["Balcony Access","Shop Fronts"]},
+{id:95,n:"Aluminum Sliding Windows",c:"Windows",p:["Residential Windows","Ventilation"]},
+{id:96,n:"Casement Windows (Aluminum)",c:"Windows",p:["Full Opening Ventilation","Commercial"]},
+{id:97,n:"UPVC Windows",c:"Windows",p:["Thermal Insulation","Noise Reduction"]},
+{id:98,n:"Wooden Frame Windows",c:"Windows",p:["Heritage Buildings","Villas"]},
+{id:99,n:"Asphalt / Bituminous Macadam",c:"Paving",p:["Road Paving","Parking","Driveways"]},
+{id:100,n:"Concrete Pavers",c:"Paving",p:["Walkways","Driveways","Landscaping"]},
+{id:101,n:"Interlocking Pavers",c:"Paving",p:["Pedestrian Zones","Parking","Driveways"]},
+{id:102,n:"Kerb Stones",c:"Paving",p:["Road Edging","Median","Landscape Borders"]},
+{id:103,n:"Concrete Drain Covers",c:"Infrastructure",p:["Stormwater Drains","Manhole Covers"]},
+{id:104,n:"RCC Boundary Wall",c:"Infrastructure",p:["Site Boundary","Security Wall"]},
+{id:105,n:"Concrete Septic Tank",c:"Infrastructure",p:["Sewage Treatment","Wastewater Management"]},
+{id:106,n:"GFRG Panels",c:"Infrastructure",p:["Wall Panels","Ceiling","Partition"]},
+{id:107,n:"Earthen Pot / Terracotta",c:"Decorative",p:["Landscaping","Decorative","Jali Screens"]},
+{id:108,n:"Gypsum Board (Drywall)",c:"Finishing",p:["False Ceiling","Partitions","Wall Lining"]},
+{id:109,n:"Calcium Silicate Board",c:"Finishing",p:["Fire-Rated Partitions","Ceiling","Shaft Walls"]},
+{id:110,n:"Cork Flooring",c:"Flooring",p:["Flooring","Gyms","Libraries","Recording Studios"]}
 ];
 
-/* WELL v2 — Full concept structure */
-const WELL_DATA = [
-  { concept:'Air', icon:'fa-wind', max:15, color:'#0FBF7A', feats:[
-    'A01 – Ventilation Effectiveness (ASHRAE 62.1+ or ISO 17772)',
-    'A02 – Air Quality Monitoring (PM2.5 ≤12µg/m3, CO2 ≤1100ppm, O3, TVOC)',
-    'A03 – Outdoor Air Systems (Dedicated OA / DOAS)',
-    'A04 – Microbe & Mold Control (RH 30–60%)',
-    'A05 – Air Filtration (MERV 13+ on all recirculation and supply)',
-    'A06 – Enhanced Air Quality (PM2.5 ≤10µg/m3, CO ≤9ppm, HCHO ≤27ppb)',
-    'A07 – Combustion Minimization (no gas combustion in occupied spaces)',
-    'A08 – Source Separation (negative pressure copy/print rooms)',
-    'A09 – Clean Air Delivery (HEPA filtration or carbon filter for high-VOC sources)',
-    'A10 – Pest Control (IPM protocol, no toxic pesticides)',
-    'A11 – Moisture Management (vapor barriers, condensate drainage)',
-    'A12 – Particle Control Sensors (HEPA for high-dust)',
-    'A13 – Pre-Occupancy Flush (14,000 cf/sf air flush before occupancy)',
-    'A14 – Microbiome Management (UV-C germicidal irradiation in HVAC)',
-    'A15 – Antimicrobial Surfaces (copper/silver on high-touch points)'
-  ]},
-  { concept:'Water', icon:'fa-droplet', max:8, color:'#06B6D4', feats:[
-    'W01 – Fundamental Water Quality (WHO Guidelines or EPA MCLs)',
-    'W02 – Contaminants Testing (lead, arsenic, nitrates, Legionella)',
-    'W03 – Periodic Water Testing (quarterly pathogen monitoring)',
-    'W04 – Enhanced Water Treatment (NSF/ANSI 55 or 58 filtration)',
-    'W05 – Drinking Water Promotion (access within 30m of all occupants)',
-    'W06 – Moisture & Condensation Management (ASHRAE 160)',
-    'W07 – Handwashing Facilities (≤1 employee per fixture in common areas)',
-    'W08 – Decorative Water Feature Safety (Legionella management plan)'
-  ]},
-  { concept:'Nourishment', icon:'fa-apple-whole', max:6, color:'#8B5CF6', feats:[
-    'N01 – Fruits & Vegetables (fresh produce available within building)',
-    'N02 – Nutritional Transparency (calorie + allergen labeling)',
-    'N03 – Portion Sizes (appropriate portion guidelines posted)',
-    'N04 – Diverse Dietary Options (vegan, gluten-free, halal/kosher available)',
-    'N05 – Food Advertising Restriction (no advertising of HFSS foods on-site)',
-    'N06 – Mindful Eating Spaces (dedicated dining area, no screen policy)'
-  ]},
-  { concept:'Light', icon:'fa-sun', max:8, color:'#F59E0B', feats:[
-    'L01 – Visual Lighting Design (IES RP standards for task illuminance)',
-    'L02 – Circadian Lighting Design (≥200 EML at eye during work hours)',
-    'L03 – Glare Control (UGR <19 in workspaces, DGP <0.35)',
-    'L04 – Daylighting (sDA300lux/50% in ≥55% regularly occupied spaces)',
-    'L05 – Enhanced Daylighting (validated by IES LM-83 simulation)',
-    'L06 – Visual Contrast (wall/ceiling/floor reflectances in required ranges)',
-    'L07 – Low-Glare Workstation Design (indirect/semi-indirect luminaires)',
-    'L08 – Color Quality (CRI ≥80, R9 ≥30 for all occupied spaces)'
-  ]},
-  { concept:'Movement', icon:'fa-person-walking', max:7, color:'#EF4444', feats:[
-    'M01 – Active Building (visible, attractive, accessible staircases)',
-    'M02 – Active Transportation Support (secure bike storage + showers)',
-    'M03 – Activity Incentive Programs (wellness challenges, activity tracking)',
-    'M04 – Physical Activity Spaces (gym / fitness room ≥0.5m2/occupant)',
-    'M05 – Active Furnishings (sit-stand desks for ≥50% of workstations)',
-    'M06 – Circulation & Wayfinding (signage encouraging active routes)',
-    'M07 – Ergonomic Workstation Design (adjustable monitors, keyboards)'
-  ]},
-  { concept:'Thermal Comfort', icon:'fa-temperature-half', max:7, color:'#3B82F6', feats:[
-    'T01 – Thermal Performance (ASHRAE 55-2017: 20–26°C in occupied zones)',
-    'T02 – Enhanced Thermal Comfort (radiant systems or personal comfort devices)',
-    'T03 – Thermal Zoning (separate temperature control for perimeter/interior)',
-    'T04 – Individual Thermal Control (personal devices for ≥50% of occupants)',
-    'T05 – Radiant Thermal Comfort (MRT ≤4°C differential, no radiant asymmetry)',
-    'T06 – Thermal Comfort Monitoring (continuous CO2/temperature sensors)',
-    'T07 – Humidity Control (30–60% RH year-round, monitored continuously)'
-  ]},
-  { concept:'Sound', icon:'fa-volume-low', max:6, color:'#EC4899', feats:[
-    'S01 – Sound & Vibration Analysis (acoustic modeling pre-design)',
-    'S02 – Maximum Noise Levels (background ≤45 dBA office, ≤35 dBA bedrooms)',
-    'S03 – Sound Masking (40–48 dBA pink noise in open offices)',
-    'S04 – Sound Absorbing Finishes (NRC ≥0.9 for ≥50% of ceiling)',
-    'S05 – Sound Barriers (STC ≥50 between private offices, ≥45 open plan)',
-    'S06 – Reverberation Time (T60 ≤0.5s offices, ≤0.7s classrooms per ANSI S12.60)'
-  ]},
-  { concept:'Materials', icon:'fa-cubes', max:10, color:'#F97316', feats:[
-    'X01 – Material Safety (hazardous building material remediation assessment)',
-    'X02 – Hazard Reduction (SVHC substitution per REACH Regulation)',
-    'X03 – Restricted Substances Elimination (CH2MHill RSL compliance)',
-    'X04 – Material Transparency (Health Product Declarations for key products)',
-    'X05 – Enhanced Material Safety (all products CDPH v1.2 or FloorScore)',
-    'X06 – Material Optimization (FSC wood, recycled content, EPD certified)',
-    'X07 – Asbestos & Lead Management (surveys completed, clearance certificate)',
-    'X08 – Antimicrobial Agent Avoidance (no triclosan/triclocarban in products)',
-    'X09 – VOC Restrictions (all paints/adhesives CDPH v1.2 or Green Seal)',
-    'X10 – Sustainable Material Sourcing (local, recycled, or certified content ≥50%)'
-  ]},
-  { concept:'Mind', icon:'fa-brain', max:8, color:'#14B8A6', feats:[
-    'D01 – Mental Health Promotion (EAP available to all occupants)',
-    'D02 – Nature & Place (biophilic design: plants, water features, nature views)',
-    'D03 – Family Support (nursing room, childcare facilities or subsidy)',
-    'D04 – Mental Health Education (wellness programs, stress management training)',
-    'D05 – Restorative Spaces (quiet rooms, meditation/prayer rooms)',
-    'D06 – Sleep & Circadian Support (blackout in sleeping areas, circadian lighting)',
-    'D07 – Stress Support Programs (yoga/mindfulness programs on-site)',
-    'D08 – Mental Health Coverage (health insurance including mental health parity)'
-  ]},
-  { concept:'Community', icon:'fa-people-group', max:10, color:'#6366F1', feats:[
-    'C01 – Occupant Health & Wellness Awareness (building wellness policy posted)',
-    'C02 – Integrative Design (community stakeholders in design process)',
-    'C03 – Occupant Survey (annual post-occupancy environmental survey)',
-    'C04 – Satisfaction Surveys (thermal, acoustic, lighting feedback collected)',
-    'C05 – Community Integration (access to parks/transit/services within 800m)',
-    'C06 – Accessibility & Universal Design (ADA/BS 8300 or equivalent)',
-    'C07 – Civic & Community Spaces (publicly accessible ground-floor amenities)',
-    'C08 – Emergency Preparedness (written EP plan, drills every 12 months)',
-    'C09 – Diversity & Inclusion Policy (documented and enforced)',
-    'C10 – Healthy Communication Policies (no harassment, documented whistleblowing)'
-  ]}
-];
+const GA={1:{n:"Geopolymer Cement",co:42,en:25,d:"Fly ash+slag,zero clinker.42% less CO2."},2:{n:"HVFA Cement",co:38,en:22,d:"50%+ fly ash.Lower heat of hydration."},3:{n:"LC3 Cement",co:40,en:23,d:"Clay+limestone replacing 50% clinker."},4:{n:"Calcium Sulfoaluminate Cement",co:35,en:30,d:"Rapid-set,lower kiln temp.35% less CO2."},5:{n:"Slag-Based Geopolymer",co:45,en:20,d:"Zero Portland cement.Excellent sulphate resistance."},6:{n:"Recycled-Glass Cementitious",co:30,en:15,d:"Recycled glass powder.Aesthetic white finish."},7:{n:"AAC Blocks",co:38,en:35,d:"No topsoil.4x better insulation.Lighter structures."},8:{n:"Fly Ash / Porotherm Blocks",co:30,en:30,d:"Hollow=thermal insulation.70% less mortar."},9:{n:"Recycled Aggregate Blocks",co:30,en:28,d:"C&D waste diverted.Comparable performance."},10:{n:"Geopolymer Masonry Blocks",co:40,en:28,d:"No cement.Industrial waste.High strength."},11:{n:"Hempcrete Blocks",co:50,en:40,d:"Carbon-negative.Hemp absorbs CO2.Humidity regulation."},12:{n:"CSEB Blocks",co:45,en:35,d:"Local soil+5% cement.45% less CO2.Minimal transport."},13:{n:"CSEB / Rammed Earth",co:50,en:38,d:"Zero firing.Natural thermal mass.Earthy aesthetics."},14:{n:"Recycled Concrete Blocks",co:35,en:25,d:"C&D waste.Comparable structural performance."},15:{n:"Recycled Steel (EAF)",co:58,en:22,d:"75% less energy.Same mechanical properties."},16:{n:"Recycled TMT Bars (>=60%)",co:48,en:18,d:"High recycled content.Maintains Fe500 grade."},17:{n:"Low-Carbon TMT (Fe550)",co:40,en:15,d:"Reduced alloy.Higher strength=less steel needed."},18:{n:"Recycled Cold-Formed Steel",co:52,en:20,d:"Post-consumer recycled.52% less CO2."},19:{n:"Color-Coated Recycled Roofing",co:45,en:18,d:"Recycled substrate.Cool-roof SRI>70."},20:{n:"Recycled SS (EAF)",co:50,en:25,d:"EAF route.50% less CO2.Fully recyclable."},21:{n:"Green Concrete (GGBS+Fly Ash)",co:38,en:22,d:"SCMs replace 50-70% cement.Better durability."},22:{n:"Green RMC (GGBS/M-Sand/LC3)",co:40,en:25,d:"Pre-mixed SCMs+M-sand.Consistent,lower carbon."},23:{n:"UHPC Green Concrete",co:30,en:35,d:"Less material per unit strength.Smaller sections."},24:{n:"GFRG / SCM Precast",co:42,en:30,d:"Waste gypsum+SCM concrete.Faster construction."},25:{n:"Geopolymer Shotcrete",co:45,en:25,d:"Zero-cement spray.Excellent chemical resistance."},26:{n:"Low-E Double Glazed Glass",co:32,en:48,d:"Low-e+argon.50% less heat transfer.HVAC savings."},27:{n:"Low-E Triple / Smart Glass",co:38,en:58,d:"Dynamic tint+triple pane.U-value 0.5 W/m2K."},28:{n:"Laminated Low-E Safety Glass",co:30,en:45,d:"PVB+low-e.Safety+energy in one."},29:{n:"Electrochromic Smart Glass",co:35,en:60,d:"Auto-tinting.30% cooling load reduction."},30:{n:"Fire-Rated Ceramic Glass",co:28,en:35,d:"No wire mesh.Clear fire-rated.Recyclable."},31:{n:"Recycled Content Ceramic",co:28,en:12,d:"40-70% recycled content.Same durability."},32:{n:"Recycled Porcelain Tiles",co:32,en:15,d:"Recycled waste.Larger format=less grout."},33:{n:"Thin Porcelain Panels",co:30,en:18,d:"6mm vs 10mm.40% less material.Recycled available."},34:{n:"Engineered Quartz / Recycled Stone",co:42,en:12,d:"90% recycled quartz.No quarrying."},35:{n:"Recycled Composite Marble",co:45,en:15,d:"Marble waste+recycled binder.Zero quarrying."},36:{n:"Recycled Kota / Engineered Stone",co:35,en:10,d:"Kota waste reconstituted.No mining."},37:{n:"Reclaimed Sandstone",co:40,en:15,d:"Reclaimed from demolition.Authentic character."},38:{n:"Reclaimed Slate / Composite Slate",co:38,en:15,d:"Reclaimed or recycled composite.No new mining."},39:{n:"Recycled Glass Terrazzo",co:40,en:20,d:"Post-consumer glass.Stunning aesthetics."},40:{n:"FSC Timber / Bamboo Lumber",co:52,en:18,d:"FSC forestry.Bamboo matures 3-5yr vs 60+ for teak."},41:{n:"Bamboo Ply / FSC Plywood",co:55,en:20,d:"2x harder than oak.Low-formaldehyde available."},42:{n:"Wheatboard / Rice Husk MDF",co:50,en:18,d:"Agricultural waste.Zero deforestation.Low-VOC."},43:{n:"Bagasse / Hemp Particle Board",co:52,en:20,d:"Carbon-negative.Superior moisture resistance."},44:{n:"FSC / Bamboo Block Board",co:48,en:16,d:"FSC core.Bamboo option stronger+renewable."},45:{n:"FSC Hardwood / Bamboo Flooring",co:52,en:20,d:"Bamboo 13% harder than maple.35% more CO2 stored."},46:{n:"FSC Softwood / Engineered Wood",co:45,en:18,d:"FSC certified.40% less timber than solid sections."},47:{n:"Recycled HDPE Pipes",co:32,en:12,d:"Post-consumer HDPE.Leak-free fusion.50yr life."},48:{n:"Recycled DI / HDPE Drainage",co:38,en:15,d:"High recycled content.HDPE is corrosion-proof."},49:{n:"CPVC / Recycled SS Pipes",co:30,en:12,d:"CPVC better insulation.Recycled SS.Both 50yr."},50:{n:"PEX / Recycled Copper",co:25,en:15,d:"PEX less energy.Recycled copper reduces mining."},51:{n:"Recycled CPVC / Bio-PEX",co:28,en:14,d:"Recycled content CPVC.Bio-based PEX emerging."},52:{n:"Recycled HDPE / PP-R",co:30,en:12,d:"Post-consumer HDPE.PP-R for high-temp."},53:{n:"Aluminum Conductor (AAAC)",co:22,en:15,d:"Lighter,less mining energy.Solar-ready."},54:{n:"Recycled Aluminum Cable",co:30,en:18,d:"Recycled Al uses 95% less energy.Same conductivity."},55:{n:"Recycled PVC / Bio-PVC Conduit",co:25,en:10,d:"Recycled PVC.Bio-based from renewable sources."},56:{n:"Low-Halogen / LSZH Cables",co:20,en:15,d:"Low Smoke Zero Halogen.Safer in fire."},57:{n:"Recycled XLPE / Bio Cable",co:28,en:14,d:"Recycled cross-linked PE.Bio-based emerging."},58:{n:"Green Roof + Crystalline",co:32,en:28,d:"Green roof absorbs CO2,reduces UHI 3-5C."},59:{n:"Crystalline + Green Roof",co:35,en:25,d:"No torch.Safer install.Biodiversity addition."},60:{n:"Crystalline Admix",co:28,en:20,d:"Added to concrete mix.Permanent waterproofing."},61:{n:"Bio-Based PU Coating",co:30,en:22,d:"Plant-based polyols.Solvent-free.Elastomeric."},62:{n:"Natural Bentonite + Recycled HDPE",co:32,en:18,d:"Clay seals permanently.Recycled HDPE board."},63:{n:"Lime Wash / Natural Mineral Paint",co:48,en:25,d:"Lime absorbs CO2.Zero VOC.Breathable."},64:{n:"Low-VOC Bio-Based Emulsion",co:38,en:18,d:"Plant-based resins.Near-zero VOC."},65:{n:"Water-Based Enamel / Powder Coat",co:40,en:22,d:"<10g/L VOC.Powder coat=zero VOC."},66:{n:"Lime Wash / Silicate Paint",co:45,en:22,d:"Mineral paint bonds permanently.Zero VOC."},67:{n:"Recycled Textured Paint",co:30,en:15,d:"Recycled mineral fillers.Low-VOC."},68:{n:"Bio-Based Epoxy / Zinc-Rich Primer",co:35,en:18,d:"Bio-based from plant oils.Recycled zinc."},69:{n:"Lime / Clay Plaster",co:42,en:28,d:"Lime carbonates absorbing CO2.Natural pH."},70:{n:"Recycled Gypsum / Clay Plaster",co:32,en:18,d:"FGD gypsum from waste.Clay is zero-carbon."},71:{n:"Lime + Hemp Plaster",co:45,en:30,d:"Hemp shiv aggregate.Carbon-negative.Humidity regulation."},72:{n:"M-Sand (Manufactured)",co:38,en:12,d:"Preserves rivers.Consistent grading.10-15% better concrete."},73:{n:"Recycled Concrete Aggregate",co:42,en:18,d:"From demolished concrete.Diverts landfill."},74:{n:"Washed M-Sand",co:35,en:10,d:"Controlled grading.Zero river impact."},75:{n:"Processed C&D Waste Aggregate",co:45,en:20,d:"Full C&D recycling.Road base,fill."},76:{n:"Cork Board / Sheep Wool",co:52,en:42,d:"Natural,renewable.Absorbs VOCs."},77:{n:"Cellulose / Recycled Glass Wool",co:48,en:38,d:"Cellulose=85% recycled newspaper."},78:{n:"Cork / Hemp Insulation",co:50,en:40,d:"Cork carbon-negative.Hemp absorbs 165kg CO2/m3."},79:{n:"Recycled Stone Wool / Cellulose",co:42,en:35,d:"Recycled stone wool.Cellulose adds fire resistance."},80:{n:"PIR / Natural Fiber Panels",co:32,en:38,d:"PIR better R-value.Hemp/flax carbon-negative."},81:{n:"Thermal-Break Al (75% Recycled)",co:42,en:38,d:"Polyamide break 60% less heat transfer.75% recycled."},82:{n:"Recycled Al Panel / Timber Cladding",co:38,en:22,d:"Recycled Al 95% less energy.FSC timber carbon-negative."},83:{n:"Recycled Steel / Bamboo Railings",co:48,en:15,d:"Recycled steel 75% less energy.Bamboo renewable."},84:{n:"Recycled Copper Roof / Green Roof",co:40,en:25,d:"Recycled copper reduces mining.Green roof sequesters CO2."},85:{n:"Cool Roof / Solar Roof Tiles",co:38,en:45,d:"SRI>78.Surface temp reduced 20-30C.Solar generates energy."},86:{n:"Recycled Clay Tiles / Green Roof",co:32,en:38,d:"Recycled content.Green roof reduces runoff 60%."},87:{n:"Fiber Cement (Non-Asbestos)",co:62,en:22,d:"Eliminates asbestos risk.Cellulose reinforced.Recyclable."},88:{n:"Recycled Polycarbonate / ETFE",co:30,en:25,d:"Recycled PC.ETFE 1% weight of glass.100% recyclable."},89:{n:"Recycled Metal Deck + GGBS Concrete",co:35,en:20,d:"Recycled steel deck.GGBS concrete composite."},90:{n:"FSC Timber + Steel Core Door",co:38,en:18,d:"FSC timber exterior.Better thermal than solid MS."},91:{n:"Bamboo Flush / FSC Door",co:48,en:22,d:"Rapidly renewable.Low-formaldehyde.Termite-resistant."},92:{n:"FSC Panel / Bamboo Composite Door",co:42,en:18,d:"FSC timber.Bamboo composite stronger+renewable."},93:{n:"FSC Timber / Bamboo Door",co:45,en:20,d:"Bamboo moisture-resistant.FSC warm aesthetics."},94:{n:"Thermal-Break Al Sliding Door",co:35,en:32,d:"Polyamide break.Double seal.Recycled available."},95:{n:"Thermal-Break Al Window",co:35,en:35,d:"60% less heat transfer.Low-e double glazing compatible."},96:{n:"Thermal-Break Casement (Recycled Al)",co:38,en:38,d:"Full opening ventilation.Recycled frame.Low-e standard."},97:{n:"Recycled uPVC / Fiberglass Window",co:30,en:35,d:"Recycled uPVC.Fiberglass inert+ultra-durable."},98:{n:"FSC Timber + Low-E Glass",co:40,en:30,d:"FSC timber+double low-e.Heritage look+performance."},99:{n:"Permeable Asphalt / Pervious Concrete",co:42,en:18,d:"Groundwater recharge.70-90% less runoff."},100:{n:"Permeable Concrete Pavers",co:38,en:18,d:"Reduces flooding.Recycled aggregate available."},101:{n:"Permeable Interlocking Pavers",co:40,en:20,d:"Water infiltration.Recycled content.Reusable."},102:{n:"Recycled Concrete Kerb Stones",co:35,en:15,d:"C&D waste aggregate.Same dimensions.Diverts landfill."},103:{n:"FRP Drain Covers / Recycled CI",co:40,en:15,d:"FRP lighter,theft-proof,non-corrosive."},104:{n:"GFRG Boundary / Bamboo Fencing",co:42,en:28,d:"GFRG from waste gypsum.Bamboo carbon-negative."},105:{n:"Biodigester Septic System",co:35,en:20,d:"Anaerobic bacteria.No desludging.Produces biogas."},106:{n:"GFRG Panels (Waste Gypsum)",co:42,en:32,d:"Fertilizer industry waste.Load-bearing low-rise.10x faster."},107:{n:"Reclaimed Terracotta / Recycled Jali",co:38,en:20,d:"Reclaimed from demolition.Recycled clay jali for ventilation."},108:{n:"Recycled Gypsum Board / MgO Board",co:35,en:22,d:"Recycled gypsum core.MgO fireproof+water-resistant."},109:{n:"Recycled CaSi / MgO Board",co:32,en:20,d:"Recycled content.MgO carbon-negative,fire-rated 1200C."},110:{n:"Cork / Recycled Rubber Flooring",co:48,en:35,d:"Cork carbon-negative,honored every 9yr.Rubber from tires."}};
 
-/* DISASTER RESILIENCE — Per hazard categories */
-const DISASTER_DATA = [
-  { cat:'Fire Safety', icon:'fa-fire', color:'#EF4444', q:[
-    'Automatic fire sprinkler system throughout building (NFPA 13 or EN 12845)?',
-    'Fire-rated wall/floor/door assemblies (minimum 1-hour rating per occupancy)?',
-    'Addressable fire alarm with smoke and heat detection in all spaces?',
-    'Minimum 2 remote fire exit stairwells per floor with emergency signage?',
-    'Stairwell pressurization (NFPA 92) and smoke exhaust system?',
-    'Portable fire extinguishers within 23m travel distance (NFPA 10)?',
-    'Voice evacuation system (EN/NFPA 72) with mass notification?',
-    'Fire engineering report / fire safety strategy completed by specialist?'
-  ]},
-  { cat:'Flood & Water Intrusion', icon:'fa-water', color:'#3B82F6', q:[
-    'Building located outside 100-year flood plain or elevated above design flood level?',
-    'Flood barriers / flood gates at all below-grade entries and utility penetrations?',
-    'Sump pump with automatic activation AND backup power source?',
-    'All critical MEP systems (switchboards, servers, UPS) elevated above design flood level?',
-    'Rainwater management system with overflow control and bypass?',
-    'Waterproofing membrane below grade with drainage layer and inspection access?'
-  ]},
-  { cat:'Extreme Heat', icon:'fa-temperature-arrow-up', color:'#F97316', q:[
-    'HVAC system maintains ≤24°C dry bulb indoor even at outdoor temperature of 50°C+?',
-    'Building envelope U-values comply with ASHRAE 90.1 hot climate requirements?',
-    'High-albedo (SRI ≥82) or vegetated roof installed?',
-    'External shading devices on east/west/south-facing glazing?',
-    'Heat emergency protocol: cooling stations, water stations, WBGT monitoring?',
-    'Backup cooling provision if primary HVAC fails (portable units, natural ventilation)?'
-  ]},
-  { cat:'Seismic / Structural', icon:'fa-house-crack', color:'#8B5CF6', q:[
-    'Structural system designed per applicable seismic code (IBC, Eurocode 8, UAE FBC)?',
-    'Non-structural elements (suspended ceilings, equipment) seismically braced?',
-    'Structural health monitoring sensors or inspection protocol in place?',
-    'Gas supply lines equipped with automatic seismic shut-off valves?',
-    'Post-earthquake assessment protocol documented?'
-  ]},
-  { cat:'Wind & Sandstorm', icon:'fa-tornado', color:'#D4A017', q:[
-    'Building envelope (cladding, glazing, roof) designed for local ultimate design wind speed?',
-    'Impact-resistant glazing or storm shutters on all exposed facades?',
-    'HVAC recirculation mode with MERV 16+ filtration for dust/sandstorm events?',
-    'All roof-mounted equipment secured against design wind uplift forces?',
-    'Storm/sandstorm monitoring and early warning protocol for occupants?'
-  ]},
-  { cat:'Power Resilience', icon:'fa-plug-circle-xmark', color:'#06B6D4', q:[
-    'Backup diesel/gas generator with ≥72-hour fuel storage capacity?',
-    'Emergency lighting and life-safety systems on UPS with ≥90-min autonomy?',
-    'On-site renewable energy (solar PV) with battery storage for critical loads?',
-    'Load-shedding priority schedule documented for critical vs. non-critical systems?',
-    'Passive survivability strategy (building operates safely without HVAC for 4+ hours)?'
-  ]},
-  { cat:'Pandemic / Airborne', icon:'fa-virus', color:'#14B8A6', q:[
-    'HVAC can increase outdoor air supply to maximum capacity (100% OA mode)?',
-    'UV-C germicidal irradiation in all AHUs and fan coil units?',
-    'Touch-free access controls (doors, lifts, faucets) installed throughout?',
-    'Negative-pressure isolation room(s) for health emergencies?',
-    'Documented pandemic response and business continuity plan?'
-  ]},
-  { cat:'Cybersecurity (BMS)', icon:'fa-shield-virus', color:'#6366F1', q:[
-    'BMS/BAS network isolated from corporate IT network (air-gapped or DMZ)?',
-    'Manual override available for all critical building systems independently of BMS?',
-    'Cyber incident response plan per ISO 27001 or NIST CSF?',
-    'Physical security systems (CCTV, access control) operate independently of internet?',
-    'Regular penetration testing of BMS/IoT devices (minimum annual)?'
-  ]}
-];
+const ZN={UAE:[{id:"uae_coastal",n:"Coastal Zone",d:"Dubai,Abu Dhabi,Sharjah — Humid,saline,sandy"},{id:"uae_desert",n:"Desert Interior",d:"Al Ain,Liwa — Extreme heat 50C+,arid"},{id:"uae_mountain",n:"Mountain Zone",d:"Ras Al Khaimah,Fujairah — Cooler,rocky"}],India:[{id:"ind_tropical",n:"Tropical Coastal",d:"Kerala,Goa — High rainfall >3000mm"},{id:"ind_arid",n:"Hot & Arid",d:"Rajasthan,Kutch — <300mm,sandy"},{id:"ind_warmhumid",n:"Warm & Humid",d:"Mumbai,Chennai — Warm,humid,moderate rain"},{id:"ind_composite",n:"Composite",d:"Delhi,UP,Bihar — Hot summer,cold winter,monsoon"},{id:"ind_temperate",n:"Temperate / Deccan",d:"Bangalore,Pune,Hyderabad — Moderate,800-1200mm"},{id:"ind_cold",n:"Cold / Himalayan",d:"Himachal,Kashmir — Snow,rocky soil"}]};
 
-/* GRID EMISSION FACTORS — kgCO2e/kWh (latest IEA/national data) */
-const GRID_FACTORS = {
-  'UAE':0.433,'Saudi Arabia':0.535,'Qatar':0.449,'Kuwait':0.527,
-  'Bahrain':0.558,'Oman':0.479,'Jordan':0.512,'Egypt':0.418,
-  'UK':0.212,'Germany':0.338,'Netherlands':0.292,'France':0.056,
-  'Netherlands':0.292,'Sweden':0.013,'Norway':0.008,'Denmark':0.160,
-  'Spain':0.198,'Italy':0.241,'Turkey':0.394,'India':0.708,'Singapore':0.432,
-  'USA':0.376,'Australia':0.540,'Canada':0.120,'China':0.559,'Japan':0.471,
-  'Other (Global Average)':0.490
-};
+const PD=[{id:1,n:"Ghaf Tree",s:"Prosopis cineraria",z:["uae_coastal","uae_desert","uae_mountain"],si:["front","back","left","right"],md:4,ps:"1.5x1.5m",co:"25 kg/yr",tr:"3-5C",pt:["residential","commercial","institutional","mixeduse"],d:"UAE national tree.Drought-tolerant.Dense shade 3-5C.25 kg CO2/yr."},{id:2,n:"Date Palm",s:"Phoenix dactylifera",z:["uae_coastal","uae_desert","uae_mountain"],si:["front","back","left","right"],md:2.5,ps:"1x1m",co:"15 kg/yr",tr:"2-3C",pt:["residential","commercial","institutional","mixeduse","industrial"],d:"Iconic desert palm.Low water.Edible dates.15 kg CO2/yr.Salt-tolerant."},{id:3,n:"Neem Tree",s:"Azadirachta indica",z:["uae_coastal","uae_desert","ind_arid","ind_composite","ind_temperate","ind_warmhumid","ind_tropical"],si:["front","back","left","right"],md:3.5,ps:"1.2x1.2m",co:"20 kg/yr",tr:"3-4C",pt:["residential","commercial","institutional","mixeduse"],d:"Medicinal,air purifier.Repels insects.Dense canopy 3-4C reduction."},{id:4,n:"Sidr Tree",s:"Ziziphus spina-christi",z:["uae_coastal","uae_desert","uae_mountain"],si:["front","back","left","right"],md:3,ps:"1.2x1.2m",co:"18 kg/yr",tr:"2-4C",pt:["residential","commercial","institutional"],d:"Ancient desert tree.Extremely drought-resistant.Wildlife habitat."},{id:5,n:"Bougainvillea",s:"Bougainvillea spectabilis",z:["uae_coastal","uae_desert","uae_mountain","ind_arid","ind_warmhumid","ind_composite","ind_temperate"],si:["front","left","right"],md:1,ps:"0.6x0.6m",co:"5 kg/yr",tr:"1-2C",pt:["residential","commercial","institutional","mixeduse","industrial"],d:"Vibrant flowering shrub.Facade shading.Very low water."},{id:6,n:"Olive Tree",s:"Olea europaea",z:["uae_mountain","uae_coastal","ind_cold","ind_temperate"],si:["front","back","left","right"],md:3,ps:"1x1m",co:"12 kg/yr",tr:"2-3C",pt:["residential","commercial","institutional"],d:"Mediterranean elegance.Silvery foliage.Drought-tolerant.Lives centuries."},{id:7,n:"Desert Marigold",s:"Baileya multiradiata",z:["uae_desert","uae_coastal"],si:["front","left","right"],md:.5,ps:"0.4x0.4m",co:"2 kg/yr",tr:"0.5-1C",pt:["residential","commercial","institutional","mixeduse","industrial"],d:"Yellow ground cover.Full desert sun.Very low water.Pollinators."},{id:8,n:"Aloe Vera",s:"Aloe barbadensis",z:["uae_desert","uae_coastal","ind_arid"],si:["front","left","right","back"],md:.3,ps:"0.3x0.3m",co:"1.5 kg/yr",tr:"0.5C",pt:["residential","commercial","institutional","industrial"],d:"Medicinal succulent.Zero irrigation.Absorbs formaldehyde."},{id:9,n:"Banyan Tree",s:"Ficus benghalensis",z:["ind_tropical","ind_warmhumid","ind_composite","ind_temperate"],si:["back","front"],md:8,ps:"2x2m",co:"40 kg/yr",tr:"5-7C",pt:["institutional","commercial","mixeduse"],d:"National tree of India.Massive canopy.40 kg CO2/yr.5-7C reduction."},{id:10,n:"Peepal Tree",s:"Ficus religiosa",z:["ind_tropical","ind_warmhumid","ind_composite","ind_temperate"],si:["back","front"],md:6,ps:"1.8x1.8m",co:"35 kg/yr",tr:"4-6C",pt:["institutional","residential","commercial"],d:"Sacred tree,24-hour O2.Highest CO2 sequester.Cultural significance."},{id:11,n:"Ashoka Tree",s:"Saraca asoca",z:["ind_tropical","ind_warmhumid","ind_composite","ind_temperate"],si:["front","left","right"],md:2,ps:"0.8x0.8m",co:"12 kg/yr",tr:"2-3C",pt:["residential","commercial","institutional"],d:"Columnar,narrow spaces.Orange flowers.Privacy screening."},{id:12,n:"Jamun Tree",s:"Syzygium cumini",z:["ind_tropical","ind_warmhumid","ind_composite","ind_temperate"],si:["back","front"],md:4,ps:"1.2x1.2m",co:"22 kg/yr",tr:"3-4C",pt:["residential","institutional","mixeduse"],d:"Edible fruit.Dense shade.Attracts birds.Tolerates waterlogging."},{id:13,n:"Mango Tree",s:"Mangifera indica",z:["ind_tropical","ind_warmhumid","ind_composite","ind_temperate"],si:["back","front"],md:5,ps:"1.5x1.5m",co:"28 kg/yr",tr:"3-5C",pt:["residential","institutional"],d:"Beloved fruit tree.Massive shade.Edible produce.Cultural importance."},{id:14,n:"Coconut Palm",s:"Cocos nucifera",z:["ind_tropical","ind_warmhumid"],si:["front","back","left","right"],md:2,ps:"0.8x0.8m",co:"14 kg/yr",tr:"2-3C",pt:["residential","commercial","mixeduse"],d:"Tropical icon.Vertical element.Economic value.Salt-tolerant."},{id:15,n:"Bamboo (Bambusa)",s:"Bambusa bambos",z:["ind_tropical","ind_warmhumid","ind_temperate","ind_composite"],si:["back","left","right"],md:1.5,ps:"0.6x0.6m",co:"35 kg/yr",tr:"2-4C",pt:["residential","commercial","institutional","industrial"],d:"Fastest CO2 absorber—35% more than trees.Windbreak.Noise barrier."},{id:16,n:"Teak Tree",s:"Tectona grandis",z:["ind_tropical","ind_warmhumid","ind_temperate"],si:["back","front"],md:4,ps:"1.2x1.2m",co:"20 kg/yr",tr:"3-4C",pt:["residential","institutional","commercial"],d:"Premium timber.Large shade leaves.Valuable hardwood."},{id:17,n:"Pongamia (Karanj)",s:"Millettia pinnata",z:["ind_arid","ind_warmhumid","ind_composite","ind_temperate","ind_tropical"],si:["front","left","right","back"],md:2.5,ps:"0.8x0.8m",co:"15 kg/yr",tr:"2-3C",pt:["residential","commercial","industrial","institutional"],d:"Biofuel tree.Nitrogen-fixing.Salt-tolerant.Avenue tree.Bees."},{id:18,n:"Tamarind Tree",s:"Tamarindus indica",z:["ind_arid","ind_warmhumid","ind_composite","ind_temperate"],si:["back","front"],md:4,ps:"1.2x1.2m",co:"18 kg/yr",tr:"3-4C",pt:["residential","institutional","commercial"],d:"Drought-tolerant.Edible fruit.Lives 200+ years.Vase canopy."},{id:19,n:"Hibiscus Hedge",s:"Hibiscus rosa-sinensis",z:["ind_tropical","ind_warmhumid","ind_composite","ind_temperate"],si:["front","left","right"],md:.8,ps:"0.5x0.5m",co:"4 kg/yr",tr:"1-2C",pt:["residential","commercial","institutional"],d:"Colorful hedge.Vibrant boundary.Low maintenance.Butterfly habitat."},{id:20,n:"Deodar Cedar",s:"Cedrus deodara",z:["ind_cold"],si:["back","front"],md:5,ps:"1.5x1.5m",co:"25 kg/yr",tr:"3-5C",pt:["residential","institutional","commercial"],d:"Majestic conifer.Aromatic.Snow-resistant.Evergreen.Specimen tree."},{id:21,n:"Rhododendron",s:"Rhododendron arboreum",z:["ind_cold"],si:["front","left","right"],md:2,ps:"0.8x0.8m",co:"8 kg/yr",tr:"1-2C",pt:["residential","institutional","commercial"],d:"State flower of Himalayan states.Spectacular spring blooms."},{id:22,n:"Khejri Tree",s:"Prosopis cineraria",z:["ind_arid"],si:["front","back","left","right"],md:3,ps:"1x1m",co:"20 kg/yr",tr:"3-4C",pt:["residential","institutional","industrial"],d:"Rajasthan state tree.Extreme drought survivor.Nitrogen-fixing."},{id:23,n:"Sandalwood",s:"Santalum album",z:["ind_temperate","ind_tropical","ind_composite"],si:["back"],md:2.5,ps:"0.8x0.8m",co:"10 kg/yr",tr:"1-2C",pt:["institutional","residential"],d:"High-value aromatic.Sandalwood oil.Economic returns 15-20yr."},{id:24,n:"Royal Palm",s:"Roystonea regia",z:["ind_tropical","ind_warmhumid","uae_coastal"],si:["front","left","right"],md:2,ps:"0.8x0.8m",co:"10 kg/yr",tr:"1-2C",pt:["commercial","institutional","mixeduse"],d:"Grand avenue palm.Dramatic entrance.Prestige symbol."},{id:25,n:"Curry Leaf Tree",s:"Murraya koenigii",z:["ind_tropical","ind_warmhumid","ind_composite","ind_temperate"],si:["left","right","front"],md:1,ps:"0.5x0.5m",co:"6 kg/yr",tr:"1-2C",pt:["residential","commercial","institutional"],d:"Culinary herb.Aromatic repels insects.Compact for narrow spaces."}];
 
-/* BASELINE EUI — kWh/m2/yr (ASHRAE 90.1 representative values by climate) */
-const BASELINE_EUI = {
-  'Commercial Office':{'Hot-Humid (1A/1B)':220,'Hot-Dry (2A/2B)':195,'Mixed-Humid (3A/3C)':175,'Mixed-Dry (3B)':165,'Cool (4A/4B)':155,'Cold (5A/5B)':160,'Very Cold (6A/6B)':170,'Subarctic (7+)':185},
-  'Residential':{'Hot-Humid (1A/1B)':130,'Hot-Dry (2A/2B)':115,'Mixed-Humid (3A/3C)':105,'Mixed-Dry (3B)':100,'Cool (4A/4B)':100,'Cold (5A/5B)':110,'Very Cold (6A/6B)':120,'Subarctic (7+)':135},
-  'Hospitality':{'Hot-Humid (1A/1B)':295,'Hot-Dry (2A/2B)':265,'Mixed-Humid (3A/3C)':240,'Mixed-Dry (3B)':230,'Cool (4A/4B)':220,'Cold (5A/5B)':235,'Very Cold (6A/6B)':250,'Subarctic (7+)':270},
-  'Healthcare':{'Hot-Humid (1A/1B)':420,'Hot-Dry (2A/2B)':390,'Mixed-Humid (3A/3C)':370,'Mixed-Dry (3B)':355,'Cool (4A/4B)':340,'Cold (5A/5B)':360,'Very Cold (6A/6B)':375,'Subarctic (7+)':390},
-  'Educational':{'Hot-Humid (1A/1B)':175,'Hot-Dry (2A/2B)':155,'Mixed-Humid (3A/3C)':145,'Mixed-Dry (3B)':135,'Cool (4A/4B)':130,'Cold (5A/5B)':145,'Very Cold (6A/6B)':155,'Subarctic (7+)':165},
-  'Retail':{'Hot-Humid (1A/1B)':235,'Hot-Dry (2A/2B)':215,'Mixed-Humid (3A/3C)':195,'Mixed-Dry (3B)':185,'Cool (4A/4B)':175,'Cold (5A/5B)':185,'Very Cold (6A/6B)':195,'Subarctic (7+)':205},
-  'Mixed-Use':{'Hot-Humid (1A/1B)':200,'Hot-Dry (2A/2B)':180,'Mixed-Humid (3A/3C)':165,'Mixed-Dry (3B)':155,'Cool (4A/4B)':150,'Cold (5A/5B)':160,'Very Cold (6A/6B)':170,'Subarctic (7+)':185},
-  'Industrial / Warehouse':{'Hot-Humid (1A/1B)':310,'Hot-Dry (2A/2B)':280,'Mixed-Humid (3A/3C)':255,'Mixed-Dry (3B)':240,'Cool (4A/4B)':230,'Cold (5A/5B)':250,'Very Cold (6A/6B)':265,'Subarctic (7+)':280}
-};
+let mR=[],mRC=0,LC=null;
 
-/* ═══════════════════════════════════════════════════
-   STATE
-   ═══════════════════════════════════════════════════ */
-const ST = {
-  step: 0,
-  user: { name:'', role:'', org:'' },
-  proj: { name:'', type:'Commercial Office', country:'UAE', city:'', climate:'Hot-Humid (1A/1B)', area:5000, floors:10, occ:200, hvac:'VAV with DDC', yr:2025 },
-  leed: {},           // {creditName: value}
-  well: {},           // {featureName: bool}
-  dis: {},            // {questionText: bool}
-  risks: [],
-  lci: 0, wci: 0, dci: 0,
-  esg: { elec:0, gas:0, ren:0, water:0, emb:0 }
-};
+function go(s){if(s===5)gPl();if(s===6)cR();document.querySelectorAll('.ss').forEach(x=>x.classList.remove('on'));document.getElementById('s'+s).classList.add('on');document.querySelectorAll('.sd').forEach(d=>{const v=+d.dataset.s;d.classList.remove('act','dn');if(v<s)d.classList.add('dn');else if(v===s)d.classList.add('act')});document.querySelectorAll('.sl').forEach((l,i)=>l.classList.toggle('dn',i<s-1));window.scrollTo({top:0,behavior:'smooth'})}
+function updZ(){const l=document.getElementById('location').value,s=document.getElementById('climateZone');s.innerHTML='<option value="">Select</option>';if(ZN[l])ZN[l].forEach(z=>{const o=document.createElement('option');o.value=z.id;o.textContent=z.n+' - '+z.d;s.appendChild(o)})}
+function uD(){const g=id=>document.getElementById(id).value||'';document.getElementById('dF').textContent=g('frontBound')?g('frontBound')+'m':'-';document.getElementById('dB').textContent=g('backOffset')?g('backOffset')+'m':'-';document.getElementById('dL').textContent=g('leftOffset')?g('leftOffset')+'m':'-';document.getElementById('dR').textContent=g('rightOffset')?g('rightOffset')+'m':'-'}
 
-const STEPS = ['Welcome','Project','LEED','WELL','Disaster','Risk','ESG/Carbon','Report'];
+function addR(){if(mR.length>=100){sT('Max 100 rows.','i');return}mRC++;const rid=mRC;mR.push(rid);const tb=document.getElementById('mBd'),tr=document.createElement('tr');tr.id='mr_'+rid;let o='<option value="">Select...</option>';CM.forEach(m=>o+=`<option value="${m.id}">${m.n}</option>`);tr.innerHTML=`<td style="color:var(--muted);font-weight:600;">${mR.length}</td><td><select class="mi" id="ms_${rid}" onchange="oMS(${rid})">${o}</select></td><td><select class="mi" id="ps_${rid}" onchange="oPS(${rid})" disabled><option value="">Select material</option></select></td><td id="ga_${rid}" style="font-size:.74rem;color:var(--muted);">-</td><td id="cs_${rid}" style="text-align:center;">-</td><td><input type="number" class="mi" id="mq_${rid}" value="1" min="0" style="width:42px;"></td><td><button class="bd" onclick="dR(${rid})"><i class="fas fa-trash-alt"></i></button></td>`;tb.appendChild(tr)}
+function dR(rid){const tr=document.getElementById('mr_'+rid);if(tr)tr.remove();mR=mR.filter(r=>r!==rid);let i=1;document.querySelectorAll('#mBd tr').forEach(t=>t.querySelector('td').textContent=i++)}
+function oMS(rid){const mid=+document.getElementById('ms_'+rid).value,ps=document.getElementById('ps_'+rid),gt=document.getElementById('ga_'+rid),ct=document.getElementById('cs_'+rid);if(!mid){ps.innerHTML='<option value="">Select material</option>';ps.disabled=true;gt.innerHTML='-';ct.innerHTML='-';return}const m=CM.find(x=>x.id===mid);let po='<option value="">Select</option>';m.p.forEach(p=>po+=`<option value="${p}">${p}</option>`);ps.innerHTML=po;ps.disabled=false;const g=GA[mid];if(g){gt.innerHTML=`<span class="gb"><i class="fas fa-leaf" style="margin-right:2px;"></i>${g.n}</span>`;ct.innerHTML=`<span class="cb">${g.co}%</span>`}}
+function oPS(rid){const mid=+document.getElementById('ms_'+rid).value,gt=document.getElementById('ga_'+rid);if(!mid)return;const g=GA[mid];if(g)gt.innerHTML=`<span class="gb"><i class="fas fa-leaf" style="margin-right:2px;"></i>${g.n}</span><div style="font-size:.64rem;color:var(--muted);margin-top:2px;">${g.d}</div>`}
 
-/* ═══════════════════════════════════════════════════
-   HELPERS
-   ═══════════════════════════════════════════════════ */
-function el(id){ return document.getElementById(id) }
-function esc(s){ return String(s).replace(/'/g,"\\'").replace(/"/g,"&quot;") }
-function toast(msg, type='success'){
-  const c=el('toasts');
-  const cols={success:'#0FBF7A',warning:'#C8970F',error:'#E84444',info:'#3B82F6'};
-  const ics={success:'fa-check-circle',warning:'fa-triangle-exclamation',error:'fa-times-circle',info:'fa-info-circle'};
-  const d=document.createElement('div');
-  d.className='toast';d.style.background=cols[type];
-  d.innerHTML=`<i class="fas ${ics[type]}"></i>${msg}`;
-  c.appendChild(d);
-  setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),300)},3000);
-}
-function rCol(s){ return s<=4?'#22C55E':s<=9?'#EAB308':s<=16?'#F97316':'#EF4444' }
-function rLvl(s){ return s<=4?'Low':s<=9?'Medium':s<=16?'High':'Critical' }
+function sT(m,t='s'){const e=document.getElementById('toast');e.textContent=m;e.className='toast t'+t+' show';setTimeout(()=>e.classList.remove('show'),3000)}
+function v2(){const f=['projName','userName','userOrg','userCity','projectType','constrMode','location','climateZone','projSize','numFloors','soilType'],l=['Project Name','Name','Organization','City','Project Type','Construction Mode','Location','Climate Zone','Project Size','Floors','Soil'];for(let i=0;i<f.length;i++){if(!document.getElementById(f[i]).value.trim()){sT('Fill in '+l[i],'i');document.getElementById(f[i]).focus();return}}go(3);if(!mR.length){addR();addR();addR()}}
+function v3(){let h=false;mR.forEach(r=>{const s=document.getElementById('ms_'+r);if(s&&s.value)h=true});if(!h){sT('Select at least one material.','i');return}go(4)}
+function v4(){const f=['frontRoad','frontBound','leftOffset','rightOffset','backOffset','plotArea'],l=['Front-Road','Front-Boundary','Left','Right','Back','Plot Area'];for(let i=0;i<f.length;i++){if(!document.getElementById(f[i]).value||parseFloat(document.getElementById(f[i]).value)<0){sT('Enter '+l[i],'i');document.getElementById(f[i]).focus();return}}go(5)}
 
-/* ═══════════════════════════════════════════════════
-   SCORING FUNCTIONS
-   ═══════════════════════════════════════════════════ */
-function calcLeedEnergyPts(pct){
-  if(pct<6)return 0;if(pct<10)return 1;if(pct<15)return 3;if(pct<20)return 5;
-  if(pct<25)return 7;if(pct<30)return 9;if(pct<35)return 11;if(pct<40)return 13;
-  if(pct<45)return 15;if(pct<50)return 16;if(pct<55)return 17;return 18;
-}
-function calcLeedRenPts(pct){
-  if(pct<1)return 0;if(pct<5)return 1;if(pct<10)return 2;if(pct<20)return 3;if(pct<30)return 4;return 5;
-}
+function gPl(){const zn=document.getElementById('climateZone').value,pt=document.getElementById('projectType').value,fd=+document.getElementById('frontBound').value||0,ld=+document.getElementById('leftOffset').value||0,rd=+document.getElementById('rightOffset').value||0,bd=+document.getElementById('backOffset').value||0;const sides=[{k:'front',l:'Front (Road)',d:fd,i:'fa-road'},{k:'back',l:'Back',d:bd,i:'fa-tree'},{k:'left',l:'Left Side',d:ld,i:'fa-arrows-alt-h'},{k:'right',l:'Right Side',d:rd,i:'fa-arrows-alt-h'}];const ct=document.getElementById('plR');ct.innerHTML='';sides.forEach(side=>{const suit=PD.filter(p=>p.z.includes(zn)&&p.si.includes(side.k)&&p.md<=side.d&&(p.pt.includes(pt)||pt==='mixeduse'));let h=`<div class="pc"><div style="display:flex;align-items:center;gap:7px;margin-bottom:.7rem;"><div style="width:32px;height:32px;border-radius:7px;background:rgba(48,199,112,.1);display:flex;align-items:center;justify-content:center;"><i class="fas ${side.i}" style="color:var(--accent2);font-size:.85rem;"></i></div><div><h4 style="font-size:.95rem;margin:0;">${side.l}</h4><span style="font-size:.72rem;color:var(--muted);">Offset: ${side.d}m</span></div></div>`;if(!suit.length)h+=`<p style="color:var(--muted);font-size:.78rem;">Insufficient offset.Increase distance or use ground cover.</p>`;else{h+=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.6rem;">`;suit.forEach(p=>{const pw=+p.ps.split('x')[0],np=Math.min(Math.max(1,Math.floor(side.d*10/(pw+1))),20);h+=`<div style="background:rgba(7,26,11,.5);border:1px solid var(--border);border-radius:8px;padding:.7rem;"><div style="font-weight:700;font-size:.84rem;">${p.n}</div><div style="font-size:.67rem;color:var(--accent);font-style:italic;margin-bottom:3px;">${p.s}</div><p style="font-size:.7rem;color:var(--muted);line-height:1.35;margin-bottom:3px;">${p.d}</p><div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="gb">CO2: ${p.co}</span><span class="cb">Temp: ${p.tr}</span></div><div style="margin-top:3px;font-size:.68rem;color:var(--muted);">Pit: ${p.ps} | Rec: ${np}</div></div>`});h+=`</div>`}h+=`</div>`;ct.innerHTML+=h})}
 
-function leedScore(){
-  let total=0, catScores=[], prereqOK=true;
-  for(let ci=0;ci<LEED_DATA.length;ci++){
-    const cat=LEED_DATA[ci]; let cp=0;
-    for(const cr of cat.cr){
-      const v=ST.leed[cr.n];
-      if(cr.prereq){
-        if(!v) prereqOK=false;
-        continue;
-      }
-      if(cr.t==='y'){ if(v===true) cp+=cr.p }
-      else if(cr.t==='c'){ if(v!=null&&cr.o&&cr.o[v]) cp+=cr.o[v][1] }
-      else if(cr.t==='s'){
-        const val=v||0;
-        if(cr.n==='Optimize Energy Performance') cp+=calcLeedEnergyPts(val);
-        else if(cr.n==='Renewable Energy Production') cp+=calcLeedRenPts(val);
-      }
-    }
-    cp=Math.min(cp,cat.max);
-    catScores.push({a:cat.abbr,c:cat.cat,p:cp,m:cat.max,icon:cat.icon});
-    total+=cp;
-  }
-  total=Math.min(total,110);
-  const cert=!prereqOK?'INELIGIBLE':total>=80?'PLATINUM':total>=60?'GOLD':total>=50?'SILVER':total>=40?'CERTIFIED':'BELOW MIN';
-  return{total,catScores,cert,prereqOK};
-}
+function cR(){const pS=+document.getElementById('projSize').value||0,nF=+document.getElementById('numFloors').value||1,zn=document.getElementById('climateZone').value,pt=document.getElementById('projectType').value,fD=+document.getElementById('frontBound').value||0,lD=+document.getElementById('leftOffset').value||0,rD=+document.getElementById('rightOffset').value||0,bD=+document.getElementById('backOffset').value||0,pA=+document.getElementById('plotArea').value||0;let tM=0,mCt=0,tCO=0,tEN=0,msd=[];mR.forEach(rid=>{const sel=document.getElementById('ms_'+rid),psel=document.getElementById('ps_'+rid);if(!sel||!sel.value)return;const mid=+sel.value,pur=psel?psel.value:'',qty=document.getElementById('mq_'+rid)?+document.getElementById('mq_'+rid).value||1:1;const g=GA[mid],cm=CM.find(m=>m.id===mid);if(g&&pur){const qf=Math.min(qty,10)/10;tM+=(g.co*.6+g.en*.4)/100*40*qf;const bC=gBC(mid,pS),sk=bC*g.co/100*qty;tCO+=sk;tEN+=g.en*qf;msd.push({cv:cm.n,gr:g.n,pur,coP:g.co,coK:Math.round(sk),enP:g.en,ds:g.d});mCt++}});const nM=mCt?Math.min(40,tM):0,aE=mCt?tEN/mCt:0,eS=Math.min(25,aE/50*25),gA=Math.max(0,1-pS/nF/pA),sP=PD.filter(p=>p.z.includes(zn)&&(p.md<=fD||p.md<=bD||p.md<=lD||p.md<=rD)),siS=Math.min(20,sP.length/15*10+gA*10),ieM=mR.filter(rid=>{const sel=document.getElementById('ms_'+rid);if(!sel||!sel.value)return false;const g=GA[+sel.value];return g&&(g.d.toLowerCase().includes('low-voc')||g.d.toLowerCase().includes('zero voc')||g.d.includes('natural')||g.d.includes('breathable'))}).length,ieS=Math.min(8,ieM/Math.max(1,mCt)*8),hP=msd.some(m=>m.gr.toLowerCase().includes('permeable')||m.gr.toLowerCase().includes('pervious')),wS=hP?4:Math.min(4,gA*4),uC=new Set(msd.map(m=>m.cv.split(' ')[0])).size,iS=Math.min(3,uC*.5),tS=Math.round(nM+eS+siS+ieS+wS+iS);LC={tS,nM,eS,siS,ieS,wS,iS,tCO:Math.round(tCO),aEP:mCt?(tEN/mCt).toFixed(0):0,sPL:sP.length,msd,zn,pt,fD,lD,rD,bD,pA,pS,nF,pN:document.getElementById('projName').value,un:document.getElementById('userName').value,uo:document.getElementById('userOrg').value,uc:document.getElementById('userCity').value,cm:document.getElementById('constrMode').value,loc:document.getElementById('location').value,st:document.getElementById('soilType').value};aS(tS);const ld=[{n:'Materials & Resources',s:nM,m:40,c:'#30c770'},{n:'Energy & Atmosphere',s:eS,m:25,c:'#d4a83a'},{n:'Sustainable Sites',s:siS,m:20,c:'#3498db'},{n:'Indoor Environmental Quality',s:ieS,m:8,c:'#d07840'},{n:'Water Efficiency',s:wS,m:4,c:'#1abc9c'},{n:'Innovation in Design',s:iS,m:3,c:'#9b59b6'}];const lc=document.getElementById('lB');lc.innerHTML='';ld.forEach(d=>{lc.innerHTML+=`<div><div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span style="font-size:.78rem;font-weight:600;">${d.n}</span><span style="font-size:.78rem;color:var(--muted);">${d.s.toFixed(1)}/${d.m}</span></div><div class="lb-bg"><div class="lb-fl" style="width:${Math.round(d.s/d.m*100)}%;background:${d.c};"></div></div></div>`});document.getElementById('tC').textContent=Math.round(tCO).toLocaleString();document.getElementById('tE').textContent=mCt?(tEN/mCt).toFixed(0):'0';document.getElementById('tP').textContent=sP.length;document.getElementById('rS').textContent=`${LC.pN} — Prepared for ${LC.un}, ${LC.uo}`;const sb=document.getElementById('sB');sb.innerHTML='';msd.forEach(d=>sb.innerHTML+=`<tr><td style="font-size:.76rem;">${d.cv}</td><td><span class="gb">${d.gr}</span></td><td style="font-size:.76rem;">${d.pur}</td><td style="text-align:center;"><span class="cb">${d.coP}%</span></td></tr>`);const ps=document.getElementById('pS');ps.innerHTML='';const aS2=[{k:'front',l:'Front'},{k:'back',l:'Back'},{k:'left',l:'Left'},{k:'right',l:'Right'}];let tCP=0;aS2.forEach(side=>{const dist=side.k==='front'?fD:side.k==='back'?bD:side.k==='left'?lD:rD;const plants=PD.filter(p=>p.z.includes(zn)&&p.si.includes(side.k)&&p.md<=dist&&(p.pt.includes(pt)||pt==='mixeduse'));if(!plants.length)return;let sh=`<h4 style="font-size:.86rem;color:var(--accent2);margin-bottom:.25rem;">${side.l}</h4><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:.5rem;margin-bottom:.6rem;">`;plants.forEach(p=>{tCP+=parseFloat(p.co);sh+=`<div style="background:rgba(7,26,11,.4);border:1px solid var(--border);border-radius:6px;padding:.45rem;font-size:.76rem;"><strong>${p.n}</strong> <span style="color:var(--accent);font-style:italic;">(${p.s})</span><br><span style="color:var(--muted);">CO2: ${p.co} | ${p.tr}</span></div>`});sh+=`</div>`;ps.innerHTML+=sh});ps.innerHTML+=`<div style="background:rgba(48,199,112,.07);border:1px solid rgba(48,199,112,.18);border-radius:8px;padding:.6rem;text-align:center;margin-top:.2rem;"><span style="font-size:.78rem;color:var(--muted);">Annual CO2 Sequestration:</span><div style="font-size:1.2rem;font-weight:900;color:var(--accent2);">~${tCP.toFixed(0)} kg CO2/year</div></div>`}
+function gBC(mid,pS){const c=CM.find(m=>m.id===mid);if(!c)return 100;const m={"Cement":800,"Masonry":400,"Steel":1200,"Concrete":900,"Glass":600,"Flooring":300,"Stone":500,"Wood":200,"Plumbing":250,"Electrical":150,"Waterproofing":300,"Finishing":180,"Aggregate":100,"Insulation":350,"Metal":500,"Roofing":280,"Doors":220,"Cladding":400,"Paving":200,"Infrastructure":250,"Decorative":150,"Windows":280};return(m[c.c]||200)*(pS/1000)}
+function aS(target){const arc=document.getElementById('sA'),num=document.getElementById('sN'),lbl=document.getElementById('sL'),circ=2*Math.PI*82;let cur=0;const step=()=>{cur++;if(cur>target)cur=target;num.textContent=cur;arc.setAttribute('stroke-dashoffset',circ-(cur/100)*circ);if(cur<25)lbl.textContent='Needs Improvement';else if(cur<45)lbl.textContent='Fair - Room for Growth';else if(cur<65)lbl.textContent='Good - On Track';else if(cur<80)lbl.textContent='Very Good - Strong Commitment';else lbl.textContent='Excellent - Leadership Level';if(cur<target)requestAnimationFrame(step)};arc.setAttribute('stroke-dashoffset',circ);requestAnimationFrame(step)}
 
-function wellScore(){
-  let total=0, catScores=[];
-  for(const w of WELL_DATA){
-    let cp=0;
-    for(const f of w.feats){ if(ST.well[f]) cp++ }
-    cp=Math.min(cp,w.max);
-    catScores.push({c:w.concept,p:cp,m:w.max,cl:w.color,icon:w.icon});
-    total+=cp;
-  }
-  total=Math.min(total,100);
-  const cert=total>=80?'PLATINUM':total>=60?'GOLD':total>=50?'SILVER':total>=40?'BRONZE':'BELOW MIN';
-  return{total,catScores,cert};
-}
-
-function disScore(){
-  let yes=0,n=0;
-  for(const cat of DISASTER_DATA){ for(const q of cat.q){ n++; if(ST.dis[q]) yes++ }}
-  return n?Math.round(yes/n*100):0;
-}
-function disCatScore(ci){
-  const cat=DISASTER_DATA[ci]; let yes=0;
-  for(const q of cat.q){ if(ST.dis[q]) yes++ }
-  return{yes,total:cat.q.length,pct:cat.q.length?Math.round(yes/cat.q.length*100):0};
-}
-
-function calcCarbon(){
-  const p=ST.proj;
-  const gf=GRID_FACTORS[p.country]||0.49;
-  const baseEUI_map=BASELINE_EUI[p.type]||BASELINE_EUI['Commercial Office'];
-  const baseEUI=Object.entries(baseEUI_map).find(([k])=>p.climate.includes(k.split(' ')[0]))?.[1]||baseEUI_map[Object.keys(baseEUI_map)[0]]||200;
-  const eImp=ST.leed['Optimize Energy Performance']||0;
-  const renPct=ST.leed['Renewable Energy Production']||0;
-  const adjEUI=baseEUI*(1-eImp/100);
-  const annualEnergy=adjEUI*p.area; // kWh/yr
-  const annualEnergyCovered=annualEnergy*(renPct/100);
-  const gridEnergy=annualEnergy-annualEnergyCovered;
-  const opCO2=gridEnergy*gf; // kgCO2/yr
-  const esg=ST.esg;
-  const esgElecCO2=(esg.elec||annualEnergy/1000)*gf*1000;
-  const esgGasCO2=(esg.gas||0)*2.04*1000; // kg/m3 natural gas → 2.04 kgCO2/m3
-  const totalCO2=opCO2; // primary calc from LEED data
-  const co2Intensity=p.area?totalCO2/p.area:0;
-  const embCO2=(esg.emb||0)*p.area; // kgCO2/m2 embodied
-  const wCO2=(p.area*1.4)*0.344; // water CO2: ~1.4m3/m2/yr × 0.344 kgCO2/m3 (UK/UAE avg)
-  const euThreshold=27.5;
-  const uaeTarget=35;
-  return{gf,baseEUI,adjEUI,annualEnergy,gridEnergy,opCO2,co2Intensity,eImp,renPct,embCO2,wCO2,euThreshold,uaeTarget,annualEnergyCovered};
-}
-
-/* ═══════════════════════════════════════════════════
-   STEPPER
-   ═══════════════════════════════════════════════════ */
-function drawStepper(){
-  const bar=el('stepperDots'); let h='';
-  for(let i=0;i<STEPS.length;i++){
-    const cls=i===ST.step?'active':i<ST.step?'done':'';
-    h+=`<div style="display:flex;align-items:center;${i<STEPS.length-1?'flex:1':''}">`;
-    h+=`<div style="display:flex;flex-direction:column;align-items:center">`;
-    h+=`<div class="step-dot ${cls}" onclick="goStep(${i})">${i<ST.step?'<i class="fas fa-check" style="font-size:8px"></i>':i+1}</div>`;
-    h+=`<span style="font-size:7px;margin-top:2px;${i===ST.step?'color:var(--em);font-weight:700':'color:var(--muted)'}" class="sbl">${STEPS[i]}</span>`;
-    h+=`</div>`;
-    if(i<STEPS.length-1) h+=`<div class="step-line ${i<ST.step?'done':''}"></div>`;
-    h+=`</div>`;
-  }
-  bar.innerHTML=h;
-  el('stepHint').textContent=`Step ${ST.step+1}/${STEPS.length} — ${STEPS[ST.step]}`;
-}
-
-function goStep(n){
-  if(n>ST.step){
-    if(ST.step===0&&!ST.user.name.trim()){toast('Please enter your name','warning');return}
-    if(ST.step===1&&!ST.proj.name.trim()){toast('Please enter a project name','warning');return}
-  }
-  ST.step=Math.max(0,Math.min(STEPS.length-1,n));
-  drawStepper(); render();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-/* ═══════════════════════════════════════════════════
-   RENDER DISPATCHER
-   ═══════════════════════════════════════════════════ */
-function render(){
-  const w=el('appWrap');
-  w.style.animation='none'; w.offsetHeight; w.style.animation='fadeUp .3s ease';
-  const fns=[rWelcome,rProject,rLeed,rWell,rDisaster,rRisk,rESG,rReport];
-  fns[ST.step]();
-}
-
-/* ═══════════════════════════════════════════════════
-   STEP 0 — WELCOME
-   ═══════════════════════════════════════════════════ */
-function rWelcome(){
-  let h=`<div style="max-width:480px;margin:20px auto 0;text-align:center">`;
-  h+=`<div class="logo-glow" style="display:inline-block;margin-bottom:16px">
-    <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#0FBF7A,#C8970F);display:flex;align-items:center;justify-content:center;margin:0 auto">
-      <i class="fas fa-leaf" style="font-size:26px;color:#050D08"></i>
-    </div>
-  </div>`;
-  h+=`<h1 style="font-size:26px;background:linear-gradient(135deg,#0FBF7A,#C8970F);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px">Prodify Green Nexus</h1>`;
-  h+=`<p style="font-size:12px;color:var(--muted);margin-bottom:6px">Sustainability Intelligence Platform</p>`;
-  h+=`<p style="font-size:10px;color:var(--muted);margin-bottom:22px">LEED v4.1 · WELL v2 · Disaster Resilience · ESG/Carbon · Risk</p>`;
-  h+=`<div class="glass" style="border-radius:14px;padding:20px;text-align:left">`;
-  h+=`<h3 style="font-size:14px;margin-bottom:14px;text-align:center">Tell us about yourself</h3>`;
-  h+=`<div style="margin-bottom:10px"><label class="lbl">Your Full Name <span style="color:var(--red)">*</span></label>
-    <input type="text" id="iN" class="inp" value="${esc(ST.user.name)}" placeholder="e.g., Aravind Kumar"></div>`;
-  h+=`<div style="margin-bottom:10px"><label class="lbl">Professional Role</label>
-    <input type="text" id="iR" class="inp" value="${esc(ST.user.role)}" placeholder="Sustainability Consultant, MEP Engineer…"></div>`;
-  h+=`<div><label class="lbl">Organization / Firm</label>
-    <input type="text" id="iO" class="inp" value="${esc(ST.user.org)}" placeholder="Company or Institution"></div>`;
-  h+=`</div>`;
-  h+=`<div style="margin-top:16px;padding:14px;border:1px solid var(--border);border-radius:12px;text-align:left;background:rgba(15,191,122,.04)">`;
-  h+=`<p style="font-size:10px;color:var(--fg2);line-height:1.7">
-    This tool guides you step-by-step through a professional sustainability assessment covering:
-    <strong style="color:var(--em)">LEED v4.1 BD+C</strong> (110 pts) ·
-    <strong style="color:var(--rose)">WELL v2</strong> (100 pts) ·
-    <strong style="color:var(--blue)">Disaster Resilience</strong> ·
-    <strong style="color:var(--cyan)">Risk Matrix</strong> ·
-    <strong style="color:var(--gold)">ESG & Carbon</strong>.
-    At the end, a professional PDF report is generated. All calculations follow published LEED, WELL, ASHRAE, IEA, and ISO standards.
-  </p></div>`;
-  h+=`<button class="btn-primary" style="margin-top:18px;width:100%;padding:12px" 
-    onclick="ST.user.name=el('iN').value.trim();ST.user.role=el('iR').value.trim();ST.user.org=el('iO').value.trim();
-    if(!ST.user.name){toast('Please enter your name','warning');return}goStep(1)">
-    Begin Assessment <i class="fas fa-arrow-right" style="margin-left:6px"></i>
-  </button>`;
-  h+=`</div>`;
-  el('appWrap').innerHTML=h;
-}
-
-/* ═══════════════════════════════════════════════════
-   STEP 1 — PROJECT DETAILS
-   ═══════════════════════════════════════════════════ */
-function rProject(){
-  const p=ST.proj;
-  const types=Object.keys(BASELINE_EUI);
-  const countries=Object.keys(GRID_FACTORS);
-  const climates=['Hot-Humid (1A/1B)','Hot-Dry (2A/2B)','Mixed-Humid (3A/3C)','Mixed-Dry (3B)','Cool (4A/4B)','Cold (5A/5B)','Very Cold (6A/6B)','Subarctic (7+)'];
-  const hvacs=['VAV with DDC','VRF / VRV System','District Cooling + DOAS','Ground Source Heat Pump','Chilled Beam (Active/Passive)','Radiant Ceiling + DOAS','Split / Multi-Split','Fan Coil Unit (FCU)','Packaged Rooftop Unit'];
-
-  let h=`<div>`;
-  h+=`<h2 style="font-size:18px;margin-bottom:4px">Project Information</h2>`;
-  h+=`<p style="font-size:10px;color:var(--muted);margin-bottom:14px">Enter building details — used for LEED baseline, carbon calculations, and report generation.</p>`;
-  h+=`<div class="glass" style="border-radius:14px;padding:16px">`;
-  h+=`<div style="margin-bottom:10px"><label class="lbl">Project Name <span style="color:var(--red)">*</span></label>
-    <input type="text" id="pN" class="inp" value="${esc(p.name)}" placeholder="e.g., Al Hilal Sustainable Tower"></div>`;
-  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">`;
-  h+=`<div><label class="lbl">Building Use Type</label><select id="pT" class="sel">${types.map(t=>`<option${p.type===t?' selected':''}>${t}</option>`).join('')}</select></div>`;
-  h+=`<div><label class="lbl">Country / Region</label><select id="pC" class="sel">${countries.map(c=>`<option${p.country===c?' selected':''}>${c}</option>`).join('')}</select></div>`;
-  h+=`</div>`;
-  h+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">`;
-  h+=`<div><label class="lbl">City</label><input type="text" id="pCi" class="inp" value="${esc(p.city)}" placeholder="Dubai, Abu Dhabi…"></div>`;
-  h+=`<div><label class="lbl">Climate Zone</label><select id="pCz" class="sel">${climates.map(c=>`<option${p.climate===c?' selected':''}>${c}</option>`).join('')}</select></div>`;
-  h+=`<div><label class="lbl">Year</label><input type="number" id="pY" class="inp" value="${p.yr}" min="2020" max="2035"></div>`;
-  h+=`</div>`;
-  h+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:10px">`;
-  h+=`<div><label class="lbl">GFA (m²)</label><input type="number" id="pA" class="inp" value="${p.area}" min="100"></div>`;
-  h+=`<div><label class="lbl">No. of Floors</label><input type="number" id="pF" class="inp" value="${p.floors}" min="1"></div>`;
-  h+=`<div><label class="lbl">Occupants</label><input type="number" id="pO" class="inp" value="${p.occ}" min="1"></div>`;
-  h+=`<div><label class="lbl">Construction Type</label><select id="pCT" class="sel">
-    <option${p.conType==='Concrete Frame'?' selected':''}>Concrete Frame</option>
-    <option${p.conType==='Steel Frame'?' selected':''}>Steel Frame</option>
-    <option${p.conType==='Timber / CLT'?' selected':''}>Timber / CLT</option>
-    <option${p.conType==='Masonry'?' selected':''}>Masonry</option>
-    <option${p.conType==='Hybrid'?' selected':''}>Hybrid</option>
-  </select></div>`;
-  h+=`</div>`;
-  h+=`<div style="margin-bottom:0"><label class="lbl">HVAC System</label>
-    <select id="pH" class="sel">${hvacs.map(v=>`<option${p.hvac===v?' selected':''}>${v}</option>`).join('')}</select>
-  </div>`;
-  h+=`</div>`;
-  h+=`<div style="display:flex;justify-content:space-between;margin-top:14px">`;
-  h+=`<button class="btn-ghost" onclick="goStep(0)"><i class="fas fa-arrow-left" style="margin-right:5px"></i>Back</button>`;
-  h+=`<button class="btn-primary" onclick="saveProject()">Continue <i class="fas fa-arrow-right" style="margin-left:5px"></i></button>`;
-  h+=`</div></div>`;
-  el('appWrap').innerHTML=h;
-}
-
-function saveProject(){
-  ST.proj={
-    name:el('pN').value.trim(),type:el('pT').value,country:el('pC').value,city:el('pCi').value.trim(),
-    climate:el('pCz').value,area:parseInt(el('pA').value)||5000,floors:parseInt(el('pF').value)||10,
-    occ:parseInt(el('pO').value)||200,hvac:el('pH').value,yr:parseInt(el('pY').value)||2025,
-    conType:el('pCT').value
-  };
-  if(!ST.proj.name){toast('Please enter a project name','warning');return}
-  toast(`Project "${ST.proj.name}" saved`,'success');
-  goStep(2);
-}
-
-/* ═══════════════════════════════════════════════════
-   STEP 2 — LEED ENGINE
-   ═══════════════════════════════════════════════════ */
-function rLeed(){
-  const sc=leedScore(), cat=LEED_DATA[ST.lci], cs=sc.catScores[ST.lci];
-  const certColor={PLATINUM:'#0FBF7A',GOLD:'#C8970F',SILVER:'#94A3B8',CERTIFIED:'#6DA87E','BELOW MIN':'#E84444',INELIGIBLE:'#E84444'};
-  const cc=certColor[sc.cert]||'#E84444';
-
-  let h=`<div>`;
-  // Header
-  h+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">`;
-  h+=`<div><h2 style="font-size:18px;margin-bottom:2px">LEED v4.1 BD+C</h2>
-    <p style="font-size:10px;color:var(--muted)">Answer all credits and prerequisites accurately per LEED reference guide.</p></div>`;
-  h+=`<div style="text-align:right">
-    <span style="font-size:20px;font-weight:800;color:var(--em)">${sc.total}</span><span style="font-size:11px;color:var(--muted)">/110 pts</span><br>
-    <span class="cert" style="background:${cc}20;color:${cc}">${sc.cert}</span>
-    ${!sc.prereqOK?'<div style="font-size:9px;color:var(--red);margin-top:2px"><i class="fas fa-exclamation-triangle"></i> Prerequisites not met</div>':''}
-  </div>`;
-  h+=`</div>`;
-
-  // Category overview mini-bars
-  h+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:12px" class="grid4">`;
-  for(let i=0;i<LEED_DATA.length;i++){
-    const c=sc.catScores[i], active=i===ST.lci;
-    h+=`<div onclick="ST.lci=${i};rLeed()" style="padding:7px;border-radius:8px;cursor:pointer;border:1px solid ${active?'var(--em)':'var(--border)'};background:${active?'rgba(15,191,122,.1)':'var(--card)'}">
-      <div style="font-size:9px;font-weight:700;color:${active?'var(--em)':'var(--muted)'};margin-bottom:3px">${c.a}</div>
-      <div style="font-size:8px;color:var(--em);font-weight:700">${c.p}/${c.m}</div>
-      <div class="pbar" style="margin-top:3px"><div class="pfill" style="width:${c.m?Math.round(c.p/c.m*100):0}%;background:var(--em)"></div></div>
-    </div>`;
-  }
-  h+=`</div>`;
-
-  // Current category header
-  h+=`<div class="glass" style="border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">`;
-  h+=`<div style="display:flex;align-items:center;gap:8px">
-    <i class="fas ${cat.icon}" style="color:var(--em);font-size:14px"></i>
-    <div><div style="font-size:13px;font-weight:700">${cat.cat}</div>
-    <div style="font-size:9px;color:var(--muted)">${cat.cr.length} items · Max ${cat.max} pts</div></div>
-  </div>`;
-  h+=`<div style="text-align:right">
-    <span style="font-size:16px;font-weight:800;color:var(--em)">${cs.p}</span>
-    <span style="font-size:9px;color:var(--muted)">/${cs.m} pts</span>
-    <div class="pbar" style="width:90px;margin-top:4px"><div class="pfill" style="width:${cs.m?Math.round(cs.p/cs.m*100):0}%;background:var(--em)"></div></div>
-  </div>`;
-  h+=`</div>`;
-
-  // Credits
-  for(const cr of cat.cr){
-    const v=ST.leed[cr.n];
-    h+=`<div class="qcard">`;
-    h+=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">`;
-    if(cr.prereq) h+=`<span style="font-size:8px;padding:2px 7px;border-radius:4px;font-weight:800;background:rgba(232,68,68,.15);color:var(--red)">PREREQ</span>`;
-    else h+=`<span style="font-size:8px;padding:2px 7px;border-radius:4px;font-weight:800;background:rgba(15,191,122,.12);color:var(--em)">${cr.p} pt${cr.p!==1?'s':''}</span>`;
-    h+=`<span style="font-size:11px;font-weight:700">${cr.n}</span>`;
-    h+=`</div>`;
-    h+=`<p style="font-size:9px;color:var(--fg2);line-height:1.6;margin-bottom:7px">${cr.q}</p>`;
-    if(cr.note) h+=`<p style="font-size:8px;color:var(--gold);margin-bottom:6px;background:rgba(200,151,15,.08);padding:4px 7px;border-radius:5px;border-left:2px solid var(--gold)"><i class="fas fa-circle-info" style="margin-right:3px"></i>${cr.note}</p>`;
-
-    if(cr.t==='y'||cr.t==='p'){
-      h+=`<div style="display:flex;gap:6px">`;
-      h+=`<div class="opt${v===true?' sel':''}" onclick="ST.leed['${esc(cr.n)}']=true;rLeed()">&#10003; Yes</div>`;
-      h+=`<div class="opt${v===false?' sel':''}" onclick="ST.leed['${esc(cr.n)}']=false;rLeed()">&#10007; No</div>`;
-      h+=`</div>`;
-    } else if(cr.t==='c'){
-      h+=`<div style="display:flex;flex-wrap:wrap;gap:4px">`;
-      for(let k=0;k<cr.o.length;k++){
-        h+=`<div class="opt${v===k?' sel':''}" onclick="ST.leed['${esc(cr.n)}']='+k+';rLeed()">${cr.o[k][0]}${cr.o[k][1]>0?' ('+cr.o[k][1]+'pt'+(cr.o[k][1]!==1?'s':'')+')':''}</div>`;
-      }
-      h+=`</div>`;
-    } else if(cr.t==='s'){
-      const sv=v||0;
-      const pts=cr.n==='Optimize Energy Performance'?calcLeedEnergyPts(sv):calcLeedRenPts(sv);
-      h+=`<div style="display:flex;align-items:center;gap:10px">`;
-      h+=`<input type="range" min="${cr.mn}" max="${cr.mx}" step="1" value="${sv}" style="flex:1;accent-color:var(--em)" oninput="ST.leed['${esc(cr.n)}']=+this.value;rLeed()">`;
-      h+=`<span style="font-size:13px;font-weight:800;color:var(--em);width:90px;text-align:right;flex-shrink:0">${sv}% = ${pts} pt${pts!==1?'s':''}</span>`;
-      h+=`</div>`;
-    }
-    if(cr.ref) h+=`<p style="font-size:8px;color:var(--muted);margin-top:5px"><i class="fas fa-book-open" style="margin-right:3px"></i>${cr.ref}</p>`;
-    h+=`</div>`;
-  }
-
-  // Navigation
-  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">`;
-  h+=`<button class="btn-ghost" onclick="goStep(1)"><i class="fas fa-arrow-left" style="margin-right:5px"></i>Back</button>`;
-  h+=`<div style="display:flex;gap:8px">`;
-  if(ST.lci>0) h+=`<button class="btn-ghost" onclick="ST.lci--;rLeed()"><i class="fas fa-chevron-left" style="margin-right:4px"></i>Prev</button>`;
-  if(ST.lci<LEED_DATA.length-1) h+=`<button class="btn-primary" onclick="ST.lci++;rLeed()">Next Category <i class="fas fa-chevron-right" style="margin-left:4px"></i></button>`;
-  else h+=`<button class="btn-primary" onclick="toast('LEED complete: '+leedScore().total+' pts — '+leedScore().cert,'success');goStep(3)">Continue to WELL <i class="fas fa-arrow-right" style="margin-left:5px"></i></button>`;
-  h+=`</div></div></div>`;
-  el('appWrap').innerHTML=h;
-}
-
-/* ═══════════════════════════════════════════════════
-   STEP 3 — WELL ENGINE
-   ═══════════════════════════════════════════════════ */
-function rWell(){
-  const sc=wellScore(), con=WELL_DATA[ST.wci], cs=sc.catScores[ST.wci];
-  const certColor={PLATINUM:'#0FBF7A',GOLD:'#C8970F',SILVER:'#94A3B8',BRONZE:'#cd7f32','BELOW MIN':'#E84444'};
-  const cc=certColor[sc.cert]||'#E84444';
-
-  let h=`<div>`;
-  h+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">`;
-  h+=`<div><h2 style="font-size:18px;margin-bottom:2px">WELL v2 Standard</h2>
-    <p style="font-size:10px;color:var(--muted)">Toggle all features your building currently achieves or will achieve.</p></div>`;
-  h+=`<div style="text-align:right">
-    <span style="font-size:20px;font-weight:800;color:var(--rose)">${sc.total}</span><span style="font-size:11px;color:var(--muted)">/100 pts</span><br>
-    <span class="cert" style="background:${cc}20;color:${cc}">${sc.cert}</span>
-  </div>`;
-  h+=`</div>`;
-
-  // Concept overview
-  h+=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">`;
-  for(let i=0;i<WELL_DATA.length;i++){
-    const w=WELL_DATA[i], active=i===ST.wci;
-    const cp=sc.catScores[i];
-    h+=`<button class="catTab${active?' active':''}" style="${active?'border-color:'+w.color+'50;background:'+w.color+'15;color:'+w.color:'color:var(--muted)'}" onclick="ST.wci=${i};rWell()">
-      <i class="fas ${w.icon}" style="margin-right:3px;font-size:9px"></i>${w.concept} ${cp.p}/${cp.m}
-    </button>`;
-  }
-  h+=`</div>`;
-
-  // Current concept header
-  h+=`<div class="glass" style="border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">`;
-  h+=`<div style="display:flex;align-items:center;gap:8px">
-    <div style="width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:${con.color}15;flex-shrink:0">
-      <i class="fas ${con.icon}" style="color:${con.color};font-size:13px"></i>
-    </div>
-    <div><div style="font-size:13px;font-weight:700">${con.concept}</div>
-    <div style="font-size:9px;color:var(--muted)">${con.feats.length} features · Max ${con.max} pts</div></div>
-  </div>`;
-  h+=`<div style="text-align:right">
-    <span style="font-size:16px;font-weight:800;color:${con.color}">${cs.p}</span>
-    <span style="font-size:9px;color:var(--muted)">/${cs.m}</span>
-    <div class="pbar" style="width:90px;margin-top:4px"><div class="pfill" style="width:${cs.m?Math.round(cs.p/cs.m*100):0}%;background:${con.color}"></div></div>
-  </div>`;
-  h+=`</div>`;
-
-  // Features
-  for(const f of con.feats){
-    const v=ST.well[f];
-    h+=`<div class="qcard" style="display:flex;align-items:flex-start;gap:8px;padding:9px 11px">`;
-    h+=`<div class="chk${v?' on':''}" style="margin-top:1px;flex-shrink:0" onclick="ST.well['${esc(f)}']=!ST.well['${esc(f)}'];rWell()">
-      ${v?'<i class="fas fa-check" style="font-size:8px;color:var(--bg)"></i>':''}
-    </div>`;
-    h+=`<p style="font-size:10px;line-height:1.6;color:${v?'var(--muted)':'var(--fg)'};${v?'text-decoration:line-through;opacity:.7':''}">${f}</p>`;
-    h+=`</div>`;
-  }
-
-  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">`;
-  h+=`<button class="btn-ghost" onclick="goStep(2)"><i class="fas fa-arrow-left" style="margin-right:5px"></i>Back</button>`;
-  h+=`<div style="display:flex;gap:8px">`;
-  if(ST.wci>0) h+=`<button class="btn-ghost" onclick="ST.wci--;rWell()"><i class="fas fa-chevron-left" style="margin-right:4px"></i>Prev</button>`;
-  if(ST.wci<WELL_DATA.length-1) h+=`<button class="btn-primary" onclick="ST.wci++;rWell()">Next Concept <i class="fas fa-chevron-right" style="margin-left:4px"></i></button>`;
-  else h+=`<button class="btn-primary" onclick="toast('WELL complete: '+wellScore().total+' pts — '+wellScore().cert,'success');goStep(4)">Continue to Disaster <i class="fas fa-arrow-right" style="margin-left:5px"></i></button>`;
-  h+=`</div></div></div>`;
-  el('appWrap').innerHTML=h;
-}
-
-/* ═══════════════════════════════════════════════════
-   STEP 4 — DISASTER RESILIENCE
-   ═══════════════════════════════════════════════════ */
-function rDisaster(){
-  const ds=disScore(), cat=DISASTER_DATA[ST.dci], cs=disCatScore(ST.dci);
-
-  let h=`<div>`;
-  h+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">`;
-  h+=`<div><h2 style="font-size:18px;margin-bottom:2px">Disaster Resilience</h2>
-    <p style="font-size:10px;color:var(--muted)">Assess emergency preparedness per hazard category.</p></div>`;
-  h+=`<div style="text-align:right">
-    <span style="font-size:20px;font-weight:800;color:var(--blue)">${ds}%</span>
-    <div style="font-size:9px;color:var(--muted)">${ds>=80?'Highly Resilient':ds>=60?'Adequate':ds>=40?'Moderate':'Vulnerable'}</div>
-  </div>`;
-  h+=`</div>`;
-
-  // Hazard tabs
-  h+=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">`;
-  for(let i=0;i<DISASTER_DATA.length;i++){
-    const d=DISASTER_DATA[i], active=i===ST.dci;
-    const cp=disCatScore(i);
-    h+=`<button class="catTab${active?' active':''}" style="${active?'border-color:'+d.color+'50;background:'+d.color+'15;color:'+d.color:'color:var(--muted)'}" onclick="ST.dci=${i};rDisaster()">
-      <i class="fas ${d.icon}" style="margin-right:3px;font-size:9px"></i>${d.cat} ${cp.pct}%
-    </button>`;
-  }
-  h+=`</div>`;
-
-  // Category header
-  h+=`<div class="glass" style="border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">`;
-  h+=`<div style="display:flex;align-items:center;gap:8px">
-    <div style="width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:${cat.color}15;flex-shrink:0">
-      <i class="fas ${cat.icon}" style="color:${cat.color};font-size:13px"></i>
-    </div>
-    <div><div style="font-size:13px;font-weight:700">${cat.cat}</div>
-    <div style="font-size:9px;color:var(--muted)">${cat.q.length} measures</div></div>
-  </div>`;
-  h+=`<div style="text-align:right">
-    <span style="font-size:16px;font-weight:800;color:${cat.color}">${cs.pct}%</span>
-    <span style="font-size:9px;color:var(--muted)"> (${cs.yes}/${cs.total})</span>
-    <div class="pbar" style="width:90px;margin-top:4px"><div class="pfill" style="width:${cs.pct}%;background:${cat.color}"></div></div>
-  </div>`;
-  h+=`</div>`;
-
-  // Questions
-  for(const q of cat.q){
-    const v=ST.dis[q];
-    h+=`<div class="qcard" style="display:flex;align-items:flex-start;gap:8px;padding:9px 11px">`;
-    h+=`<div class="chk${v?' on':''}" style="margin-top:1px;flex-shrink:0" onclick="ST.dis['${esc(q)}']=!ST.dis['${esc(q)}'];rDisaster()">
-      ${v?'<i class="fas fa-check" style="font-size:8px;color:var(--bg)"></i>':''}
-    </div>`;
-    h+=`<p style="font-size:10px;line-height:1.6;color:${v?'var(--muted)':'var(--fg)'};${v?'opacity:.7':''}">${q}</p>`;
-    h+=`</div>`;
-  }
-
-  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">`;
-  h+=`<button class="btn-ghost" onclick="goStep(3)"><i class="fas fa-arrow-left" style="margin-right:5px"></i>Back</button>`;
-  h+=`<div style="display:flex;gap:8px">`;
-  if(ST.dci>0) h+=`<button class="btn-ghost" onclick="ST.dci--;rDisaster()"><i class="fas fa-chevron-left" style="margin-right:4px"></i>Prev</button>`;
-  if(ST.dci<DISASTER_DATA.length-1) h+=`<button class="btn-primary" onclick="ST.dci++;rDisaster()">Next Hazard <i class="fas fa-chevron-right" style="margin-left:4px"></i></button>`;
-  else h+=`<button class="btn-primary" onclick="toast('Disaster assessment: '+disScore()+'% resilience','success');goStep(5)">Continue to Risk <i class="fas fa-arrow-right" style="margin-left:5px"></i></button>`;
-  h+=`</div></div></div>`;
-  el('appWrap').innerHTML=h;
-}
-
-/* ═══════════════════════════════════════════════════
-   STEP 5 — RISK ASSESSMENT
-   ═══════════════════════════════════════════════════ */
-function rRisk(){
-  let h=`<div>`;
-  h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">`;
-  h+=`<div><h2 style="font-size:18px;margin-bottom:2px">Risk Assessment</h2>
-    <p style="font-size:10px;color:var(--muted)">5×5 ISO 31000 risk matrix. Add project-specific risks.</p></div>`;
-  h+=`<button class="btn-primary" style="font-size:11px;padding:7px 14px" onclick="el('riskModal').classList.add('show')">
-    <i class="fas fa-plus" style="margin-right:5px"></i>Add Risk
-  </button>`;
-  h+=`</div>`;
-
-  h+=`<div style="display:grid;grid-template-columns:3fr 2fr;gap:12px" class="grid2">`;
-
-  // Risk Matrix
-  h+=`<div class="glass" style="border-radius:12px;padding:14px">`;
-  h+=`<h4 style="font-size:11px;margin-bottom:10px;font-family:sans-serif">Likelihood × Impact Matrix <span style="font-size:8px;color:var(--muted)">(ISO 31000)</span></h4>`;
-  h+=`<div style="display:flex;gap:4px">`;
-  h+=`<div style="display:flex;flex-direction:column;justify-content:space-between;padding-bottom:20px">`;
-  for(let l=5;l>=1;l--) h+=`<div style="font-size:7px;color:var(--muted);text-align:right;width:12px;line-height:44px">${l}</div>`;
-  h+=`</div>`;
-  h+=`<div style="flex:1">`;
-  h+=`<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:3px">`;
-  for(let l=5;l>=1;l--){
-    for(let i=1;i<=5;i++){
-      const sc=l*i, col=rCol(sc);
-      const here=ST.risks.filter(r=>r.l===l&&r.i===i);
-      h+=`<div class="rcell" style="background:${col}20;color:${col};flex-direction:column;gap:1px" onclick="if(${here.length})toast('${here.map(r=>r.desc.substring(0,30)).join(' | ')}','info')">
-        <span style="font-size:11px">${sc}</span>
-        ${here.length?`<span style="font-size:8px;background:${col}35;padding:1px 4px;border-radius:3px">${here.length}</span>`:''}
-      </div>`;
-    }
-  }
-  h+=`</div>`;
-  h+=`<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-top:3px">`;
-  ['Neg','Minor','Mod','Major','Catas'].forEach(l=>{ h+=`<div style="font-size:7px;color:var(--muted);text-align:center">${l}</div>` });
-  h+=`</div>`;
-  h+=`<div style="font-size:8px;color:var(--muted);text-align:center;margin-top:2px;font-weight:700;letter-spacing:.1em">IMPACT →</div>`;
-  h+=`</div></div>`;
-  // Legend
-  h+=`<div style="display:flex;gap:10px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">`;
-  [{c:'#22C55E',l:'Low (1–4)'},{c:'#EAB308',l:'Med (5–9)'},{c:'#F97316',l:'High (10–16)'},{c:'#EF4444',l:'Critical (17–25)'}].forEach(x=>{
-    h+=`<div style="display:flex;align-items:center;gap:4px"><div style="width:9px;height:9px;border-radius:2px;background:${x.c}"></div><span style="font-size:8px;color:var(--muted)">${x.l}</span></div>`;
-  });
-  h+=`</div></div>`;
-
-  // Risk Register
-  h+=`<div class="glass" style="border-radius:12px;padding:14px">`;
-  h+=`<h4 style="font-size:11px;margin-bottom:10px;font-family:sans-serif">Risk Register <span style="font-size:9px;color:var(--muted)">(${ST.risks.length} entries)</span></h4>`;
-  h+=`<div style="max-height:340px;overflow-y:auto">`;
-  if(ST.risks.length){
-    // Summary bars
-    const crit=ST.risks.filter(r=>r.l*r.i>=17).length;
-    const high=ST.risks.filter(r=>{const s=r.l*r.i;return s>=10&&s<17}).length;
-    const med=ST.risks.filter(r=>{const s=r.l*r.i;return s>=5&&s<10}).length;
-    const low=ST.risks.filter(r=>r.l*r.i<5).length;
-    h+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;margin-bottom:8px">`;
-    [{c:'#EF4444',l:'Critical',n:crit},{c:'#F97316',l:'High',n:high},{c:'#EAB308',l:'Med',n:med},{c:'#22C55E',l:'Low',n:low}].forEach(x=>{
-      h+=`<div style="text-align:center;padding:5px;border-radius:6px;background:${x.c}10;border:1px solid ${x.c}20">
-        <div style="font-size:14px;font-weight:800;color:${x.c}">${x.n}</div>
-        <div style="font-size:7px;color:var(--muted)">${x.l}</div>
-      </div>`;
-    });
-    h+=`</div>`;
-    for(let ri=0;ri<ST.risks.length;ri++){
-      const rk=ST.risks[ri], s=rk.l*rk.i, col=rCol(s);
-      h+=`<div style="padding:7px 9px;border-radius:7px;background:rgba(9,20,9,.6);border-left:3px solid ${col};margin-bottom:5px;position:relative">`;
-      h+=`<div style="font-size:10px;font-weight:600;padding-right:20px">${rk.desc}</div>`;
-      h+=`<div style="display:flex;gap:8px;font-size:8px;margin-top:3px">
-        <span style="color:${col};font-weight:700">${rLvl(s)} (${s})</span>
-        <span style="color:var(--muted)">L${rk.l}×I${rk.i}</span>
-        <span style="color:var(--muted)">${rk.cat}</span>
-        <span style="color:var(--muted)">${rk.treat}</span>
-      </div>`;
-      h+=`<span onclick="ST.risks.splice(${ri},1);rRisk()" style="position:absolute;top:6px;right:8px;cursor:pointer;color:var(--muted);font-size:10px;font-family:sans-serif" title="Remove">✕</span>`;
-      h+=`</div>`;
-    }
-  } else {
-    h+=`<div style="text-align:center;padding:28px 0;color:var(--muted);font-size:10px">
-      <i class="fas fa-shield-halved" style="font-size:24px;display:block;margin-bottom:8px;opacity:.3"></i>
-      No risks added yet. Click "Add Risk" to begin.
-    </div>`;
-  }
-  h+=`</div></div>`;
-  h+=`</div>`;
-
-  h+=`<div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">`;
-  h+=`<button class="btn-ghost" onclick="goStep(4)"><i class="fas fa-arrow-left" style="margin-right:5px"></i>Back</button>`;
-  h+=`<button class="btn-primary" onclick="goStep(6)">Continue to ESG & Carbon <i class="fas fa-arrow-right" style="margin-left:5px"></i></button>`;
-  h+=`</div></div>`;
-  el('appWrap').innerHTML=h;
-}
-
-/* ═══════════════════════════════════════════════════
-   STEP 6 — ESG & CARBON
-   ═══════════════════════════════════════════════════ */
-function rESG(){
-  const carb=calcCarbon();
-  let h=`<div>`;
-  h+=`<h2 style="font-size:18px;margin-bottom:4px">ESG & Carbon Analysis</h2>`;
-  h+=`<p style="font-size:10px;color:var(--muted);margin-bottom:14px">Carbon calculations use LEED EA data + GHG Protocol methodology. Refine with actual consumption data.</p>`;
-
-  // Auto-calculated from LEED data
-  h+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px" class="grid4">`;
-  const cards=[
-    {label:'Adjusted EUI',val:carb.adjEUI.toFixed(0),unit:'kWh/m²/yr',color:'var(--cyan)',icon:'fa-bolt',
-     note:`Baseline ${carb.baseEUI} kWh/m²/yr × (1 − ${carb.eImp}% improvement)`},
-    {label:'Annual Energy',val:(carb.annualEnergy/1000).toFixed(1),unit:'MWh/yr',color:'var(--amber)',icon:'fa-solar-panel',
-     note:`${ST.proj.area.toLocaleString()} m² × ${carb.adjEUI.toFixed(0)} kWh/m²`},
-    {label:'Carbon Intensity',val:carb.co2Intensity.toFixed(1),unit:'kgCO2/m²/yr',color:carb.co2Intensity>35?'var(--red)':'var(--em)',icon:'fa-cloud',
-     note:`Grid: ${carb.gf} kgCO2e/kWh (${ST.proj.country})`},
-    {label:'Annual Emissions',val:(carb.opCO2/1000).toFixed(1),unit:'tCO2e/yr',color:'var(--gold)',icon:'fa-leaf',
-     note:`${(carb.annualEnergyCovered/1000).toFixed(1)} MWh/yr avoided by renewables`}
-  ];
-  cards.forEach(c=>{
-    h+=`<div class="kpi">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <span style="font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">${c.label}</span>
-        <i class="fas ${c.icon}" style="color:${c.color};font-size:11px"></i>
-      </div>
-      <div style="font-size:20px;font-weight:800;color:${c.color}">${c.val}</div>
-      <div style="font-size:8px;color:var(--muted);margin-bottom:4px">${c.unit}</div>
-      <div style="font-size:8px;color:var(--muted);line-height:1.4">${c.note}</div>
-    </div>`;
-  });
-  h+=`</div>`;
-
-  // Compliance check
-  h+=`<div class="glass" style="border-radius:12px;padding:14px;margin-bottom:14px">`;
-  h+=`<h4 style="font-size:12px;margin-bottom:10px">Compliance Thresholds</h4>`;
-  const checks=[
-    {label:'EU Taxonomy (Climate Mitigation) — nZEB',threshold:27.5,val:carb.co2Intensity,unit:'kgCO2/m²/yr',ref:'EU Taxonomy Regulation 2020/852 Annex I'},
-    {label:'UAE Al Sa\'fat — Green Building Intensity',threshold:40,val:carb.co2Intensity,unit:'kgCO2/m²/yr',ref:'Dubai Decree No. 23/2017'},
-    {label:'LEED EA Prereq — Minimum Energy (5% vs ASHRAE 90.1)',threshold:5,val:carb.eImp,unit:'% improvement',ref:'LEED v4.1 EA Prerequisite',higher:true},
-    {label:'LEED EA Optimize — Gold threshold (25%+ improvement)',threshold:25,val:carb.eImp,unit:'% improvement',ref:'LEED v4.1 EA Credit',higher:true}
-  ];
-  checks.forEach(ck=>{
-    const ok=ck.higher?(ck.val>=ck.threshold):(ck.val<=ck.threshold);
-    h+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)">`;
-    h+=`<div><div style="font-size:10px;font-weight:600">${ck.label}</div>
-      <div style="font-size:8px;color:var(--muted)">${ck.ref}</div></div>`;
-    h+=`<div style="text-align:right">
-      <span style="font-size:11px;font-weight:800;color:${ok?'var(--em)':'var(--red)'}">${ck.val.toFixed(1)} ${ck.unit}</span><br>
-      <span style="font-size:8px;color:${ok?'var(--em)':'var(--red)'}">${ok?'✓ COMPLIANT':'✗ NON-COMPLIANT'} (threshold: ${ck.threshold})</span>
-    </div>`;
-    h+=`</div>`;
-  });
-  h+=`</div>`;
-
-  // Optional actual data entry
-  h+=`<div class="glass" style="border-radius:12px;padding:14px;margin-bottom:14px">`;
-  h+=`<h4 style="font-size:12px;margin-bottom:3px">Optional: Actual Energy Data</h4>`;
-  h+=`<p style="font-size:9px;color:var(--muted);margin-bottom:10px">Override auto-calculated values with measured data (if available).</p>`;
-  h+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">`;
-  h+=`<div><label class="lbl">Electricity (MWh/yr)</label>
-    <input type="number" id="eeElec" class="inp" value="${ST.esg.elec||''}" placeholder="Auto-calculated" oninput="ST.esg.elec=+this.value"></div>`;
-  h+=`<div><label class="lbl">Gas Consumption (m³/yr)</label>
-    <input type="number" id="eeGas" class="inp" value="${ST.esg.gas||''}" placeholder="0" oninput="ST.esg.gas=+this.value"></div>`;
-  h+=`<div><label class="lbl">Embodied Carbon (kgCO2/m²)</label>
-    <input type="number" id="eeEmb" class="inp" value="${ST.esg.emb||''}" placeholder="e.g., 350" oninput="ST.esg.emb=+this.value"></div>`;
-  h+=`</div></div>`;
-
-  // ESG scoring
-  const ls=leedScore(), ws=wellScore(), ds=disScore();
-  const E_score=Math.min(100,Math.round((1-carb.co2Intensity/100)*50+ls.catScores[4].p/33*30+carb.renPct/50*20));
-  const S_score=Math.round(ws.total*0.7+ds*0.3);
-  const G_score=Math.round((ls.total/110)*60+(ds/100)*40);
-  const ESG_total=Math.round((E_score+S_score+G_score)/3);
-  h+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px" class="grid4">`;
-  [{label:'Environmental (E)',val:E_score,color:'var(--em)',note:'Energy, carbon, renewables, water'},{label:'Social (S)',val:S_score,color:'var(--rose)',note:'WELL wellness + disaster preparedness'},{label:'Governance (G)',val:G_score,color:'var(--purple)',note:'LEED compliance + resilience planning'},{label:'ESG Total',val:ESG_total,color:'var(--gold)',note:'Composite ESG score'}].forEach(c=>{
-    h+=`<div class="kpi"><div style="font-size:8px;color:var(--muted);text-transform:uppercase;margin-bottom:4px">${c.label}</div>
-      <div style="font-size:22px;font-weight:800;color:${c.color}">${c.val}</div>
-      <div style="font-size:8px;color:var(--muted)">/100</div>
-      <div class="pbar" style="margin-top:6px"><div class="pfill" style="width:${c.val}%;background:${c.color}"></div></div>
-      <div style="font-size:8px;color:var(--muted);margin-top:4px">${c.note}</div>
-    </div>`;
-  });
-  h+=`</div>`;
-
-  h+=`<div style="display:flex;justify-content:space-between;margin-top:4px">`;
-  h+=`<button class="btn-ghost" onclick="goStep(5)"><i class="fas fa-arrow-left" style="margin-right:5px"></i>Back</button>`;
-  h+=`<button class="btn-primary" onclick="goStep(7)">Generate Report <i class="fas fa-file-pdf" style="margin-left:6px"></i></button>`;
-  h+=`</div></div>`;
-  el('appWrap').innerHTML=h;
-}
-
-/* ═══════════════════════════════════════════════════
-   STEP 7 — REPORT
-   ═══════════════════════════════════════════════════ */
-function rReport(){
-  const ls=leedScore(), ws=wellScore(), ds=disScore(), carb=calcCarbon();
-  const p=ST.proj, u=ST.user;
-  const ls_cs=ls.catScores, ws_cs=ws.catScores;
-
-  const E_score=Math.min(100,Math.round((1-carb.co2Intensity/100)*50+ls.catScores[4].p/33*30+carb.renPct/50*20));
-  const S_score=Math.round(ws.total*0.7+ds*0.3);
-  const G_score=Math.round((ls.total/110)*60+(ds/100)*40);
-  const ESG_total=Math.round((E_score+S_score+G_score)/3);
-
-  // Auto-generate recommendations
-  const recs=[];
-  if(ls.total<40) recs.push({sev:'critical',text:`LEED score is ${ls.total}/110 — below minimum for Certified (40 pts). Prioritize prerequisites and Energy & Atmosphere credits (up to 33 pts).`});
-  else if(ls.total<60) recs.push({sev:'warning',text:`LEED at ${ls.total}/110 (${ls.cert}). Target Gold (60 pts) by focusing on Optimize Energy Performance (up to 18 pts available).`});
-  const eimp=ST.leed['Optimize Energy Performance']||0;
-  if(eimp<20) recs.push({sev:'warning',text:`Energy improvement at ${eimp}% is below LEED Gold threshold. Target ≥25% via HVAC optimization (${p.hvac}), envelope upgrade, and demand response integration.`});
-  const renPct=ST.leed['Renewable Energy Production']||0;
-  if(renPct<10) recs.push({sev:'warning',text:`On-site renewable energy at ${renPct}%. Rooftop PV in ${p.climate.includes('Hot')?'hot arid climate can achieve 22–28%+ capacity factor.':'temperate climate can achieve 12–18% of building load.'}`});
-  if(!ST.leed['Enhanced Commissioning']) recs.push({sev:'info',text:'Enhanced Commissioning (LEED EA) not implemented. Proper Cx of HVAC typically delivers 10–15% energy savings and earns up to 6 LEED points.'});
-  if(ws.total<40) recs.push({sev:'critical',text:`WELL score ${ws.total}/100 is below Bronze (40 pts). Prioritize Air concept (A01–A05) and Thermal Comfort (T01–T04) — highest occupant impact and most achievable.`});
-  if(ds<60) recs.push({sev:'warning',text:`Disaster resilience at ${ds}% is below adequate threshold (60%). Critical gaps in: ${DISASTER_DATA.filter((_,i)=>disCatScore(i).pct<50).map(d=>d.cat).join(', ')}.`});
-  const critRisks=ST.risks.filter(r=>r.l*r.i>=17);
-  if(critRisks.length) recs.push({sev:'critical',text:`${critRisks.length} critical risk(s) identified: "${critRisks.map(r=>r.desc).join('; ')}". Immediate mitigation required.`});
-  if(carb.co2Intensity>27.5) recs.push({sev:'warning',text:`Carbon intensity ${carb.co2Intensity.toFixed(1)} kgCO2/m²/yr exceeds EU Taxonomy threshold (27.5). Gap: ${(carb.co2Intensity-27.5).toFixed(1)} kgCO2/m²/yr. Increase renewables and energy efficiency.`});
-  if(!recs.length) recs.push({sev:'info',text:'Excellent performance across all sustainability metrics. Consider targeting LEED Platinum and WELL Platinum to maximize market differentiation.'});
-
-  const certColor={PLATINUM:'#0FBF7A',GOLD:'#C8970F',SILVER:'#94A3B8',CERTIFIED:'#6DA87E','BELOW MIN':'#E84444',INELIGIBLE:'#E84444',BRONZE:'#cd7f32'};
-
-  let h=`<div>`;
-  h+=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">`;
-  h+=`<div><h2 style="font-size:18px;margin-bottom:2px">Sustainability Intelligence Report</h2>
-    <p style="font-size:10px;color:var(--muted)">${p.name} · ${p.city||''}${p.city?', ':''}${p.country} · ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}</p></div>`;
-  h+=`<button class="btn-primary" style="font-size:11px;padding:8px 16px;flex-shrink:0" onclick="genPDF()">
-    <i class="fas fa-file-pdf" style="margin-right:6px"></i>Download PDF
-  </button>`;
-  h+=`</div>`;
-
-  // Summary cards
-  h+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px" class="grid4">`;
-  [
-    {l:'LEED v4.1',v:ls.total,max:110,cert:ls.cert,col:certColor[ls.cert]||'#E84444',icon:'fa-leaf'},
-    {l:'WELL v2',v:ws.total,max:100,cert:ws.cert,col:certColor[ws.cert]||'#E84444',icon:'fa-heart-pulse'},
-    {l:'Disaster Resilience',v:ds,max:100,cert:ds>=80?'Resilient':ds>=60?'Adequate':ds>=40?'Moderate':'Vulnerable',col:ds>=80?'#0FBF7A':ds>=60?'#C8970F':ds>=40?'#F97316':'#E84444',icon:'fa-shield-halved'},
-    {l:'ESG Score',v:ESG_total,max:100,cert:ESG_total>=80?'Strong':ESG_total>=60?'Good':ESG_total>=40?'Developing':'Weak',col:ESG_total>=60?'#0FBF7A':'#C8970F',icon:'fa-chart-line'}
-  ].forEach(c=>{
-    h+=`<div class="kpi" style="text-align:center">
-      <i class="fas ${c.icon}" style="color:${c.col};font-size:16px;margin-bottom:6px;display:block"></i>
-      <div style="font-size:22px;font-weight:800;color:${c.col}">${c.v}</div>
-      <div style="font-size:8px;color:var(--muted);margin-bottom:3px">/ ${c.max} · ${c.l}</div>
-      <span class="cert" style="background:${c.col}20;color:${c.col}">${c.cert}</span>
-    </div>`;
-  });
-  h+=`</div>`;
-
-  // Carbon summary
-  h+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px" class="grid4">`;
-  [{l:'Carbon Intensity',v:carb.co2Intensity.toFixed(1),u:'kgCO2/m²/yr',col:carb.co2Intensity>35?'var(--red)':'var(--em)'},{l:'Annual Emissions',v:(carb.opCO2/1000).toFixed(1),u:'tCO2e/yr',col:'var(--gold)'},{l:'Adjusted EUI',v:carb.adjEUI.toFixed(0),u:'kWh/m²/yr',col:'var(--cyan)'},{l:'Renewable Energy',v:carb.renPct,u:'%',col:'var(--em)'}].forEach(c=>{
-    h+=`<div class="kpi"><div style="font-size:9px;color:var(--muted);margin-bottom:3px">${c.l}</div>
-      <div style="font-size:18px;font-weight:800;color:${c.col}">${c.v}</div>
-      <div style="font-size:8px;color:var(--muted)">${c.u}</div></div>`;
-  });
-  h+=`</div>`;
-
-  // Recommendations
-  h+=`<div class="glass" style="border-radius:12px;padding:14px;margin-bottom:14px">`;
-  h+=`<h3 style="font-size:13px;margin-bottom:10px"><i class="fas fa-lightbulb" style="color:var(--gold);margin-right:6px"></i>Key Recommendations</h3>`;
-  const sevCol={critical:'#E84444',warning:'#C8970F',info:'#3B82F6'};
-  const sevIco={critical:'fa-circle-exclamation',warning:'fa-triangle-exclamation',info:'fa-circle-info'};
-  recs.forEach((r,i)=>{
-    h+=`<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 9px;border-radius:7px;background:rgba(9,20,9,.5);margin-bottom:5px;border-left:2px solid ${sevCol[r.sev]}">
-      <i class="fas ${sevIco[r.sev]}" style="color:${sevCol[r.sev]};font-size:11px;margin-top:2px;flex-shrink:0"></i>
-      <span style="font-size:9px;line-height:1.6">${r.text}</span>
-    </div>`;
-  });
-  h+=`</div>`;
-
-  // LEED breakdown
-  h+=`<div class="glass" style="border-radius:12px;padding:14px;margin-bottom:14px">`;
-  h+=`<h3 style="font-size:13px;margin-bottom:10px"><i class="fas fa-leaf" style="color:var(--em);margin-right:6px"></i>LEED Category Breakdown</h3>`;
-  h+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px" class="grid3">`;
-  ls_cs.forEach(c=>{
-    h+=`<div style="padding:8px;border-radius:8px;background:rgba(9,20,9,.5)">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:9px;font-weight:700;font-family:sans-serif">${c.a}</span>
-        <span style="font-size:9px;color:var(--em);font-weight:800">${c.p}/${c.m}</span>
-      </div>
-      <div style="font-size:8px;color:var(--muted);margin-bottom:3px">${c.c}</div>
-      <div class="pbar"><div class="pfill" style="width:${c.m?Math.round(c.p/c.m*100):0}%;background:var(--em)"></div></div>
-    </div>`;
-  });
-  h+=`</div></div>`;
-
-  // WELL breakdown
-  h+=`<div class="glass" style="border-radius:12px;padding:14px;margin-bottom:14px">`;
-  h+=`<h3 style="font-size:13px;margin-bottom:10px"><i class="fas fa-heart-pulse" style="color:var(--rose);margin-right:6px"></i>WELL Concept Breakdown</h3>`;
-  h+=`<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px">`;
-  ws_cs.forEach(c=>{
-    h+=`<div style="padding:7px;border-radius:8px;background:rgba(9,20,9,.5);text-align:center">
-      <div style="font-size:8px;margin-bottom:3px">${c.c}</div>
-      <div style="font-size:12px;font-weight:800;color:${c.cl}">${c.p}/${c.m}</div>
-      <div class="pbar" style="margin-top:3px"><div class="pfill" style="width:${c.m?Math.round(c.p/c.m*100):0}%;background:${c.cl}"></div></div>
-    </div>`;
-  });
-  h+=`</div></div>`;
-
-  // Disaster breakdown
-  h+=`<div class="glass" style="border-radius:12px;padding:14px;margin-bottom:14px">`;
-  h+=`<h3 style="font-size:13px;margin-bottom:10px"><i class="fas fa-shield-halved" style="color:var(--blue);margin-right:6px"></i>Disaster Resilience Breakdown</h3>`;
-  h+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px" class="grid4">`;
-  DISASTER_DATA.forEach((d,i)=>{
-    const cs=disCatScore(i);
-    h+=`<div style="padding:7px;border-radius:8px;background:rgba(9,20,9,.5)">
-      <div style="font-size:9px;font-weight:700;margin-bottom:2px"><i class="fas ${d.icon}" style="color:${d.color};margin-right:3px;font-size:8px"></i>${d.cat}</div>
-      <div style="font-size:12px;font-weight:800;color:${d.color}">${cs.pct}%</div>
-      <div style="font-size:8px;color:var(--muted)">${cs.yes}/${cs.total} met</div>
-      <div class="pbar" style="margin-top:3px"><div class="pfill" style="width:${cs.pct}%;background:${d.color}"></div></div>
-    </div>`;
-  });
-  h+=`</div></div>`;
-
-  h+=`<div style="display:flex;justify-content:space-between;margin-top:8px">`;
-  h+=`<button class="btn-ghost" onclick="goStep(6)"><i class="fas fa-arrow-left" style="margin-right:5px"></i>Back</button>`;
-  h+=`<button class="btn-primary" onclick="genPDF()"><i class="fas fa-file-pdf" style="margin-right:6px"></i>Download Full PDF Report</button>`;
-  h+=`</div></div>`;
-  el('appWrap').innerHTML=h;
-}
-
-/* ═══════════════════════════════════════════════════
-   PDF GENERATION — via browser print
-   ═══════════════════════════════════════════════════ */
+// ========== PDF — HIDDEN IFRAME METHOD ==========
 function genPDF(){
-  const ls=leedScore(), ws=wellScore(), ds=disScore(), carb=calcCarbon();
-  const p=ST.proj, u=ST.user;
-  const E_score=Math.min(100,Math.round((1-carb.co2Intensity/100)*50+ls.catScores[4].p/33*30+carb.renPct/50*20));
-  const S_score=Math.round(ws.total*0.7+ds*0.3);
-  const G_score=Math.round((ls.total/110)*60+(ds/100)*40);
-  const ESG_total=Math.round((E_score+S_score+G_score)/3);
-  const certColor={PLATINUM:'#0a7d4a',GOLD:'#b8860b',SILVER:'#708090',CERTIFIED:'#4a7a5a','BELOW MIN':'#cc3333',INELIGIBLE:'#cc3333',BRONZE:'#8B5A2B'};
-  const date=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  if(!LC){sT('View results first.','i');return}
+  sT('Generating PDF report...','i');
+  const d=LC,zO=ZN[d.loc]?ZN[d.loc].find(z=>z.id===d.zn):null,zN=zO?zO.n:d.zn,zD=zO?zO.d:'';
+  const pTL={'residential':'Residential','commercial':'Commercial','industrial':'Industrial','institutional':'Institutional','mixeduse':'Mixed-Use','infra':'Infrastructure'}[d.pt]||d.pt;
+  const cML={'rcc':'RCC Framed Structure','steel':'Steel Structure','composite':'Composite (RCC + Steel)','loadbearing':'Load-Bearing Masonry','prefab':'Pre-Fabricated','hybrid':'Hybrid Construction'}[d.cm]||d.cm;
+  const sTL={'clay':'Clay','sandy':'Sandy','loamy':'Loamy','rocky':'Rocky / Hard Strata','silt':'Silt','marshy':'Marshy / Waterlogged','laterite':'Laterite','blackcotton':'Black Cotton (Expansive Clay)'}[d.st]||d.st;
+  const now=new Date(),dS=now.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}),tS=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  let sL='Needs Improvement',sC='#e74c3c';if(d.tS>=80){sL='Excellent - Leadership Level';sC='#2ECC71'}else if(d.tS>=65){sL='Very Good - Strong Commitment';sC='#27ae60'}else if(d.tS>=45){sL='Good - On Track';sC='#C8A951'}else if(d.tS>=25){sL='Fair - Room for Growth';sC='#e67e22'}
+  const ld=[{n:'Materials & Resources',s:d.nM,m:40,c:'#2ECC71'},{n:'Energy & Atmosphere',s:d.eS,m:25,c:'#C8A951'},{n:'Sustainable Sites',s:d.siS,m:20,c:'#3498db'},{n:'Indoor Environmental Quality',s:d.ieS,m:8,c:'#D4854A'},{n:'Water Efficiency',s:d.wS,m:4,c:'#1abc9c'},{n:'Innovation in Design',s:d.iS,m:3,c:'#9b59b6'}];
+  let leedH='';ld.forEach(l=>{const p=Math.round(l.s/l.m*100);leedH+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><div style="min-width:170px;font-size:12px;font-weight:600;color:#333;">${l.n}</div><div style="flex:1;height:10px;background:#e8e8e8;border-radius:5px;overflow:hidden;"><div style="height:100%;width:${p}%;background:${l.c};border-radius:5px;"></div></div><div style="font-size:12px;font-weight:700;min-width:50px;text-align:right;color:#333;">${l.s.toFixed(1)}/${l.m}</div></div>`});
+  let matH='';d.msd.forEach((m,i)=>{matH+=`<tr style="background:${i%2?'#f4f9f5':'#fff'}"><td style="padding:5px;border-bottom:1px solid #e0e0e0;font-size:11px;">${i+1}</td><td style="padding:5px;border-bottom:1px solid #e0e0e0;font-size:11px;">${m.cv}</td><td style="padding:5px;border-bottom:1px solid #e0e0e0;font-size:11px;color:#1a8a4a;font-weight:600;">${m.gr}</td><td style="padding:5px;border-bottom:1px solid #e0e0e0;font-size:11px;">${m.pur}</td><td style="padding:5px;border-bottom:1px solid #e0e0e0;font-size:11px;text-align:center;"><span style="background:#e8f5e9;color:#2e7d32;padding:1px 5px;border-radius:3px;font-size:10px;font-weight:600;">${m.coP}%</span></td><td style="padding:5px;border-bottom:1px solid #e0e0e0;font-size:11px;text-align:center;">~${m.coK} kg</td></tr>`});
+  const allS=[{k:'front',l:'Front (Road Side)',d:d.fD},{k:'back',l:'Back Side',d:d.bD},{k:'left',l:'Left Side',d:d.lD},{k:'right',l:'Right Side',d:d.rD}];
+  let plH='',tCP=0;allS.forEach(side=>{const plants=PD.filter(p=>p.z.includes(d.zn)&&p.si.includes(side.k)&&p.md<=side.d&&(p.pt.includes(d.pt)||d.pt==='mixeduse'));if(!plants.length)return;plH+=`<div style="margin-bottom:12px;"><div style="font-weight:700;font-size:12px;color:#0B1D0F;border-bottom:1px solid #e0e0e0;padding-bottom:3px;margin-bottom:5px;">${side.l} (Offset: ${side.d}m)</div>`;plants.forEach(p=>{const cv=parseFloat(p.co);tCP+=cv;const pw=+p.ps.split('x')[0],np=Math.min(Math.max(1,Math.floor(side.d*10/(pw+1))),20);plH+=`<div style="border:1px solid #d4e8d6;border-radius:6px;padding:8px;margin-bottom:5px;background:#f9fdf9;"><div style="font-weight:700;color:#0B1D0F;font-size:12px;">${p.n} <span style="font-style:italic;color:#888;font-size:10px;">(${p.s})</span></div><div style="font-size:10px;color:#444;margin-top:3px;line-height:1.4;">${p.d}</div><div style="display:flex;gap:5px;margin-top:4px;font-size:10px;flex-wrap:wrap;"><span style="background:#e8f5e9;padding:1px 5px;border-radius:3px;color:#2e7d32;font-weight:600;">CO2: ${p.co}</span><span style="background:#e8f5e9;padding:1px 5px;border-radius:3px;color:#2e7d32;font-weight:600;">Temp: ${p.tr}</span><span style="background:#e8f5e9;padding:1px 5px;border-radius:3px;color:#2e7d32;font-weight:600;">Pit: ${p.ps}</span><span style="background:#e8f5e9;padding:1px 5px;border-radius:3px;color:#2e7d32;font-weight:600;">Qty: ${np}</span></div></div>`});plH+=`</div>`});
 
-  const recs=[];
-  const eimp=ST.leed['Optimize Energy Performance']||0;
-  const renPct=ST.leed['Renewable Energy Production']||0;
-  if(ls.total<40) recs.push(`CRITICAL: LEED score ${ls.total}/110 — below minimum Certified (40 pts). Immediately address prerequisites and Energy & Atmosphere credits.`);
-  else if(ls.total<60) recs.push(`LEED at ${ls.total}/110 (${ls.cert}). Target Gold (60 pts) via Energy Optimization (up to 18 pts remaining).`);
-  if(eimp<20) recs.push(`Energy improvement at ${eimp}% — below recommended 25%+ for Gold tier. Review HVAC (${p.hvac}), envelope insulation, and building management system.`);
-  if(renPct<10) recs.push(`On-site renewable energy at ${renPct}%. Rooftop PV and/or green power procurement of 10–30% would yield 2–5 additional LEED points.`);
-  if(ws.total<40) recs.push(`WELL score ${ws.total}/100 below Bronze. Prioritize: Air (A01–A05 ventilation/filtration), Thermal Comfort (T01, T07), and Light (L03, L04 daylight/glare).`);
-  if(ds<60) recs.push(`Disaster resilience ${ds}% — below adequate. Gaps in: ${DISASTER_DATA.filter((_,i)=>disCatScore(i).pct<50).map(d=>d.cat).join(', ')}.`);
-  const critRisks=ST.risks.filter(r=>r.l*r.i>=17);
-  if(critRisks.length) recs.push(`${critRisks.length} critical risk(s) requiring immediate mitigation: "${critRisks.map(r=>r.desc).join('; ')}".`);
-  if(carb.co2Intensity>27.5) recs.push(`Carbon intensity ${carb.co2Intensity.toFixed(1)} kgCO2/m²/yr exceeds EU Taxonomy nZEB threshold (27.5). Bridge gap of ${(carb.co2Intensity-27.5).toFixed(1)} kgCO2/m²/yr via renewable energy and efficiency measures.`);
-  if(!recs.length) recs.push('Outstanding sustainability performance across all metrics. Maintain and document for certification submission.');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ARC Report - ${d.pN}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;background:#fff;line-height:1.5;font-size:12px;padding:20px 28px;max-width:760px;margin:0 auto}.hdr{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #2ECC71;padding-bottom:10px;margin-bottom:14px}.logo{font-size:1.5rem;font-weight:900}.l1{color:#2ECC71}.l2{color:#C8A951}.l3{color:#D4854A}.sec{margin-bottom:16px;page-break-inside:avoid}.stit{font-size:14px;font-weight:700;color:#0B1D0F;border-left:4px solid #2ECC71;padding-left:8px;margin-bottom:8px}.kv{display:flex;margin-bottom:3px;font-size:11px}.kvl{font-weight:600;color:#555;min-width:165px}.kvv{color:#1a1a1a}table{width:100%;border-collapse:collapse}th{background:#0B1D0F;color:#fff;padding:5px 4px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.03em}.caut{background:#fff8e1;border:2px dashed #C8A951;border-radius:8px;padding:12px;text-align:center;margin:16px 0}.ftr{border-top:2px solid #2ECC71;padding:10px 0;margin-top:16px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}.ftr a{color:#2ECC71;text-decoration:none;font-weight:600}@media print{body{padding:10px 15px}}</style></head><body>
+<div class="hdr"><div><div class="logo"><span class="l1">A</span><span class="l2">R</span><span class="l3">C</span></div><div style="font-size:9px;color:#888;letter-spacing:.08em;text-transform:uppercase;">Adaptive Regenerative Conservation</div></div><div style="text-align:right;"><div style="font-size:9px;color:#888;">Green Building Assessment Report</div><div style="font-size:9px;color:#aaa;">${dS} | ${tS}</div></div></div>
 
-  let leedRows='',wellRows='',disRows='',riskRows='';
-  ls.catScores.forEach(c=>{ leedRows+=`<tr><td>${c.a}</td><td>${c.c}</td><td style="text-align:center">${c.p}</td><td style="text-align:center">${c.m}</td><td style="text-align:center">${c.m?Math.round(c.p/c.m*100):0}%</td></tr>` });
-  ws.catScores.forEach(c=>{ wellRows+=`<tr><td>${c.c}</td><td style="text-align:center">${c.p}</td><td style="text-align:center">${c.m}</td><td style="text-align:center">${c.m?Math.round(c.p/c.m*100):0}%</td></tr>` });
-  DISASTER_DATA.forEach((_,i)=>{ const cs=disCatScore(i);disRows+=`<tr><td>${DISASTER_DATA[i].cat}</td><td style="text-align:center">${cs.yes}/${cs.total}</td><td style="text-align:center">${cs.pct}%</td><td style="font-weight:600;color:${cs.pct>=80?'#0a7d4a':cs.pct>=50?'#b8860b':'#cc3333'}">${cs.pct>=80?'Adequate':cs.pct>=50?'Needs Improvement':'Inadequate'}</td></tr>` });
-  const riskSummary=ST.risks.map(r=>`<tr><td>${r.desc}</td><td style="text-align:center">${r.l}</td><td style="text-align:center">${r.i}</td><td style="text-align:center;font-weight:700">${r.l*r.i}</td><td style="font-weight:700;color:${rCol(r.l*r.i)}">${rLvl(r.l*r.i)}</td><td>${r.cat}</td><td>${r.treat}</td></tr>`).join('');
-  const critN=ST.risks.filter(r=>r.l*r.i>=17).length, highN=ST.risks.filter(r=>{const s=r.l*r.i;return s>=10&&s<17}).length, medN=ST.risks.filter(r=>{const s=r.l*r.i;return s>=5&&s<10}).length, lowN=ST.risks.filter(r=>r.l*r.i<5).length;
-
-  const html=`
-<div class="cv">
-  <div style="font-size:40pt;color:#0a7d4a;margin-bottom:12px">&#9760;</div>
-  <h1 style="font-family:sans-serif;color:#0a7d4a">Sustainability Intelligence Report</h1>
-  <p class="sub">Prodify Green Nexus · Professional Building Assessment Platform</p>
-  <table style="width:68%;margin:16px auto;border:none;text-align:left">
-    <tr><td style="border:none;color:#888;font-size:8pt;padding:3px 8px;width:30%">Project</td><td style="border:none;font-weight:700;font-size:9pt;padding:3px 8px">${p.name||'Untitled Project'}</td></tr>
-    <tr><td style="border:none;color:#888;font-size:8pt;padding:3px 8px">Location</td><td style="border:none;font-weight:700;font-size:9pt;padding:3px 8px">${p.city||''}${p.city?', ':''}${p.country}</td></tr>
-    <tr><td style="border:none;color:#888;font-size:8pt;padding:3px 8px">Building Type</td><td style="border:none;font-weight:700;font-size:9pt;padding:3px 8px">${p.type} — ${p.conType||'Concrete Frame'}</td></tr>
-    <tr><td style="border:none;color:#888;font-size:8pt;padding:3px 8px">Specifications</td><td style="border:none;font-weight:700;font-size:9pt;padding:3px 8px">${p.area.toLocaleString()} m² GFA · ${p.floors} floors · ${p.occ} occupants</td></tr>
-    <tr><td style="border:none;color:#888;font-size:8pt;padding:3px 8px">Climate Zone</td><td style="border:none;font-weight:700;font-size:9pt;padding:3px 8px">${p.climate} · HVAC: ${p.hvac}</td></tr>
-    <tr><td style="border:none;color:#888;font-size:8pt;padding:3px 8px">Assessed By</td><td style="border:none;font-weight:700;font-size:9pt;padding:3px 8px">${u.name}${u.role?' · '+u.role:''}${u.org?' · '+u.org:''}</td></tr>
-    <tr><td style="border:none;color:#888;font-size:8pt;padding:3px 8px">Report Date</td><td style="border:none;font-weight:700;font-size:9pt;padding:3px 8px">${date}</td></tr>
-    <tr><td style="border:none;color:#888;font-size:8pt;padding:3px 8px">Standards Applied</td><td style="border:none;font-weight:700;font-size:9pt;padding:3px 8px">LEED v4.1 BD+C · WELL v2 · ISO 31000 · GHG Protocol · ASHRAE 90.1-2016 · IEA 2024</td></tr>
-  </table>
+<div class="sec"><div class="stit">Project Information</div>
+<div class="kv"><div class="kvl">Project Name:</div><div class="kvv"><strong>${d.pN}</strong></div></div>
+<div class="kv"><div class="kvl">Client / Name:</div><div class="kvv">${d.un}</div></div>
+<div class="kv"><div class="kvl">Organization:</div><div class="kvv">${d.uo}</div></div>
+<div class="kv"><div class="kvl">City:</div><div class="kvv">${d.uc}</div></div>
+<div class="kv"><div class="kvl">Country:</div><div class="kvv">${d.loc}</div></div>
+<div class="kv"><div class="kvl">Climate Zone:</div><div class="kvv">${zN}</div></div>
+<div class="kv"><div class="kvl">Zone Description:</div><div class="kvv">${zD}</div></div>
+<div class="kv"><div class="kvl">Project Type:</div><div class="kvv">${pTL}</div></div>
+<div class="kv"><div class="kvl">Construction Mode:</div><div class="kvv">${cML}</div></div>
+<div class="kv"><div class="kvl">Project Size:</div><div class="kvv">${d.pS} sqm</div></div>
+<div class="kv"><div class="kvl">Number of Floors:</div><div class="kvv">${d.nF}</div></div>
+<div class="kv"><div class="kvl">Soil Type:</div><div class="kvv">${sTL}</div></div>
+<div class="kv"><div class="kvl">Plot Area:</div><div class="kvv">${d.pA} sqm</div></div>
+<div class="kv"><div class="kvl">Front Offset to Road:</div><div class="kvv">${document.getElementById('frontRoad').value||'-'} m</div></div>
+<div class="kv"><div class="kvl">Front Offset to Boundary:</div><div class="kvv">${d.fD} m</div></div>
+<div class="kv"><div class="kvl">Left Side Offset:</div><div class="kvv">${d.lD} m</div></div>
+<div class="kv"><div class="kvl">Right Side Offset:</div><div class="kvv">${d.rD} m</div></div>
+<div class="kv"><div class="kvl">Back Offset:</div><div class="kvv">${d.bD} m</div></div>
 </div>
 
-<div class="sec">
-  <h2>1. Executive Summary</h2>
-  <div class="summary-grid">
-    <div class="sum-box"><span class="big" style="color:${certColor[ls.cert]||'#cc3333'}">${ls.total}</span><span class="sm">LEED pts / 110</span><span class="sm" style="font-weight:700">${ls.cert}</span></div>
-    <div class="sum-box"><span class="big" style="color:${certColor[ws.cert]||'#cc3333'}">${ws.total}</span><span class="sm">WELL pts / 100</span><span class="sm" style="font-weight:700">${ws.cert}</span></div>
-    <div class="sum-box"><span class="big" style="color:${ds>=60?'#0a7d4a':'#cc3333'}">${ds}%</span><span class="sm">Disaster Resilience</span><span class="sm" style="font-weight:700">${ds>=80?'Highly Resilient':ds>=60?'Adequate':ds>=40?'Moderate':'Vulnerable'}</span></div>
-    <div class="sum-box"><span class="big" style="color:${ESG_total>=60?'#0a7d4a':'#b8860b'}">${ESG_total}</span><span class="sm">ESG Score / 100</span><span class="sm" style="font-weight:700">${ESG_total>=80?'Strong':ESG_total>=60?'Good':ESG_total>=40?'Developing':'Weak'}</span></div>
-  </div>
-  <p style="font-size:8pt;color:#333;line-height:1.6">
-    This report presents a comprehensive sustainability intelligence assessment for <strong>${p.name||'the project'}</strong> located in ${p.city||''}${p.city?', ':''}${p.country}. The ${p.type} building encompasses ${p.area.toLocaleString()} m² GFA across ${p.floors} floors, serving ${p.occ} occupants, operating in a <strong>${p.climate}</strong> climate zone with <strong>${p.hvac}</strong> mechanical systems.
-  </p>
-  <p style="font-size:8pt;color:#333;line-height:1.6;margin-top:6px">
-    The LEED v4.1 BD+C assessment yields <strong>${ls.total} points (${ls.cert})</strong>${ls.prereqOK?', with all prerequisites satisfied':' — NOTE: one or more prerequisites are not currently satisfied, resulting in INELIGIBILITY until resolved'}. The WELL v2 Standard evaluation scores <strong>${ws.total} points (${ws.cert})</strong>, reflecting occupant wellness and environmental quality. Disaster resilience across ${DISASTER_DATA.length} hazard categories scores <strong>${ds}%</strong>. Carbon intensity is estimated at <strong>${carb.co2Intensity.toFixed(1)} kgCO2/m²/yr</strong> based on ASHRAE 90.1-2016 baseline EUI of ${carb.baseEUI} kWh/m²/yr, ${carb.eImp}% energy improvement, ${carb.renPct}% on-site renewables, and ${ST.proj.country} grid emission factor of ${carb.gf} kgCO2e/kWh (IEA 2024). The composite ESG score is <strong>${ESG_total}/100</strong>.
-  </p>
-</div>
+<div class="sec"><div class="stit">Green Score - LEED Aligned</div>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><div style="width:60px;height:60px;border-radius:50%;border:3px solid ${sC};display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;color:${sC};">${d.tS}</div><div><div style="font-size:14px;font-weight:700;color:#0B1D0F;">${sL}</div><div style="font-size:10px;color:#888;">out of 100 points</div></div></div>${leedH}</div>
 
-<div class="sec">
-  <h2>2. LEED v4.1 BD+C Assessment — ${ls.total}/110 pts (${ls.cert})</h2>
-  ${!ls.prereqOK?'<p style="font-size:8pt;color:#cc3333;font-weight:700;margin-bottom:6px">⚠ WARNING: One or more LEED prerequisites are not satisfied. The project is currently INELIGIBLE for certification. Prerequisites must be met before points are counted toward certification.</p>':''}
-  <table>
-    <tr><th>Abbr.</th><th>Category</th><th>Points Earned</th><th>Maximum</th><th>Achievement</th></tr>
-    ${leedRows}
-    <tr style="background:#e8f5ec!important"><td colspan="2"><strong>TOTAL</strong></td><td style="text-align:center"><strong>${ls.total}</strong></td><td style="text-align:center"><strong>110</strong></td><td style="text-align:center;font-weight:700;color:${certColor[ls.cert]||'#cc3333'}">${ls.cert}</td></tr>
-  </table>
-  <p style="font-size:7pt;color:#555;margin-top:6px"><strong>Certification thresholds:</strong> Certified ≥40 · Silver ≥50 · Gold ≥60 · Platinum ≥80. Source: LEED v4.1 Reference Guide, USGBC.</p>
-</div>
+<div class="sec"><div class="stit">Environmental Impact Summary</div>
+<div style="display:flex;gap:12px;flex-wrap:wrap;"><div style="background:#f0faf3;border:1px solid #c8e6c9;border-radius:6px;padding:8px 12px;text-align:center;flex:1;min-width:100px;"><div style="font-size:1.1rem;font-weight:900;color:#2ECC71;">${d.tCO.toLocaleString()}</div><div style="font-size:9px;color:#666;">kg CO2 Savings</div></div><div style="background:#fdf8ed;border:1px solid #f0e0a0;border-radius:6px;padding:8px 12px;text-align:center;flex:1;min-width:100px;"><div style="font-size:1.1rem;font-weight:900;color:#C8A951;">${d.aEP}%</div><div style="font-size:9px;color:#666;">Avg Energy Improvement</div></div><div style="background:#f0f4fa;border:1px solid #c0d0e8;border-radius:6px;padding:8px 12px;text-align:center;flex:1;min-width:100px;"><div style="font-size:1.1rem;font-weight:900;color:#3498db;">${d.sPL}</div><div style="font-size:9px;color:#666;">Suitable Plant Species</div></div></div></div>
 
-<div class="sec">
-  <h2>3. WELL v2 Standard Assessment — ${ws.total}/100 pts (${ws.cert})</h2>
-  <table>
-    <tr><th>WELL Concept</th><th>Points Earned</th><th>Maximum</th><th>Achievement</th></tr>
-    ${wellRows}
-    <tr style="background:#e8f5ec!important"><td><strong>TOTAL</strong></td><td style="text-align:center"><strong>${ws.total}</strong></td><td style="text-align:center"><strong>100</strong></td><td style="text-align:center;font-weight:700;color:${certColor[ws.cert]||'#cc3333'}">${ws.cert}</td></tr>
-  </table>
-  <p style="font-size:7pt;color:#555;margin-top:6px"><strong>Certification thresholds:</strong> Bronze ≥40 · Silver ≥50 · Gold ≥60 · Platinum ≥80. Source: WELL v2 Reference Guide, IWBI.</p>
-</div>
+<div class="sec"><div class="stit">Material Substitution Analysis</div>
+<table><thead><tr><th>#</th><th>Conventional</th><th>Green Alternative</th><th>Purpose</th><th>CO2 Saved</th><th>CO2 (kg)</th></tr></thead><tbody>${matH}</tbody></table></div>
 
-<div class="sec">
-  <h2>4. Disaster Resilience Assessment — Overall: ${ds}%</h2>
-  <table>
-    <tr><th>Hazard Category</th><th>Measures Met</th><th>Score</th><th>Status</th></tr>
-    ${disRows}
-  </table>
-  <p style="font-size:7pt;color:#555;margin-top:6px">Assessment based on NFPA, UAE Fire Code, IBC, Eurocode 8, WHO Pandemic Guidelines, and ISO 27001 references.</p>
-</div>
+<div class="sec"><div class="stit">Vegetation Recommendations</div>${plH}
+<div style="background:#e8f5e9;border:1px solid #a5d6a7;border-radius:6px;padding:8px;text-align:center;margin-top:6px;"><div style="font-size:10px;color:#555;">Annual CO2 Sequestration from Vegetation:</div><div style="font-size:1rem;font-weight:900;color:#2ECC71;">~${tCP.toFixed(0)} kg CO2/year</div></div></div>
 
-<div class="sec">
-  <h2>5. Risk Register — ${ST.risks.length} entries (${critN} Critical, ${highN} High, ${medN} Medium, ${lowN} Low)</h2>
-  <table style="margin-bottom:6px">
-    <tr><th style="width:12px"></th><th>Level</th><th>Count</th><th>Score Range</th></tr>
-    <tr><td style="background:#dc2626"></td><td>Critical</td><td style="text-align:center;font-weight:700">${critN}</td><td>17–25</td></tr>
-    <tr><td style="background:#ea580c"></td><td>High</td><td style="text-align:center;font-weight:700">${highN}</td><td>10–16</td></tr>
-    <tr><td style="background:#ca8a04"></td><td>Medium</td><td style="text-align:center;font-weight:700">${medN}</td><td>5–9</td></tr>
-    <tr><td style="background:#16a34a"></td><td>Low</td><td style="text-align:center;font-weight:700">${lowN}</td><td>1–4</td></tr>
-  </table>
-  ${ST.risks.length?`<table><tr><th>Risk Description</th><th>L</th><th>I</th><th>Score</th><th>Level</th><th>Category</th><th>Treatment</th></tr>${riskSummary}</table>`:'<p style="font-size:8pt;color:#888">No project-specific risks were entered.</p>'}
-  <p style="font-size:7pt;color:#555;margin-top:6px">Risk scoring per ISO 31000:2018 — Risk Management. L = Likelihood (1–5), I = Impact (1–5), Score = L × I.</p>
-</div>
+<div class="caut"><div style="font-size:18px;color:#C8A951;margin-bottom:3px;">&#127793;</div><div style="font-size:12px;color:#5d4e00;font-weight:700;">Go Green - Think Before You Print</div><div style="font-size:9px;color:#888;margin-top:2px;">Consider the environment before printing this report. A digital copy saves paper, water, and energy.</div></div>
 
-<div class="sec">
-  <h2>6. Carbon & Energy Analysis</h2>
-  <table>
-    <tr><th>Parameter</th><th>Value</th><th>Basis / Reference</th></tr>
-    <tr><td>ASHRAE 90.1-2016 Baseline EUI</td><td><strong>${carb.baseEUI} kWh/m²/yr</strong></td><td>Building type: ${p.type} · Climate: ${p.climate}</td></tr>
-    <tr><td>Energy Performance Improvement</td><td><strong>${carb.eImp}%</strong></td><td>LEED EA: Optimize Energy Performance</td></tr>
-    <tr><td>Adjusted EUI (post-improvement)</td><td><strong>${carb.adjEUI.toFixed(1)} kWh/m²/yr</strong></td><td>Baseline × (1 − ${carb.eImp}/100)</td></tr>
-    <tr><td>Annual Energy Consumption</td><td><strong>${(carb.annualEnergy/1000).toFixed(1)} MWh/yr</strong></td><td>${p.area.toLocaleString()} m² × ${carb.adjEUI.toFixed(1)} kWh/m²</td></tr>
-    <tr><td>On-site Renewable Energy</td><td><strong>${carb.renPct}% (${(carb.annualEnergyCovered/1000).toFixed(1)} MWh/yr offset)</strong></td><td>LEED EA: Renewable Energy Production credit</td></tr>
-    <tr><td>Grid Electricity Consumed</td><td><strong>${(carb.gridEnergy/1000).toFixed(1)} MWh/yr</strong></td><td>Total − Renewables</td></tr>
-    <tr><td>Grid Emission Factor</td><td><strong>${carb.gf} kgCO2e/kWh</strong></td><td>${p.country} national grid factor · IEA Emissions Factors 2024</td></tr>
-    <tr><td>Operational Carbon (Scope 2)</td><td><strong>${(carb.opCO2/1000).toFixed(1)} tCO2e/yr</strong></td><td>Grid kWh × emission factor × (1 − renewable %)</td></tr>
-    <tr><td>Carbon Intensity</td><td><strong>${carb.co2Intensity.toFixed(1)} kgCO2e/m²/yr</strong></td><td>Annual CO2 / ${p.area.toLocaleString()} m² GFA</td></tr>
-    <tr><td>EU Taxonomy nZEB Threshold</td><td><strong>27.5 kgCO2e/m²/yr</strong></td><td>${carb.co2Intensity<=27.5?'✓ COMPLIANT':'✗ NON-COMPLIANT — gap: '+(carb.co2Intensity-27.5).toFixed(1)+' kgCO2/m²/yr'} · EU Regulation 2020/852</td></tr>
-    <tr><td>UAE Al Sa'fat Target</td><td><strong>≤40 kgCO2e/m²/yr</strong></td><td>${carb.co2Intensity<=40?'✓ COMPLIANT':'✗ NON-COMPLIANT'} · Dubai Green Building Decree 23/2017</td></tr>
-    <tr><td>ESG Score — Environmental (E)</td><td><strong>${E_score}/100</strong></td><td>Energy efficiency (35%) + Carbon performance (40%) + Renewables (25%)</td></tr>
-    <tr><td>ESG Score — Social (S)</td><td><strong>${S_score}/100</strong></td><td>WELL v2 score (70%) + Disaster resilience (30%)</td></tr>
-    <tr><td>ESG Score — Governance (G)</td><td><strong>${G_score}/100</strong></td><td>LEED compliance (60%) + Resilience planning (40%)</td></tr>
-    <tr><td>Composite ESG Score</td><td><strong>${ESG_total}/100</strong></td><td>Average of E + S + G scores</td></tr>
-  </table>
-</div>
+<div class="ftr"><div style="font-size:10px;color:#888;">Generated by <strong style="color:#0B1D0F;">ARC</strong> - Adaptive Regenerative Conservation<br>Founded by <strong style="color:#0B1D0F;">Eng. Aravind Vijayan</strong></div><div style="font-size:10px;color:#888;text-align:right;">Contact: <a href="mailto:aravindvijayan193@gmail.com">aravindvijayan193@gmail.com</a><br><a href="https://www.linkedin.com/in/aravind-vijayan-3a877710b">LinkedIn: Aravind Vijayan</a><br><span style="color:#aaa;">${dS} ${tS}</span></div></div>
 
-<div class="sec">
-  <h2>7. Key Recommendations & Action Plan</h2>
-  <ol style="font-size:8pt;line-height:1.7;color:#333;padding-left:14px">
-    ${recs.map((r,i)=>`<li style="margin-bottom:5px"><strong>${i+1}.</strong> ${r}</li>`).join('')}
-  </ol>
-</div>
+<script>setTimeout(function(){window.print();},800);<\/script></body></html>`;
 
-<div class="sec" style="background:#f0f8f4!important">
-  <h2>8. Methodology & Standards Reference</h2>
-  <table>
-    <tr><th>Standard / Tool</th><th>Application</th></tr>
-    <tr><td>LEED v4.1 BD+C (USGBC)</td><td>Green building certification — 110-point scoring system</td></tr>
-    <tr><td>WELL v2 (IWBI)</td><td>Occupant wellness — 100-point scoring across 10 concepts</td></tr>
-    <tr><td>ASHRAE 90.1-2016</td><td>Energy performance baseline for LEED EA calculations</td></tr>
-    <tr><td>ASHRAE 55-2017</td><td>Thermal comfort evaluation for WELL T01</td></tr>
-    <tr><td>ASHRAE 62.1-2016</td><td>Ventilation rates for LEED IEQ and WELL A01</td></tr>
-    <tr><td>GHG Protocol — Scope 2</td><td>Operational carbon accounting methodology</td></tr>
-    <tr><td>IEA Emission Factors 2024</td><td>National grid CO2 emission factors</td></tr>
-    <tr><td>EU Taxonomy Reg. 2020/852</td><td>27.5 kgCO2e/m²/yr Substantial Contribution threshold</td></tr>
-    <tr><td>ISO 31000:2018</td><td>Risk management — 5×5 likelihood × impact matrix</td></tr>
-    <tr><td>NFPA 13, 72, 92, 10</td><td>Fire safety prerequisites</td></tr>
-    <tr><td>IBC / Eurocode 8</td><td>Seismic design standards</td></tr>
-  </table>
-</div>
-
-<div class="green-warn">
-  <p style="font-size:10pt;font-weight:700;font-family:sans-serif">&#9752; GO GREEN — THINK BEFORE YOU PRINT</p>
-  <p style="font-size:7pt;font-weight:400;margin-top:4px">This report was generated digitally by Prodify Green Nexus. If printing is necessary, use recycled paper and enable double-sided (duplex) printing to minimize environmental impact. Consider sharing this report digitally to reduce paper waste and embodied carbon.</p>
-  <p style="font-size:7pt;color:#555;margin-top:6px">Report generated: ${date} · Assessed by: ${u.name} · Organization: ${u.org||'N/A'} · Prodify Green Nexus v2.0</p>
-</div>
-  `;
-
-  el('printZone').innerHTML=html;
-  window.print();
-  toast('PDF report generated — printing…','success');
-}
-
-/* ═══════════════════════════════════════════════════
-   SPLASH + INIT
-   ═══════════════════════════════════════════════════ */
-function initSplash(){
-  const cv=el('splashCanvas'), ctx=cv.getContext('2d');
-  cv.width=window.innerWidth; cv.height=window.innerHeight;
-  const pts=[];
-  for(let i=0;i<70;i++) pts.push({x:Math.random()*cv.width,y:Math.random()*cv.height,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.5+.4,a:Math.random()*.35+.08});
-  let frame=0;
-  function loop(){
-    ctx.clearRect(0,0,cv.width,cv.height);
-    ctx.strokeStyle='rgba(15,191,122,0.035)'; ctx.lineWidth=.5;
-    for(let x=0;x<cv.width;x+=55){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,cv.height);ctx.stroke()}
-    for(let y=0;y<cv.height;y+=55){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cv.width,y);ctx.stroke()}
-    pts.forEach(p=>{
-      p.x+=p.vx; p.y+=p.vy;
-      if(p.x<0)p.x=cv.width; if(p.x>cv.width)p.x=0;
-      if(p.y<0)p.y=cv.height; if(p.y>cv.height)p.y=0;
-      ctx.beginPath(); ctx.arc(p.x,p.y,Math.max(.4,p.r),0,Math.PI*2);
-      ctx.fillStyle=`rgba(15,191,122,${p.a})`; ctx.fill();
-    });
-    for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
-      const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.sqrt(dx*dx+dy*dy);
-      if(d<90){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(15,191,122,${.05*(1-d/90)})`;ctx.lineWidth=.5;ctx.stroke()}
+  // === IFRAME METHOD - Works without popup blockers ===
+  const iframe=document.createElement('iframe');
+  iframe.style.cssText='position:fixed;left:-9999px;top:-9999px;width:800px;height:600px;border:none;';
+  document.body.appendChild(iframe);
+  
+  iframe.onload=function(){
+    try{
+      iframe.contentWindow.print();
+    }catch(e){
+      // Fallback: open in new tab
+      const blob=new Blob([html],{type:'text/html'});
+      const url=URL.createObjectURL(blob);
+      window.open(url,'_blank');
+      setTimeout(()=>URL.revokeObjectURL(url),10000);
     }
-    frame++;
-    if(frame<200) requestAnimationFrame(loop);
-  }
-  if(!matchMedia('(prefers-reduced-motion:reduce)').matches) loop();
-  setTimeout(()=>{
-    el('splash').classList.add('hide');
-    setTimeout(()=>{
-      el('splash').style.display='none';
-      el('stepBar').style.display='block';
-      el('appWrap').style.display='block';
-      drawStepper(); render();
-    },800);
-  },2800);
+    setTimeout(()=>{try{document.body.removeChild(iframe)}catch(e){}},6000);
+  };
+  
+  iframe.srcdoc=html;
+  
+  sT('Print dialog opening - select Save as PDF.','s');
 }
 
-// Risk modal
-document.addEventListener('DOMContentLoaded',()=>{
-  el('rAddBtn').addEventListener('click',()=>{
-    const desc=el('rDesc').value.trim();
-    if(!desc){toast('Enter a risk description','warning');return}
-    ST.risks.push({
-      desc,
-      l:parseInt(el('rL').value),
-      i:parseInt(el('rI').value),
-      cat:el('rCat').value,
-      treat:el('rTreat').value
-    });
-    el('rDesc').value='';
-    el('riskModal').classList.remove('show');
-    if(ST.step===5) rRisk();
-    toast('Risk added to register','success');
-  });
-  document.addEventListener('keydown',e=>{ if(e.key==='Escape') el('riskModal').classList.remove('show') });
-  initSplash();
-});
+// ========== PARTICLES ==========
+function initP(){const c=document.getElementById('bgC'),x=c.getContext('2d');let w,h,ps=[];function rs(){w=c.width=innerWidth;h=c.height=innerHeight}rs();addEventListener('resize',rs);class P{constructor(){this.r()}r(){this.x=Math.random()*w;this.y=Math.random()*h;this.sz=Math.random()*2+.5;this.vy=-Math.random()*.2-.05;this.vx=(Math.random()-.5)*.18;this.op=Math.random()*.3+.06;this.hu=105+Math.random()*35}u(){this.y+=this.vy;this.x+=this.vx;if(this.y<-6){this.r();this.y=h+6}}d(){x.beginPath();x.arc(this.x,this.y,this.sz,0,Math.PI*2);x.fillStyle=`hsla(${this.hu},45%,40%,${this.op})`;x.fill()}}for(let i=0;i<40;i++)ps.push(new P());function a(){x.clearRect(0,0,w,h);ps.forEach(p=>{p.u();p.d()});requestAnimationFrame(a)}a()}
+
+document.addEventListener('DOMContentLoaded',()=>{initP();const el=document.getElementById('ctr');const t=CM.length;let c=0;const iv=setInterval(()=>{c++;el.textContent=c+'+';if(c>=t)clearInterval(iv)},22)});
 </script>
-
-<style>
-/* Print-only overrides for WELL icon colors */
-@media print {
-  .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-}
-/* Sticky step labels — hide on mobile */
-@media(max-width:500px) { .sbl { display:none } }
-</style>
 </body>
 </html>
